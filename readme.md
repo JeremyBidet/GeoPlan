@@ -1,6 +1,12 @@
 GeoPlan
 =======
 
+Introduction
+------------
+
+Ce projet AndroidStudio est une réponse au projet demandé dans le cadre de nos études en Master 2.
+Le sujet du projet se trouve ici <http://igm.univ-mlv.fr/~chilowi/teaching/subjects/java/android/project/fapro/index.html>.
+
 Description
 -----------
 
