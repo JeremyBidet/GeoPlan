@@ -1,11 +1,7 @@
 package fr.upem.geoplan.core.planning;
 
-import android.location.LocationListener;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by jerem_000 on 11/02/2016.
