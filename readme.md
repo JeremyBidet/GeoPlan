@@ -27,17 +27,22 @@ Voici les fonctionnalités à implémenter :
 Groupe
 ------
 
-Nous avons 6 membres :
+Nous sommes 6 à travailler sur ce projet.
+
+### Équipe *Server*
 
  * Tristan FAUTREL
  * Jeremie CHATTOU
+
+### Équipe *planning*
+
  * Huy HUYNH
- * Pierre PERONNET
- * Maxime PICHOU
  * Jeremy BIDET
 
-Les rôles de chacun ne sont pas encore définis.
+### Équipe *Radar*
 
+ * Maxime PICHOU
+ * Pierre PERONNET
 
 Fonctionnalités
 ---------------
