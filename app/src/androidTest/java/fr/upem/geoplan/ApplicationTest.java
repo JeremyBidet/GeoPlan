@@ -1,4 +1,4 @@
-package upem.fr.geoplan;
+package fr.upem.geoplan;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
