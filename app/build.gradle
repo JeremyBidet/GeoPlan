@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "upem.fr.geoplan"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 14
         versionCode 1
         versionName "1.0"
     }
