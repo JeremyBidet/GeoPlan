@@ -1,13 +1,12 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "upem.fr.geoplan"
-        minSdkVersion 14
-        targetSdkVersion 14
+        minSdkVersion 9
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -22,5 +21,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile project(':android-radar-master')
+    compile 'com.google.android.gms:play-services:+'
+
 }
