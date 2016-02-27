@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         map:cameraZoom="10"
-        tools:ignore="MissingPrefix" />
+        tools:ignore="MissingPrefix"
+        tools:layout="@layout/preview_map" />
 
     <co.geeksters.radar.Radar
         android:id="@+id/radar"
