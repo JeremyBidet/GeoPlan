@@ -20,11 +20,6 @@ import upem.fr.geoplan.R;
 
 public class Radar_activity extends AppCompatActivity implements OnMapReadyCallback {
     /**
-     * Default map zoom
-     */
-    private static final float MAP_ZOOM = 10;
-
-    /**
      * Map markers
      */
     private final ConcurrentHashMap<Integer, Marker> mapMarkers = new ConcurrentHashMap<>();
@@ -103,7 +98,6 @@ public class Radar_activity extends AppCompatActivity implements OnMapReadyCallb
         mMap = googleMap;
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(eventPosition));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(MAP_ZOOM));
 
         updatePosition(1, new LatLng(10.00220f, 22.0000f));
         updatePosition(2, new LatLng(10.00420f, 22.0010f));
