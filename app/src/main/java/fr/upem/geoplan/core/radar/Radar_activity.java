@@ -49,6 +49,7 @@ public class Radar_activity extends AppCompatActivity implements OnMapReadyCallb
         radar.setReferencePoint(new RadarPoint(getString(R.string.reference_point_label), 10f, 22f));
 
         radar.setPoints(radarMarkers);
+        radar.setOnTouchListener(new RadarEvent(getBaseContext(), radar));
     }
 
     private void initializeMap() {
