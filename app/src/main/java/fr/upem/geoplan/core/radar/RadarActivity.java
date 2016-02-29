@@ -58,8 +58,9 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_radar_activity);
 
         event = getIntent().getParcelableExtra("event");
-        ArrayList<User> users = getIntent().getParcelableArrayListExtra("users");
+        setTitle(event.getTitle());
 
+        ArrayList<User> users = getIntent().getParcelableArrayListExtra("users");
         for (User user : users) {
             this.users.put(user.getId(), user);
         }
