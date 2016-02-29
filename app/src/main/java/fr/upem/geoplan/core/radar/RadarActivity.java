@@ -153,6 +153,6 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
 
         final LatLng eventPosition = event.getPosition();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(eventPosition));
-        mMap.addMarker(new MarkerOptions().position(eventPosition));
+        mMap.addMarker(new MarkerOptions().position(eventPosition).title(event.getTitle()).snippet(users.size() + " users"));
     }
 }

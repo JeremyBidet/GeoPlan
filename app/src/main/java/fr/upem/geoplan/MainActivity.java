@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 import fr.upem.geoplan.core.Event;
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = new Intent(this, RadarActivity.class);
-        intent.putExtra("event", new Event(10., 22.));
+        intent.putExtra("event", new Event(new LatLng(10., 22.), "Event title"));
         ArrayList<User> users = new ArrayList<>();
         users.add(new User(1, "Pierre", "0678912345"));
         users.add(new User(2, "Maxime", "0033123456789"));

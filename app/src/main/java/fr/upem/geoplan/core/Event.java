@@ -7,15 +7,18 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Event implements Parcelable {
     private final LatLng position;
+    private final String title;
 
-    public Event(Double lat, Double lon) {
-        position = new LatLng(lat, lon);
+    public Event(LatLng position, String title) {
+        this.position = position;
+        this.title = title;
     }
 
     protected Event(Parcel in) {
         Double lat = in.readDouble();
         Double lon = in.readDouble();
         position = new LatLng(lat, lon);
+        title = in.readString();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -39,6 +42,11 @@ public class Event implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(position.latitude);
         dest.writeDouble(position.longitude);
+        dest.writeString(title);
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public LatLng getPosition() {
