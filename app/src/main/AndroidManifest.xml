@@ -32,7 +32,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name="fr.upem.geoplan.core.radar.Radar_activity">
+        <activity android:name="fr.upem.geoplan.core.radar.RadarActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="fr.upem.geoplan.MainActivity" />

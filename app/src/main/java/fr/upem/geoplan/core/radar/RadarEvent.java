@@ -11,10 +11,10 @@ import co.geeksters.radar.Radar;
 
 class RadarEvent implements View.OnTouchListener {
     private final Radar radar;
-    private final Radar_activity activity;
+    private final RadarActivity activity;
     private final ConcurrentHashMap<String, Bundle> bundles = new ConcurrentHashMap<>();
 
-    RadarEvent(Radar_activity activity, Radar radar, HashMap<String, Bundle> bundles) {
+    RadarEvent(RadarActivity activity, Radar radar, HashMap<String, Bundle> bundles) {
         this.activity = activity;
         this.radar = radar;
 

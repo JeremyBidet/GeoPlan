@@ -21,7 +21,7 @@ import fr.upem.geoplan.core.Event;
 import fr.upem.geoplan.core.User;
 import upem.fr.geoplan.R;
 
-public class Radar_activity extends AppCompatActivity implements OnMapReadyCallback {
+public class RadarActivity extends AppCompatActivity implements OnMapReadyCallback {
     private Event event;
 
     private final ConcurrentHashMap<Integer, User> users = new ConcurrentHashMap<>();
