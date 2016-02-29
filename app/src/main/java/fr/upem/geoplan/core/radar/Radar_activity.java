@@ -12,40 +12,68 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import co.geeksters.radar.Radar;
 import co.geeksters.radar.RadarPoint;
+import fr.upem.geoplan.core.Event;
+import fr.upem.geoplan.core.User;
 import upem.fr.geoplan.R;
 
 public class Radar_activity extends AppCompatActivity implements OnMapReadyCallback {
+    private Event event;
+
+    private final ConcurrentHashMap<Integer, User> users = new ConcurrentHashMap<>();
+
     /**
      * Map markers
      */
     private final ConcurrentHashMap<Integer, Marker> mapMarkers = new ConcurrentHashMap<>();
 
     /**
-     * Radar markers
+     * The map
+     */
+    private GoogleMap mMap;
+
+    /**
+     * Radar markers associated by label
+     */
+    private final HashMap<String, RadarPoint> radarDatas = new HashMap<>();
+
+    /**
+     * Radar label associated by user
+     */
+    private final HashMap<Integer, String> radarPinsLabel = new HashMap<>();
+
+    /**
+     * Shown radar markers
      */
     private final ArrayList<RadarPoint> radarMarkers = new ArrayList<>();
-
-    private final LatLng eventPosition = new LatLng(10.00000f, 22.0000f);
-
-    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radar_activity);
 
+        event = getIntent().getParcelableExtra("event");
+        ArrayList<User> users = getIntent().getParcelableArrayListExtra("users");
+
+        for (User user : users) {
+            this.users.put(user.getId(), user);
+        }
+
         initializeRadar();
         initializeMap();
+
+        for (User user : users) {
+            updatePosition(user.getId(), new LatLng(event.position.latitude + user.getId() / 1000., event.position.longitude));
+        }
     }
 
     private void initializeRadar() {
         Radar radar = (Radar) findViewById(R.id.radar);
 
-        //And here set the reference Point (or for example your GPS location)
         radar.setReferencePoint(new RadarPoint(getString(R.string.reference_point_label), 10f, 22f));
 
         radar.setPoints(radarMarkers);
@@ -53,7 +81,6 @@ public class Radar_activity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void initializeMap() {
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
@@ -66,21 +93,35 @@ public class Radar_activity extends AppCompatActivity implements OnMapReadyCallb
      * @param position - New position of the user.
      */
     public void updatePosition(Integer userId, LatLng position) {
+        System.out.println("User " + userId + "\tposition " + position);
         updatePositionMap(userId, position);
         updatePositionRadar(userId, position);
     }
 
     private void updatePositionMap(Integer userId, LatLng position) {
-        Marker previousMarker = mapMarkers.get(userId);
-        if (previousMarker != null) {
-            previousMarker.remove();
+        if (mMap != null) {
+            Marker marker = mMap.addMarker(new MarkerOptions().position(position));
+            Marker oldMarker = mapMarkers.replace(userId, marker);
+            if (oldMarker != null) {
+                oldMarker.remove();
+            }
         }
-        mapMarkers.put(userId, mMap.addMarker(new MarkerOptions().position(position)));
     }
 
+    private final Object lockRadar = new Object();
+
     private void updatePositionRadar(Integer userId, LatLng position) {
-        RadarPoint marker = new RadarPoint("User " + userId, (float) position.latitude, (float) position.longitude);
-        radarMarkers.add(marker);
+        String label = radarPinsLabel.get(userId);
+        RadarPoint marker = new RadarPoint(label, (float) position.latitude, (float) position.longitude);
+        synchronized (lockRadar) {
+            RadarPoint oldMarker = radarDatas.get(label);
+            radarDatas.put(label, marker);
+
+            if (oldMarker != null) {
+                radarMarkers.remove(oldMarker);
+            }
+            radarMarkers.add(marker);
+        }
     }
 
     /**
@@ -98,10 +139,7 @@ public class Radar_activity extends AppCompatActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(eventPosition));
-
-        updatePosition(1, new LatLng(10.00220f, 22.0000f));
-        updatePosition(2, new LatLng(10.00420f, 22.0010f));
-        updatePosition(3, new LatLng(100, 200));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(event.position));
+        mMap.addMarker(new MarkerOptions().position(event.position));
     }
 }

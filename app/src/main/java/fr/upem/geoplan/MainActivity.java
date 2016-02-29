@@ -6,7 +6,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+import fr.upem.geoplan.core.Event;
 import fr.upem.geoplan.core.radar.Radar_activity;
+import fr.upem.geoplan.core.User;
 import upem.fr.geoplan.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = new Intent(this, Radar_activity.class);
+        intent.putExtra("event", new Event(10., 22.));
+        ArrayList<User> users = new ArrayList<>();
+        users.add(new User(1, "Pierre", "0678912345"));
+        users.add(new User(2, "Maxime", "0033123456789"));
+        intent.putExtra("users", users);
+
         startActivity(intent);
     }
 
