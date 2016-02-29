@@ -7,6 +7,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -153,6 +154,11 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
 
         final LatLng eventPosition = event.getPosition();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(eventPosition));
-        mMap.addMarker(new MarkerOptions().position(eventPosition).title(event.getTitle()).snippet(users.size() + " users"));
+        final MarkerOptions eventMarkerOptions = new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.radar_marker_event))
+                .position(eventPosition)
+                .snippet(String.format(getString(R.string.users_number_format), users.size()))
+                .title(event.getTitle());
+        mMap.addMarker(eventMarkerOptions);
     }
 }
