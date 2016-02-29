@@ -76,8 +76,19 @@ public class Radar_activity extends AppCompatActivity implements OnMapReadyCallb
 
         radar.setReferencePoint(new RadarPoint(getString(R.string.reference_point_label), 10f, 22f));
 
+        HashMap<String, Bundle> usersBundles = new HashMap<>();
+
+        for (User user : users.values()) {
+            int userId = user.getId();
+            String label = user.getUsername();
+            radarPinsLabel.put(userId, label);
+            Bundle newBundle = new Bundle();
+            newBundle.putParcelable("user", user);
+            usersBundles.put(label, newBundle);
+        }
+
         radar.setPoints(radarMarkers);
-        radar.setOnTouchListener(new RadarEvent(getBaseContext(), radar));
+        radar.setOnTouchListener(new RadarEvent(this, radar, usersBundles));
     }
 
     private void initializeMap() {

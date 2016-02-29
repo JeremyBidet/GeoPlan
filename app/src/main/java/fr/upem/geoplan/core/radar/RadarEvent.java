@@ -1,30 +1,39 @@
 package fr.upem.geoplan.core.radar;
 
-import android.content.Context;
+import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import co.geeksters.radar.Radar;
 
 class RadarEvent implements View.OnTouchListener {
     private final Radar radar;
-    private final Context context;
+    private final Radar_activity activity;
+    private final ConcurrentHashMap<String, Bundle> bundles = new ConcurrentHashMap<>();
 
-    RadarEvent(Context context, Radar radar) {
-        this.context = context;
+    RadarEvent(Radar_activity activity, Radar radar, HashMap<String, Bundle> bundles) {
+        this.activity = activity;
         this.radar = radar;
+
+        this.bundles.putAll(bundles);
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         String pinIdentifier = radar.getTouchedPin(event);
-        if (pinIdentifier != null) {
-            Toast.makeText(context, pinIdentifier, Toast.LENGTH_SHORT).show();
+
+        if (pinIdentifier != null && bundles.containsKey(pinIdentifier)) {
+            RadarDialogUserAction dialog = new RadarDialogUserAction();
+            Bundle bundle = new Bundle();
+            bundle.putAll(bundles.get(pinIdentifier));
+            dialog.setArguments(bundle);
+            dialog.show(activity.getFragmentManager(), "UserAction");
 
             return true;
         }
-        // TODO Let user choose some actions
 
         return false;
     }
