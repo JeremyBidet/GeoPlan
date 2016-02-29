@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.android.gms.maps.model.LatLng;
 
 public class Event implements Parcelable {
-    public final LatLng position;
+    private final LatLng position;
 
     public Event(Double lat, Double lon) {
         position = new LatLng(lat, lon);
@@ -39,5 +39,9 @@ public class Event implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(position.latitude);
         dest.writeDouble(position.longitude);
+    }
+
+    public LatLng getPosition() {
+        return position;
     }
 }

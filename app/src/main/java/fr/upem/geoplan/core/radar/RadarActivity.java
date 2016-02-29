@@ -66,8 +66,9 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
         initializeRadar();
         initializeMap();
 
+        LatLng eventPosition = event.getPosition();
         for (User user : users) {
-            updatePosition(user.getId(), new LatLng(event.position.latitude + user.getId() / 1000., event.position.longitude));
+            updatePosition(user.getId(), new LatLng(eventPosition.latitude + user.getId() / 1000., eventPosition.longitude));
         }
     }
 
@@ -150,7 +151,8 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(event.position));
-        mMap.addMarker(new MarkerOptions().position(event.position));
+        final LatLng eventPosition = event.getPosition();
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(eventPosition));
+        mMap.addMarker(new MarkerOptions().position(eventPosition));
     }
 }
