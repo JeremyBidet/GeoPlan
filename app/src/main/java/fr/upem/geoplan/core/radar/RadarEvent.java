@@ -21,8 +21,11 @@ class RadarEvent implements View.OnTouchListener {
         String pinIdentifier = radar.getTouchedPin(event);
         if (pinIdentifier != null) {
             Toast.makeText(context, pinIdentifier, Toast.LENGTH_SHORT).show();
+
+            return true;
         }
         // TODO Let user choose some actions
-        return true;
+
+        return false;
     }
 }
