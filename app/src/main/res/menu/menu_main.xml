@@ -1,6 +1,31 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_settings" android:title="Settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/create"
+        android:icon="@drawable/ic_action_new"
+        app:showAsAction="always"
+        android:title="Create">
+    </item>
+    <item
+        android:id="@+id/edit"
+        android:icon="@drawable/ic_action_edit"
+        app:showAsAction="always"
+        android:title="Edit">
+    </item>
+    <item
+        android:id="@+id/filter"
+        android:icon="@drawable/ic_action_search"
+        app:showAsAction="always"
+        android:title="Filter">
+    </item>
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/ic_action_discard"
+        app:showAsAction="always"
+        android:title="Delete">
+    </item>
+
 </menu>

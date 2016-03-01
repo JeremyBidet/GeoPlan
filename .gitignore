@@ -31,3 +31,4 @@ proguard/
 .idea
 
 google_maps_api.xml
+*.iml

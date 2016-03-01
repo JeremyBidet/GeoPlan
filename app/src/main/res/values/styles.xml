@@ -1,8 +1,31 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="actionOverflowButtonStyle">@style/MyOverFlow</item>
+        <!--  <item name="actionButtonStyle">@style/ActionButtonStyle</item> -->
     </style>
+
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@color/OrangeRed</item>
+        <item name="titleTextStyle">@style/MyActionBarTextStyle</item>
+    </style>
+
+    <style name="MyActionBarTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="MyOverFlow" parent="@style/Widget.AppCompat.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_overflow</item>
+        <item name="android:minWidth">0dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:paddingLeft">0dip</item>
+    </style>
+
+    <!-- <style name="ActionButtonStyle" parent="@style/Widget.AppCompat.ActionButton">
+         <item name="android:minWidth">0dip</item>
+         <item name="android:padding">3dip</item>
+     </style> -->
 
 </resources>
