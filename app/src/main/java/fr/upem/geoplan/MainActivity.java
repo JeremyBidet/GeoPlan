@@ -6,13 +6,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
+import fr.upem.firecloud.FireCloudUser;
 import fr.upem.geoplan.core.Event;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.User;
+import fr.upem.geoplan.core.server.ServerApp;
 import upem.fr.geoplan.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +24,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Firebase.setAndroidContext(this);
+        ServerApp server = new ServerApp("https://blazing-inferno-2418.firebaseio.com/");
+        ArrayList<FireCloudUser> guests = new ArrayList<>();
+
+
+        FireCloudUser userTristan = server.createUser(1, "Tristan", "Fautrel", new LatLng(48.877535,2.59016), "0621185284");
+        FireCloudUser userJeremie = server.createUser(2, "Jérémie", "Chattou", new LatLng(48.8385709, 2.561343), "0658596324");
+        guests.add(userJeremie);
+        guests.add(userTristan);
+        server.createEvent(1, "tfautrel", "Rendez-vous Android", guests, null, null, "UPEM - Copernic", new LatLng(48.8392168, 2.5870625));
+
 
         Intent intent = new Intent(this, RadarActivity.class);
         intent.putExtra("event", new Event(new LatLng(10., 22.), "Event title"));

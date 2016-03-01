@@ -12,6 +12,12 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -21,7 +27,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':android-radar-master')
+    compile project(':firecloud')
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.firebase:firebase-client-android:2.3.1'
 }
