@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "upem.fr.geoplan"
+        applicationId "fr.upem.geoplan"
         minSdkVersion 14
         //noinspection OldTargetApi
         targetSdkVersion 14
