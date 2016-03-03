@@ -36,8 +36,12 @@ public class MainActivity extends AppCompatActivity {
         server.createEvent(1, "tfautrel", "Rendez-vous Android", guests, null, null, "UPEM - Copernic", new LatLng(48.8392168, 2.5870625));
 
 
+        startRadarActivity(new Event(new LatLng(10., 22.), "Event title"));
+    }
+
+    private void startRadarActivity(Event event) {
         Intent intent = new Intent(this, RadarActivity.class);
-        intent.putExtra("event", new Event(new LatLng(10., 22.), "Event title"));
+        intent.putExtra("event", event);
         ArrayList<User> users = new ArrayList<>();
         users.add(new User(1, "Pierre", "0678912345"));
         users.add(new User(2, "Maxime", "0033123456789"));
