@@ -1,79 +1,65 @@
 package fr.upem.geoplan.core.planning;
 
-import android.location.LocationListener;
+import android.os.Parcel;
 
-import java.text.DateFormat;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+
+import fr.upem.geoplan.core.User;
 
 /**
  * Created by jerem_000 on 11/02/2016.
  */
-public class Event {
-
-    private final long id;
-    private String name;
-    private String start_date_time;
-    private String end_date_time;
-    private String localization;
-    private float pos_lat;
-    private float pos_lon;
-    private ArrayList<Long> guests;
-    private ArrayList<Long> owners;
-    private String description;
+public class Event extends fr.upem.geoplan.core.Event {
     private Weight weight;
     private Type type;
     private int color;
 
-    private Event(long id, String name, String start_date_time, String end_date_time, String localization, float pos_lat, float pos_lon, ArrayList<Long> guests, ArrayList<Long> owners, String description, Weight weight, Type type) {
-        this.id = id;
-        this.name = name;
-        this.start_date_time = start_date_time;
-        this.end_date_time = end_date_time;
-        this.localization = localization;
-        this.pos_lat = pos_lat;
-        this.pos_lon = pos_lon;
-        this.guests = guests;
-        this.owners = owners;
-        this.description = description;
+    public Event(String name, Date start_date_time, Date end_date_time, String localization, LatLng position, ArrayList<User> guests, ArrayList<User> owners, String description, Weight weight, Type type, int color) {
+        super(name, start_date_time, end_date_time, localization, position, guests, owners, description);
+
         this.weight = weight;
         this.type = type;
-    }
-
-    //pour les tests
-    public Event(String name, String start_date_time, String end_date_time, String localization, int color) {
-        this.id = 0;
-        this.name = name;
-        this.start_date_time = start_date_time;
-        this.end_date_time = end_date_time;
-        this.localization = localization;
         this.color = color;
     }
 
-    public static Event getEvent(long id) {
-        //TODO: get from database the event by its event id
+    public Event(Parcel in) {
+        super(in);
 
-        return new Event(id, null, null, null, null, 0, 0, null, null, null, null, null);
+        color = in.readInt();
+        //TODO get other fields
     }
 
-    public String getName() {
-        return this.name;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(color);
+        //TODO write other fields
     }
 
-    public String getLocalization() {
-        return this.localization;
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
+
+    protected Creator<User> getUserCreator() {
+        return User.CREATOR;
     }
 
-    public String getStart_date_time() {
-        return this.start_date_time;
-    }
-
-    public String getEnd_date_time() {
-        return this.end_date_time;
+    //pour les tests
+    public Event(String name, Date start_date_time, Date end_date_time, String localization, int color) {
+        this(name, start_date_time, end_date_time, localization, new LatLng(48.8392203, 2.5848739), new ArrayList<User>(), new ArrayList<User>(), "", null, null, color);
     }
 
     public int getColor() {
         return this.color;
     }
- }
+}

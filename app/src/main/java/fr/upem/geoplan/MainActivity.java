@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.firebase.client.Firebase;
@@ -21,11 +23,12 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fr.upem.firecloud.FireCloudUser;
-import fr.upem.geoplan.core.Event;
 import fr.upem.geoplan.core.User;
+import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.server.ServerApp;
@@ -44,25 +47,24 @@ public class MainActivity extends AppCompatActivity {
 
         listEvent = (ListView) findViewById(R.id.listEvent);
 
-        fr.upem.geoplan.core.planning.Event e1 = new fr.upem.geoplan.core.planning.Event("fiesta", "15h00", "00h00", "chez Jeremie", Color.BLUE);
-        fr.upem.geoplan.core.planning.Event e2 = new fr.upem.geoplan.core.planning.Event("sex party", "23h00", "07h00", "upem", Color.RED);
-        fr.upem.geoplan.core.planning.Event e3 = new fr.upem.geoplan.core.planning.Event("karaoke night", "15h00", "00h00", "chez tristan", Color.GREEN);
-        fr.upem.geoplan.core.planning.Event e4 = new fr.upem.geoplan.core.planning.Event("paintball", "16h00", "19h00", "chez Maxime", Color.GRAY);
-        fr.upem.geoplan.core.planning.Event e5 = new fr.upem.geoplan.core.planning.Event("geek party", "10h00", "00h00", "chez Jeremy", Color.BLACK);
-        fr.upem.geoplan.core.planning.Event e6 = new fr.upem.geoplan.core.planning.Event("seance photo", "15h30", "21h00", "chez Huy", Color.CYAN);
-        fr.upem.geoplan.core.planning.Event e7 = new fr.upem.geoplan.core.planning.Event("Projet X", "17h00", "08h00", "chez Pierre", Color.YELLOW);
-        fr.upem.geoplan.core.planning.Event e8 = new fr.upem.geoplan.core.planning.Event("Courses", "10h30", "16h00", "Aux Halles", Color.MAGENTA);
+        List<Event> events = new ArrayList<>();
+        events.add(new Event("sex party", new Date(2015, 3, 19, 23, 0), new Date(2015, 3, 20, 7, 0), "upem", Color.RED));
+        events.add(new Event("fiesta", new Date(2015, 3, 20, 15, 0), new Date(2015, 3, 20, 18, 0), "chez Jeremie", Color.BLUE));
+        events.add(new Event("karaoke night", new Date(2015, 3, 20, 15, 0), new Date(2015, 3, 21, 0, 0), "chez tristan", Color.GREEN));
+        events.add(new Event("paintball", new Date(2015, 3, 21, 16, 0), new Date(2015, 3, 21, 19, 0), "chez Maxime", Color.GRAY));
+        events.add(new Event("geek party", new Date(2015, 3, 21, 22, 0), new Date(2015, 3, 21, 2, 0), "chez Jeremy", Color.BLACK));
+        events.add(new Event("seance photo", new Date(2015, 3, 28, 14, 0), new Date(2015, 3, 28, 16, 0), "chez Huy", Color.CYAN));
+        events.add(new Event("Courses", new Date(2015, 3, 29, 10, 30), new Date(2015, 3, 29, 13, 30), "Aux Halles", Color.MAGENTA));
+        events.add(new Event("Projet X", new Date(2015, 3, 29, 22, 0), new Date(2015, 3, 30, 10, 0), "chez Pierre", Color.YELLOW));
 
-        List<fr.upem.geoplan.core.planning.Event> events = new ArrayList<>();
-        events.add(e1);
-        events.add(e2);
-        events.add(e3);
-        events.add(e4);
-        events.add(e5);
-        events.add(e6);
-        events.add(e7);
-        events.add(e8);
-
+        listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                fr.upem.geoplan.core.Event event = (fr.upem.geoplan.core.Event) parent.getItemAtPosition(position);
+                Log.i(LOG_TAG, "Event selected: " + event);
+                startRadarActivity(event);
+            }
+        });
         EventAdapter adapter = new EventAdapter(MainActivity.this, events);
         listEvent.setAdapter(adapter);
 
@@ -79,23 +81,20 @@ public class MainActivity extends AppCompatActivity {
 
         initializeReceiver();
         registerReceiver();
+        startReceiver();
+    }
 
+    private void startReceiver() {
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
-
-        startRadarActivity(new Event(new LatLng(10., 22.), "Event title"));
     }
 
-    private void startRadarActivity(Event event) {
+    private void startRadarActivity(fr.upem.geoplan.core.Event event) {
         Intent intent = new Intent(this, RadarActivity.class);
         intent.putExtra("event", event);
-        ArrayList<User> users = new ArrayList<>();
-        users.add(new User(1, "Pierre", "0678912345"));
-        users.add(new User(2, "Maxime", "0033123456789"));
-        intent.putExtra("users", users);
 
         startActivity(intent);
     }

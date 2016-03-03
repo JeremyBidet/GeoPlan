@@ -5,33 +5,55 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class Event implements Parcelable {
-    private final LatLng position;
-    private final String title;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
-    public Event(LatLng position, String title) {
+public abstract class Event implements Parcelable {
+    private String name;
+    private String description;
+
+    private LatLng position;
+    private String localization;
+
+    private Date start_date_time;
+    private Date end_date_time;
+
+    private final ArrayList<User> guests = new ArrayList<>();
+    private final ArrayList<User> owners = new ArrayList<>();
+
+    public Event(String name, Date start_date_time, Date end_date_time, String localization, LatLng position, Collection<User> guests, Collection<User> owners, String description) {
+        this.name = name;
+        this.description = description;
+
+        this.localization = localization;
         this.position = position;
-        this.title = title;
+
+        this.start_date_time = start_date_time;
+        this.end_date_time = end_date_time;
+
+        this.guests.addAll(guests);
+        this.owners.addAll(owners);
     }
 
-    protected Event(Parcel in) {
+    public Event(Parcel in) {
+        name = in.readString();
+        description = in.readString();
+
+        localization = in.readString();
         Double lat = in.readDouble();
         Double lon = in.readDouble();
         position = new LatLng(lat, lon);
-        title = in.readString();
+
+        start_date_time = new Date(in.readLong());
+        end_date_time = new Date(in.readLong());
+
+        in.readTypedList(guests, getUserCreator());
+        in.readTypedList(owners, getUserCreator());
     }
 
-    public static final Creator<Event> CREATOR = new Creator<Event>() {
-        @Override
-        public Event createFromParcel(Parcel in) {
-            return new Event(in);
-        }
-
-        @Override
-        public Event[] newArray(int size) {
-            return new Event[size];
-        }
-    };
+    protected abstract Creator<User> getUserCreator();
 
     @Override
     public int describeContents() {
@@ -40,16 +62,54 @@ public class Event implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(description);
+
+        dest.writeString(localization);
         dest.writeDouble(position.latitude);
         dest.writeDouble(position.longitude);
-        dest.writeString(title);
+
+        dest.writeLong(start_date_time.getTime());
+        dest.writeLong(end_date_time.getTime());
+
+        dest.writeTypedList(guests);
+        dest.writeTypedList(owners);
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     public LatLng getPosition() {
         return position;
+    }
+
+    public String getLocalization() {
+        return localization;
+    }
+
+    public Date getStart_date_time() {
+        return this.start_date_time;
+    }
+
+    public Date getEnd_date_time() {
+        return this.end_date_time;
+    }
+
+    public List<User> getGuests() {
+        ArrayList<User> guests = new ArrayList<>();
+        guests.addAll(this.guests);
+        return guests;
+    }
+
+    public ArrayList<User> getOwners() {
+        ArrayList<User> owners = new ArrayList<>();
+        owners.addAll(this.owners);
+        return owners;
+    }
+
+    @Override
+    public String toString() {
+        return name + "(" + position.latitude + ";" + position.longitude + ") - " + guests.size() + " guests";
     }
 }

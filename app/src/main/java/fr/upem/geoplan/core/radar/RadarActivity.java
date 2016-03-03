@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import co.geeksters.radar.Radar;
@@ -58,9 +59,9 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_radar_activity);
 
         event = getIntent().getParcelableExtra("event");
-        setTitle(event.getTitle());
+        setTitle(event.getName());
 
-        ArrayList<User> users = getIntent().getParcelableArrayListExtra("users");
+        List<User> users = event.getGuests();
         for (User user : users) {
             this.users.put(user.getId(), user);
         }
@@ -77,7 +78,8 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
     private void initializeRadar() {
         Radar radar = (Radar) findViewById(R.id.radar);
 
-        radar.setReferencePoint(new RadarPoint(getString(R.string.reference_point_label), 10f, 22f));
+        LatLng position = event.getPosition();
+        radar.setReferencePoint(new RadarPoint(getString(R.string.reference_point_label), (float) position.latitude, (float) position.longitude));
 
         HashMap<String, Bundle> usersBundles = new HashMap<>();
 
@@ -159,7 +161,7 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.radar_marker_event))
                 .position(eventPosition)
                 .snippet(String.format(getString(R.string.users_number_format), users.size()))
-                .title(event.getTitle());
+                .title(event.getName());
         mMap.addMarker(eventMarkerOptions);
     }
 }
