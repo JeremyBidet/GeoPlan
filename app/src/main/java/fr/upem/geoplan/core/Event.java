@@ -89,11 +89,11 @@ public abstract class Event implements Parcelable {
     }
 
     public Date getStart_date_time() {
-        return this.start_date_time;
+        return new Date(this.start_date_time.getTime());
     }
 
     public Date getEnd_date_time() {
-        return this.end_date_time;
+        return new Date(this.end_date_time.getTime());
     }
 
     public List<User> getGuests() {
