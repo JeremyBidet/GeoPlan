@@ -32,3 +32,5 @@ proguard/
 
 google_maps_api.xml
 *.iml
+
+google-services.json
