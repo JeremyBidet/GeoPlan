@@ -16,7 +16,6 @@ import fr.upem.geoplan.core.Event;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.User;
 import fr.upem.geoplan.core.server.ServerApp;
-import upem.fr.geoplan.R;
 
 public class MainActivity extends AppCompatActivity {
 

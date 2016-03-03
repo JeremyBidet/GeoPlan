@@ -18,9 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import co.geeksters.radar.Radar;
 import co.geeksters.radar.RadarPoint;
+import fr.upem.geoplan.R;
 import fr.upem.geoplan.core.Event;
 import fr.upem.geoplan.core.User;
-import upem.fr.geoplan.R;
 
 public class RadarActivity extends AppCompatActivity implements OnMapReadyCallback {
     private Event event;

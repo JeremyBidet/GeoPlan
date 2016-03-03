@@ -15,8 +15,8 @@ import android.os.Handler;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
+import fr.upem.geoplan.R;
 import fr.upem.geoplan.core.User;
-import upem.fr.geoplan.R;
 
 public class RadarDialogUserAction extends DialogFragment implements DialogInterface.OnClickListener {
     public static final int CALL_ACTION = 0;
