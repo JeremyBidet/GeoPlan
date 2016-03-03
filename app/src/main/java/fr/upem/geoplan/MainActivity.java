@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.List;
 
 import fr.upem.firecloud.FireCloudUser;
-import fr.upem.geoplan.core.User;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.radar.RadarActivity;
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 fr.upem.geoplan.core.Event event = (fr.upem.geoplan.core.Event) parent.getItemAtPosition(position);
-                Log.i(LOG_TAG, "Event selected: " + event);
                 startRadarActivity(event);
             }
         });
@@ -84,19 +82,18 @@ public class MainActivity extends AppCompatActivity {
         startReceiver();
     }
 
+    private void startRadarActivity(fr.upem.geoplan.core.Event event) {
+        Intent intent = new Intent(this, RadarActivity.class);
+        intent.putExtra("event", event);
+        startActivity(intent);
+    }
+
     private void startReceiver() {
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
-    }
-
-    private void startRadarActivity(fr.upem.geoplan.core.Event event) {
-        Intent intent = new Intent(this, RadarActivity.class);
-        intent.putExtra("event", event);
-
-        startActivity(intent);
     }
 
     private void initializeReceiver() {

@@ -34,6 +34,8 @@ public class Event extends fr.upem.geoplan.core.Event {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+
         dest.writeInt(color);
         //TODO write other fields
     }
