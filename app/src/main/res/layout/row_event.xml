@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    >
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="50dp"
+        android:layout_height="55dp"
+        tools:background="#AAA"
+        />
+
+    <TextView
+        android:id="@+id/eventName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/img"
+        android:layout_alignTop="@+id/img"
+        android:textStyle="bold"
+        tools:text="Event Name"
+        />
+
+    <TextView
+        android:id="@+id/startingTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_alignLeft="@+id/eventName"
+        android:layout_below="@+id/eventName"
+
+        tools:text="StartingTime"
+        />
+
+    <TextView
+        android:id="@+id/endTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/eventName"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/startingTime"
+        tools:text="EndTime"
+        />
+
+    <TextView
+        android:id="@+id/localization"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_alignLeft="@+id/startingTime"
+        android:layout_below="@+id/startingTime"
+        tools:text="Localization"
+        />
+
+</RelativeLayout>

@@ -14,8 +14,8 @@ public class Event {
 
     private final long id;
     private String name;
-    private DateFormat start_date_time;
-    private DateFormat end_date_time;
+    private String start_date_time;
+    private String end_date_time;
     private String localization;
     private float pos_lat;
     private float pos_lon;
@@ -24,8 +24,9 @@ public class Event {
     private String description;
     private Weight weight;
     private Type type;
+    private int color;
 
-    private Event(long id, String name, DateFormat start_date_time, DateFormat end_date_time, String localization, float pos_lat, float pos_lon, ArrayList<Long> guests, ArrayList<Long> owners, String description, Weight weight, Type type) {
+    private Event(long id, String name, String start_date_time, String end_date_time, String localization, float pos_lat, float pos_lon, ArrayList<Long> guests, ArrayList<Long> owners, String description, Weight weight, Type type) {
         this.id = id;
         this.name = name;
         this.start_date_time = start_date_time;
@@ -40,6 +41,15 @@ public class Event {
         this.type = type;
     }
 
+    //pour les tests
+    public Event(String name, String start_date_time, String end_date_time, String localization, int color) {
+        this.id = 0;
+        this.name = name;
+        this.start_date_time = start_date_time;
+        this.end_date_time = end_date_time;
+        this.localization = localization;
+        this.color = color;
+    }
 
     public static Event getEvent(long id) {
         //TODO: get from database the event by its event id
@@ -47,4 +57,23 @@ public class Event {
         return new Event(id, null, null, null, null, 0, 0, null, null, null, null, null);
     }
 
-}
+    public String getName() {
+        return this.name;
+    }
+
+    public String getLocalization() {
+        return this.localization;
+    }
+
+    public String getStart_date_time() {
+        return this.start_date_time;
+    }
+
+    public String getEnd_date_time() {
+        return this.end_date_time;
+    }
+
+    public int getColor() {
+        return this.color;
+    }
+ }

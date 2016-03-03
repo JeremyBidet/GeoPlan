@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
@@ -19,10 +21,12 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.upem.firecloud.FireCloudUser;
 import fr.upem.geoplan.core.Event;
 import fr.upem.geoplan.core.User;
+import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.server.ServerApp;
 import fr.upem.geoplan.core.server.gcm.Preferences;
@@ -31,17 +35,43 @@ import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
 public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = "GeoPlan";
 
+    ListView listEvent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        listEvent = (ListView) findViewById(R.id.listEvent);
+
+        fr.upem.geoplan.core.planning.Event e1 = new fr.upem.geoplan.core.planning.Event("fiesta", "15h00", "00h00", "chez Jeremie", Color.BLUE);
+        fr.upem.geoplan.core.planning.Event e2 = new fr.upem.geoplan.core.planning.Event("sex party", "23h00", "07h00", "upem", Color.RED);
+        fr.upem.geoplan.core.planning.Event e3 = new fr.upem.geoplan.core.planning.Event("karaoke night", "15h00", "00h00", "chez tristan", Color.GREEN);
+        fr.upem.geoplan.core.planning.Event e4 = new fr.upem.geoplan.core.planning.Event("paintball", "16h00", "19h00", "chez Maxime", Color.GRAY);
+        fr.upem.geoplan.core.planning.Event e5 = new fr.upem.geoplan.core.planning.Event("geek party", "10h00", "00h00", "chez Jeremy", Color.BLACK);
+        fr.upem.geoplan.core.planning.Event e6 = new fr.upem.geoplan.core.planning.Event("seance photo", "15h30", "21h00", "chez Huy", Color.CYAN);
+        fr.upem.geoplan.core.planning.Event e7 = new fr.upem.geoplan.core.planning.Event("Projet X", "17h00", "08h00", "chez Pierre", Color.YELLOW);
+        fr.upem.geoplan.core.planning.Event e8 = new fr.upem.geoplan.core.planning.Event("Courses", "10h30", "16h00", "Aux Halles", Color.MAGENTA);
+
+        List<fr.upem.geoplan.core.planning.Event> events = new ArrayList<>();
+        events.add(e1);
+        events.add(e2);
+        events.add(e3);
+        events.add(e4);
+        events.add(e5);
+        events.add(e6);
+        events.add(e7);
+        events.add(e8);
+
+        EventAdapter adapter = new EventAdapter(MainActivity.this, events);
+        listEvent.setAdapter(adapter);
 
         Firebase.setAndroidContext(this);
         ServerApp server = new ServerApp("https://blazing-inferno-2418.firebaseio.com/");
         ArrayList<FireCloudUser> guests = new ArrayList<>();
 
 
-        FireCloudUser userTristan = server.createUser(1, "Tristan", "Fautrel", new LatLng(48.877535,2.59016), "0621185284");
+        FireCloudUser userTristan = server.createUser(1, "Tristan", "Fautrel", new LatLng(48.877535, 2.59016), "0621185284");
         FireCloudUser userJeremie = server.createUser(2, "Jérémie", "Chattou", new LatLng(48.8385709, 2.561343), "0658596324");
         guests.add(userJeremie);
         guests.add(userTristan);
