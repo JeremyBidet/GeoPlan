@@ -1,5 +1,6 @@
 package fr.upem.geoplan.core.planning;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -10,4 +11,5 @@ public class EventViewHolder {
     public TextView startingTime;
     public TextView endTime;
     public TextView localization;
+    public ImageView icon;
 }

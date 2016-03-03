@@ -1,6 +1,7 @@
 package fr.upem.geoplan;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -35,23 +36,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /* listEvent = (ListView) findViewById(R.id.listEvent);
-        String myDateString = "2009-04-22 15:51";
-        SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        try {
-            inFormat.parse(myDateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        fr.upem.geoplan.core.planning.Event e1 = new fr.upem.geoplan.core.planning.Event("fiesta", inFormat, inFormat, "chez jeremie");
-        fr.upem.geoplan.core.planning.Event e2 = new fr.upem.geoplan.core.planning.Event("sex party", inFormat, inFormat, "upem");
+        listEvent = (ListView) findViewById(R.id.listEvent);
+
+        fr.upem.geoplan.core.planning.Event e1 = new fr.upem.geoplan.core.planning.Event("fiesta", "15h00", "00h00", "chez Jeremie", Color.BLUE);
+        fr.upem.geoplan.core.planning.Event e2 = new fr.upem.geoplan.core.planning.Event("sex party", "23h00", "07h00", "upem", Color.RED);
+        fr.upem.geoplan.core.planning.Event e3 = new fr.upem.geoplan.core.planning.Event("karaoke night", "15h00", "00h00", "chez tristan", Color.GREEN);
+        fr.upem.geoplan.core.planning.Event e4 = new fr.upem.geoplan.core.planning.Event("paintball", "16h00", "19h00", "chez Maxime", Color.GRAY);
+        fr.upem.geoplan.core.planning.Event e5 = new fr.upem.geoplan.core.planning.Event("geek party", "10h00", "00h00", "chez Jeremy", Color.BLACK);
+        fr.upem.geoplan.core.planning.Event e6 = new fr.upem.geoplan.core.planning.Event("seance photo", "15h30", "21h00", "chez Huy", Color.CYAN);
+        fr.upem.geoplan.core.planning.Event e7 = new fr.upem.geoplan.core.planning.Event("Projet X", "17h00", "08h00", "chez Pierre", Color.YELLOW);
+        fr.upem.geoplan.core.planning.Event e8 = new fr.upem.geoplan.core.planning.Event("Courses", "10h30", "16h00", "Aux Halles", Color.MAGENTA);
+
+
         List<fr.upem.geoplan.core.planning.Event> events = new ArrayList<fr.upem.geoplan.core.planning.Event>();
         events.add(e1);
         events.add(e2);
+        events.add(e3);
+        events.add(e4);
+        events.add(e5);
+        events.add(e6);
+        events.add(e7);
+        events.add(e8);
 
         EventAdapter adapter = new EventAdapter(MainActivity.this, events);
-        listEvent.setAdapter(adapter); */
+        listEvent.setAdapter(adapter);
 
+        /*
         Firebase.setAndroidContext(this);
         ServerApp server = new ServerApp("https://blazing-inferno-2418.firebaseio.com/");
         ArrayList<FireCloudUser> guests = new ArrayList<>();
@@ -72,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("users", users);
 
         startActivity(intent);
-        
+        */
     }
 
     @Override
