@@ -40,6 +40,14 @@ public class Event {
         this.type = type;
     }
 
+    //pour les tests
+    public Event(String name, DateFormat start_date_time, DateFormat end_date_time, String localization) {
+        this.id = 0;
+        this.name = name;
+        this.start_date_time = start_date_time;
+        this.end_date_time = end_date_time;
+        this.localization = localization;
+    }
 
     public static Event getEvent(long id) {
         //TODO: get from database the event by its event id
@@ -47,4 +55,19 @@ public class Event {
         return new Event(id, null, null, null, null, 0, 0, null, null, null, null, null);
     }
 
-}
+    public String getName() {
+        return this.name;
+    }
+
+    public String getLocalization() {
+        return this.localization;
+    }
+
+    public DateFormat getStart_date_time() {
+        return this.start_date_time;
+    }
+
+    public DateFormat getEnd_date_time() {
+        return this.end_date_time;
+    }
+ }

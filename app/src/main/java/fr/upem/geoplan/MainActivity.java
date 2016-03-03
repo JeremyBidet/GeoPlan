@@ -5,14 +5,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.firebase.client.Firebase;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import fr.upem.firecloud.FireCloudUser;
 import fr.upem.geoplan.core.Event;
+import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.User;
 import fr.upem.geoplan.core.server.ServerApp;
@@ -20,10 +28,29 @@ import upem.fr.geoplan.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    ListView listEvent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /* listEvent = (ListView) findViewById(R.id.listEvent);
+        String myDateString = "2009-04-22 15:51";
+        SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        try {
+            inFormat.parse(myDateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        fr.upem.geoplan.core.planning.Event e1 = new fr.upem.geoplan.core.planning.Event("fiesta", inFormat, inFormat, "chez jeremie");
+        fr.upem.geoplan.core.planning.Event e2 = new fr.upem.geoplan.core.planning.Event("sex party", inFormat, inFormat, "upem");
+        List<fr.upem.geoplan.core.planning.Event> events = new ArrayList<fr.upem.geoplan.core.planning.Event>();
+        events.add(e1);
+        events.add(e2);
+
+        EventAdapter adapter = new EventAdapter(MainActivity.this, events);
+        listEvent.setAdapter(adapter); */
 
         Firebase.setAndroidContext(this);
         ServerApp server = new ServerApp("https://blazing-inferno-2418.firebaseio.com/");
@@ -45,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("users", users);
 
         startActivity(intent);
+        
     }
 
     @Override
