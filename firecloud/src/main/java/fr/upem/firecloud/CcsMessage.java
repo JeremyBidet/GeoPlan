@@ -1,9 +1,5 @@
 package fr.upem.firecloud;
 
-/**
- * Created by Jeremie on 03/03/2016.
- */
-
 
 import java.util.Map;
 

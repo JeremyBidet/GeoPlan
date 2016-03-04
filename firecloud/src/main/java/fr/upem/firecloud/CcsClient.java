@@ -1,8 +1,5 @@
 package fr.upem.firecloud;
 
-/**
- * Created by Jeremie on 03/03/2016.
- */
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.ConnectionListener;
@@ -25,9 +22,6 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.SSLSocketFactory;
 
@@ -45,23 +39,23 @@ import javax.net.ssl.SSLSocketFactory;
  */
 public class CcsClient {
 
-    public static final Logger logger = Logger.getLogger(CcsClient.class.getName());
+    private static final String GCM_SERVER = "gcm.googleapis.com";
+    private static final int GCM_PORT = 5235;
+    private static final int GCM_TEST_PORT = 5236;
 
-    public static final String GCM_SERVER = "gcm.googleapis.com";
-    public static final int GCM_PORT = 5235;
+    private static final String GCM_ELEMENT_NAME = "gcm";
+    private static final String GCM_NAMESPACE = "google:mobile:data";
 
-    public static final String GCM_ELEMENT_NAME = "gcm";
-    public static final String GCM_NAMESPACE = "google:mobile:data";
+    private Long messageId = 0l;
+    private XMPPConnection connection;
 
-    static Random random = new Random();
-    XMPPConnection connection;
-    ConnectionConfiguration config;
+    private final String apiKey;
+    private final String projectId;
+    private final boolean debuggable;
 
-    /// new: some additional instance and class members
-    private static CcsClient sInstance = null;
-    private String mApiKey = null;
-    private String mProjectId = null;
-    private boolean mDebuggable = false;
+    private long getCurrentMessageId(){
+        return messageId++;
+    }
 
     /**
      * XMPP Packet Extension for GCM Cloud Connection Server.
@@ -118,30 +112,7 @@ public class CcsClient {
         }
     }
 
-    public static CcsClient getInstance() {
-        if (sInstance == null) {
-            throw new IllegalStateException("You have to prepare the client first");
-        }
-        return sInstance;
-    }
-
-    public static CcsClient prepareClient(String projectId, String apiKey, boolean debuggable) {
-        synchronized(CcsClient.class) {
-            if (sInstance == null) {
-                sInstance = new CcsClient(projectId, apiKey, debuggable);
-            }
-        }
-        return sInstance;
-    }
-
-    private CcsClient(String projectId, String apiKey, boolean debuggable) {
-        this();
-        mApiKey = apiKey;
-        mProjectId = projectId;
-        mDebuggable = debuggable;
-    }
-
-    private CcsClient() {
+    public CcsClient(String projectId, String apiKey, boolean debuggable) {
         // Add GcmPacketExtension
         ProviderManager.getInstance().addExtensionProvider(GCM_ELEMENT_NAME,
                 GCM_NAMESPACE, new PacketExtensionProvider() {
@@ -150,11 +121,14 @@ public class CcsClient {
                     public PacketExtension parseExtension(XmlPullParser parser)
                             throws Exception {
                         String json = parser.nextText();
-                        GcmPacketExtension packet = new GcmPacketExtension(json);
-                        return packet;
+                        return new GcmPacketExtension(json);
                     }
                 });
+        this.apiKey = apiKey;
+        this.projectId = projectId;
+        this.debuggable = debuggable;
     }
+
 
     /**
      * Returns a random message id to uniquely identify a message.
@@ -165,7 +139,7 @@ public class CcsClient {
      *
      */
     public String getRandomMessageId() {
-        return "m-" + Long.toString(random.nextLong());
+        return "m-" + getCurrentMessageId();
     }
 
     /**
@@ -206,7 +180,7 @@ public class CcsClient {
     }
 
     /// new: was previously part of the previous method
-     /**
+    /**
      *
      */
     private CcsMessage getMessage(Map<String, Object> jsonObject) {
@@ -236,7 +210,8 @@ public class CcsClient {
     public void handleAckReceipt(Map<String, Object> jsonObject) {
         String messageId = jsonObject.get("message_id").toString();
         String from = jsonObject.get("from").toString();
-        logger.log(Level.INFO, "handleAckReceipt() from: " + from + ", messageId: " + messageId);
+        System.out.println("Ack received : " + from);
+        System.out.println("Message id : " + messageId);
     }
 
     /**
@@ -249,7 +224,9 @@ public class CcsClient {
     public void handleNackReceipt(Map<String, Object> jsonObject) {
         String messageId = jsonObject.get("message_id").toString();
         String from = jsonObject.get("from").toString();
-        logger.log(Level.INFO, "handleNackReceipt() from: " + from + ", messageId: " + messageId);
+        System.out.println("Nack received from : " + from);
+        System.out.println("Something might be wrong.");
+        System.out.println("Message id : " + messageId);
     }
 
     /**
@@ -313,30 +290,13 @@ public class CcsClient {
         return JSONValue.toJSONString(message);
     }
 
-    /// new: NACK added
-    /**
-     * Creates a JSON encoded NACK message for an upstream message received from
-     * an application.
-     *
-     * @param to RegistrationId of the device who sent the upstream message.
-     * @param messageId messageId of the upstream message to be acknowledged to
-     * CCS.
-     * @return JSON encoded nack.
-     */
-    public static String createJsonNack(String to, String messageId) {
-        Map<String, Object> message = new HashMap<String, Object>();
-        message.put("message_type", "nack");
-        message.put("to", to);
-        message.put("message_id", messageId);
-        return JSONValue.toJSONString(message);
-    }
 
     /**
      * Connects to GCM Cloud Connection Server using the supplied credentials.
      * @throws XMPPException
      */
     public void connect() throws XMPPException {
-        config = new ConnectionConfiguration(GCM_SERVER, GCM_PORT);
+        ConnectionConfiguration config = new ConnectionConfiguration(GCM_SERVER, GCM_PORT);
         config.setSecurityMode(SecurityMode.enabled);
         config.setReconnectionAllowed(true);
         config.setRosterLoadedAtLogin(false);
@@ -344,7 +304,7 @@ public class CcsClient {
         config.setSocketFactory(SSLSocketFactory.getDefault());
 
         // NOTE: Set to true to launch a window with information about packets sent and received
-        config.setDebuggerEnabled(mDebuggable);
+        config.setDebuggerEnabled(debuggable);
 
         // -Dsmack.debugEnabled=true
         XMPPConnection.DEBUG_ENABLED = true;
@@ -356,27 +316,27 @@ public class CcsClient {
 
             @Override
             public void reconnectionSuccessful() {
-                logger.info("Reconnecting..");
+                System.out.println("The reconnection is successful.");
             }
 
             @Override
             public void reconnectionFailed(Exception e) {
-                logger.log(Level.INFO, "Reconnection failed.. ", e);
+                System.out.println("The reconnection failed with this exception :\n" + e);
             }
 
             @Override
             public void reconnectingIn(int seconds) {
-                logger.log(Level.INFO, "Reconnecting in %d secs", seconds);
+                System.out.println("The reconnection will try again in " + seconds + " seconds.");
             }
 
             @Override
             public void connectionClosedOnError(Exception e) {
-                logger.log(Level.INFO, "Connection closed on error.");
+                System.out.println("The connection closed with an exception :\n" + e);
             }
 
             @Override
             public void connectionClosed() {
-                logger.info("Connection closed.");
+                System.out.println("The connection has been closed.");
             }
         });
 
@@ -385,7 +345,7 @@ public class CcsClient {
 
             @Override
             public void processPacket(Packet packet) {
-                logger.log(Level.INFO, "Received: " + packet.toXML());
+                System.out.println("The following packet has been received :\n" + packet.toXML());
                 Message incomingMessage = (Message) packet;
                 GcmPacketExtension gcmPacket
                         = (GcmPacketExtension) incomingMessage.getExtension(GCM_NAMESPACE);
@@ -394,12 +354,9 @@ public class CcsClient {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> jsonMap
                             = (Map<String, Object>) JSONValue.parseWithException(json);
-
                     handleMessage(jsonMap);
                 } catch (ParseException e) {
-                    logger.log(Level.SEVERE, "Error parsing JSON " + json, e);
-                } catch (Exception e) {
-                    logger.log(Level.SEVERE, "Couldn't send echo.", e);
+                    System.err.println("An error occurred while parsing the following json :\n" + json + "\n" + e);
                 }
             }
         }, new PacketTypeFilter(Message.class));
@@ -408,12 +365,12 @@ public class CcsClient {
         connection.addPacketInterceptor(new PacketInterceptor() {
             @Override
             public void interceptPacket(Packet packet) {
-                logger.log(Level.INFO, "Sent: {0}", packet.toXML());
+                System.out.println("Trying to send the following packet :\n" + packet.toXML());
             }
         }, new PacketTypeFilter(Message.class));
 
-        connection.login(mProjectId + "@gcm.googleapis.com", mApiKey);
-        logger.log(Level.INFO, "logged in: " + mProjectId);
+        connection.login(projectId + "@gcm.googleapis.com", apiKey);
+        System.out.println("The project " + projectId + " has been correctly recognized by Google with the right ApiKey.");
     }
 
     private void handleMessage(Map<String, Object> jsonMap) {
@@ -423,17 +380,10 @@ public class CcsClient {
         if (messageType == null) {
             CcsMessage msg = getMessage(jsonMap);
             // Normal upstream data message
-            try {
-                handleIncomingDataMessage(msg);
-                // Send ACK to CCS
-                String ack = createJsonAck(msg.getFrom(), msg.getMessageId());
-                send(ack);
-            }
-            catch (Exception e) {
-                // Send NACK to CCS
-                String nack = createJsonNack(msg.getFrom(), msg.getMessageId());
-                send(nack);
-            }
+            handleIncomingDataMessage(msg);
+            // Send ACK to CCS
+            String ack = createJsonAck(msg.getFrom(), msg.getMessageId());
+            send(ack);
         } else if ("ack".equals(messageType.toString())) {
             // Process Ack
             handleAckReceipt(jsonMap);
@@ -441,33 +391,8 @@ public class CcsClient {
             // Process Nack
             handleNackReceipt(jsonMap);
         } else {
-            logger.log(Level.WARNING, "Unrecognized message type (%s)",
-                    messageType.toString());
+            System.err.println("The message_type received (" + messageType + ") is not one from Google (ack or nack)");
         }
-    }
-
-    public static void main(String[] args) {
-        final String projectId = args[0];
-        final String password = args[1];
-        final String toRegId = args[2];
-
-        CcsClient ccsClient = CcsClient.prepareClient(projectId, password, true);
-
-        try {
-            ccsClient.connect();
-        } catch (XMPPException e) {
-            e.printStackTrace();
-        }
-
-        // Send a sample hello downstream message to a device.
-        String messageId = ccsClient.getRandomMessageId();
-        Map<String, String> payload = new HashMap<String, String>();
-        payload.put("message", "Simple sample sessage");
-        String collapseKey = "sample";
-        Long timeToLive = 10000L;
-        Boolean delayWhileIdle = true;
-        ccsClient.send(createJsonMessage(toRegId, messageId, payload, collapseKey,
-                timeToLive, delayWhileIdle));
     }
 }
 

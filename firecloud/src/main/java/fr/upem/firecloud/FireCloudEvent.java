@@ -8,14 +8,11 @@ import com.google.android.gms.maps.model.LatLng;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
-/**
- * Created by Jeremie on 01/03/2016.
- */
 public class FireCloudEvent implements Parcelable{
     private final int id;
     private final String owner;
     private final String title;
-    private ArrayList<FireCloudUser> guests;
+    private final ArrayList<FireCloudUser> guests = new ArrayList<>();
     private DateFormat start_date_time;
     private DateFormat end_date_time;
     private final String localization;
@@ -26,7 +23,7 @@ public class FireCloudEvent implements Parcelable{
         this.id = id;
         this.owner = owner;
         this.title = title;
-        this.guests = guests;
+        this.guests.addAll(guests);
         this.start_date_time = start_date_time;
         this.end_date_time = end_date_time;
         this.localization = localization;
@@ -41,8 +38,7 @@ public class FireCloudEvent implements Parcelable{
         localization = in.readString();
         owner = in.readString();
         id = in.readInt();
-        guests = new ArrayList<>();
-        guests = in.readArrayList(FireCloudUser.class.getClassLoader());
+        guests.addAll(in.readArrayList(FireCloudUser.class.getClassLoader()));
     }
 
     public static final Creator<FireCloudEvent> CREATOR = new Creator<FireCloudEvent>() {
@@ -83,7 +79,10 @@ public class FireCloudEvent implements Parcelable{
 
     public ArrayList<FireCloudUser> getGuests() { return guests; }
 
-    public void setGuests(ArrayList<FireCloudUser> guests) { this.guests = guests; }
+    public void setGuests(ArrayList<FireCloudUser> guests) {
+        this.guests.clear();
+        this.guests.addAll(guests);
+    }
 
     public DateFormat getStart_date_time() { return start_date_time; }
 

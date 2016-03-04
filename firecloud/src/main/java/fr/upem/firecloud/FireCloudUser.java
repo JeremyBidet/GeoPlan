@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-/**
- * Created by Jeremie on 01/03/2016.
- */
 public class FireCloudUser implements Parcelable{
     private final int idUser;
     private final String firstName;

@@ -1,9 +1,6 @@
 package fr.upem.firecloud;
 
 /**
- * Created by Jeremie on 03/03/2016.
- */
-/**
  * Handles an echo request.
  */
 public class EchoProcessor implements PayloadProcessor{
