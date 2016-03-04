@@ -1,0 +1,99 @@
+Requête getPosition (android) :
+
+{
+	"category" : "fr.upem.firecloud",
+	"data" : {
+		"action" : "getPosition",
+		"user" : "something to identify the user in the DB"
+	}
+	"message-id" : "id",
+	"from" : "from"
+}
+
+Requête updatePosition (android) :
+{
+	"category" : "fr.upem.firecloud",
+	"data" : {
+		"action" : "updatePosition",
+		"user" : "something to identify the user in the DB",
+		"position" : "position"
+	}
+	"message-id" : "id",
+	"from" : "from"
+}
+
+Requête createEvent (android) :
+{
+	"category" : "fr.upem.firecloud",
+	"data" : {
+		"action" : "createEvent",
+		"event" : {
+			"creator" : "something to identify the user in the DB",
+			"guests" : [
+				{
+					"user" : "something to identify the user in the DB"
+				},
+				{
+					"user" : "something to identify the user in the DB"
+				}
+				...
+			]
+			"attr1" : "",
+			"attr2" : ""
+		},
+		"refresh" : 1234
+	}
+	"message-id" : "id",
+	"from" : "from"
+}
+
+Au create => on crée une thread qui va push tous les x temps (refresh) les positions des users associés à l'event au manager
+
+Côté serveur => Méthodes pour ajouter facilement dans la base un nouveau user / un nouvel event.
+				Méthode pour accéder à la position d'un user.
+				Méthode pour créer un user => Ajouter les requêtes pour ?
+				Méthode pour ajouter un user à un event => Ajouter les requêtes pour ?
+				Méthodes pour faire des setter sur l'event (dates) ? => Ajouter les requêtes pour ?
+				Méthode pour supprimer un user de l'event ? => Ajouter les requêtes pour ?
+				Méthode pour notifier les guests invités à un event ? => Ajouter les requêtes pour ? (Ceci est optionnel si on a du temps)
+				Méthode List<Event> getAllEvents(User user) qui permet de récupérer tous les events associés à un user.
+
+
+Requêtes serveur => android :
+	- Push des positions des gens.
+	- Prévenir les users qui sont invités à un event ? Comment ? Quel retour ?
+
+Dans tous les messages serveur / client, ajouter un attribut version.
+
+Mail Pierre : 
+
+{
+  "user": {
+    "id": 2, //long (à voir si nécessaire: peut être y a t-il un autre moyen d'identifier un utilisateur)
+    "position": {
+      "lat": 2.3, //double
+      "lon": 3.4 //double
+    }
+  }
+}
+
+
+{
+  "users": [
+    {
+      "id": 2, //long
+      "position": {
+        "lat": 2.3, //double
+        "lon": 3.4 //double
+      },
+      "timestamp": 1457040772702 //long
+    }, {
+      "id": 3, //long
+      "position": {
+        "lat": 2.4, //double
+        "lon": 3.5 //double
+      },
+      "timestamp": 1457040772710 //long
+    }
+  ]
+}
