@@ -54,6 +54,7 @@ Côté serveur => Méthodes pour ajouter facilement dans la base un nouveau user
 				Méthode pour créer un user => Ajouter les requêtes pour ?
 				Méthode pour ajouter un user à un event => Ajouter les requêtes pour ?
 				Méthodes pour faire des setter sur l'event (dates) ? => Ajouter les requêtes pour ?
+				Changer en un truc qui prend l'ancien event et qui modifie tous les champs...
 				Méthode pour supprimer un user de l'event ? => Ajouter les requêtes pour ?
 				Méthode pour notifier les guests invités à un event ? => Ajouter les requêtes pour ? (Ceci est optionnel si on a du temps)
 				Méthode List<Event> getAllEvents(User user) qui permet de récupérer tous les events associés à un user.
@@ -97,3 +98,5 @@ Mail Pierre :
     }
   ]
 }
+
+Le project id est défini dans le fichier json gentiment fourni par Pierre.
