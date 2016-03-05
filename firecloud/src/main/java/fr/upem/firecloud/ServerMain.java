@@ -10,10 +10,10 @@ import static fr.upem.firecloud.CcsClient.createJsonMessage;
 public class ServerMain {
     public static void main(String[] args) {
         final String projectId = args[0];
-        final String password = args[1];
+        final String apiKey = args[1];
         final String toRegId = args[2];
 
-        CcsClient ccsClient = CcsClient.prepareClient(projectId, password, true);
+        CcsClient ccsClient = new CcsClient(projectId, apiKey, true);
 
         try {
             ccsClient.connect();
@@ -23,7 +23,7 @@ public class ServerMain {
 
         // Send a sample hello downstream message to a device.
         String messageId = ccsClient.getRandomMessageId();
-        Map<String, String> payload = new HashMap<String, String>();
+        Map<String, String> payload = new HashMap<>();
         payload.put("message", "Simple sample sessage");
         String collapseKey = "sample";
         Long timeToLive = 10000L;

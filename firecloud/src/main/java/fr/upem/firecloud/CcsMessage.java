@@ -11,40 +11,40 @@ public class CcsMessage {
     /**
      * Recipient-ID.
      */
-    private String mFrom;
+    private String from;
     /**
      * Sender app's package.
      */
-    private String mCategory;
+    private String category;
     /**
      * Unique id for this message.
      */
-    private String mMessageId;
+    private String messageId;
     /**
      * Payload data. A String in Json format.
      */
-    private Map<String, String> mPayload;
+    private Map<String, String> payload;
 
     public CcsMessage(String from, String category, String messageId, Map<String, String> payload) {
-        mFrom = from;
-        mCategory = category;
-        mMessageId = messageId;
-        mPayload = payload;
+        this.from = from;
+        this.category = category;
+        this.messageId = messageId;
+        this.payload = payload;
     }
 
     public String getFrom() {
-        return mFrom;
+        return from;
     }
 
     public String getCategory() {
-        return mCategory;
+        return category;
     }
 
     public String getMessageId() {
-        return mMessageId;
+        return messageId;
     }
 
     public Map<String, String> getPayload() {
-        return mPayload;
+        return payload;
     }
 }
