@@ -2,4 +2,5 @@
 <resources>
     <string name="reference_point_label">Me</string>
     <string name="users_number_format">%d users</string>
+    <string name="activity_radar_name">Radar</string>
 </resources>

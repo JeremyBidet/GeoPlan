@@ -26,11 +26,37 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="Agenda">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="home"
+                    android:scheme="geoplan" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".core.radar.RadarActivity"
+            android:label="@string/activity_radar_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="radar"
+                    android:scheme="geoplan" />
             </intent-filter>
         </activity>
 
@@ -70,12 +96,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity android:name=".core.radar.RadarActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
 
         <service
             android:name=".core.server.gcm.service.RegistrationIntentService"
