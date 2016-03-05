@@ -16,7 +16,7 @@ import android.telephony.SmsManager;
 import android.widget.Toast;
 
 import fr.upem.geoplan.R;
-import fr.upem.geoplan.core.User;
+import fr.upem.geoplan.core.session.User;
 
 public class RadarDialogUserAction extends DialogFragment implements DialogInterface.OnClickListener {
     public static final int CALL_ACTION = 0;
@@ -34,7 +34,7 @@ public class RadarDialogUserAction extends DialogFragment implements DialogInter
         user = bundle.getParcelable("user");
 
         assert user != null;
-        builder.setTitle(user.getUsername()).setItems(R.array.dialog_touch_user_action, this);
+        builder.setTitle(user.getFirstname() + user.getLastname()).setItems(R.array.dialog_touch_user_action, this);
         builder.setCancelable(true);
 
         return builder.create();
@@ -49,7 +49,7 @@ public class RadarDialogUserAction extends DialogFragment implements DialogInter
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context, "Message sent to " + user.getUsername(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Message sent to " + (user.getFirstname() + user.getLastname()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -62,7 +62,7 @@ public class RadarDialogUserAction extends DialogFragment implements DialogInter
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context, "Message delivered to " + user.getUsername(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Message delivered to " + (user.getFirstname() + user.getLastname()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -87,7 +87,7 @@ public class RadarDialogUserAction extends DialogFragment implements DialogInter
 
     private void call() {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:" + user.getPhoneNumber()));
+        callIntent.setData(Uri.parse("tel:" + user.getPhone()));
         startActivity(callIntent);
     }
 
@@ -102,7 +102,7 @@ public class RadarDialogUserAction extends DialogFragment implements DialogInter
         PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);
 
         SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(user.getPhoneNumber(), null, body, sentPI, deliveredPI);
+        sms.sendTextMessage(user.getPhone(), null, body, sentPI, deliveredPI);
 
         new Handler().postDelayed(new Runnable() {
             @Override

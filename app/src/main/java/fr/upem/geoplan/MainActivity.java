@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                fr.upem.geoplan.core.Event event = (fr.upem.geoplan.core.Event) parent.getItemAtPosition(position);
+                Event event = (Event) parent.getItemAtPosition(position);
                 startRadarActivity(event);
             }
         });
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         startReceiver();
     }
 
-    private void startRadarActivity(fr.upem.geoplan.core.Event event) {
+    private void startRadarActivity(Event event) {
         Intent intent = new Intent(this, RadarActivity.class);
         intent.putExtra("event", event);
         startActivity(intent);
