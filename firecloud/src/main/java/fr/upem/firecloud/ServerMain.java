@@ -10,7 +10,7 @@ import static fr.upem.firecloud.CcsClient.createJsonMessage;
 public class ServerMain {
     public static void main(String[] args) {
         final String projectId = "geoplan-cd1dd";
-        final String apiKey = "AIzaSyDLt1dgAn154JKtFknBgK7eV4RUvTc2GS4";
+        final String apiKey = args[0];
         final String toRegId = args[2];
 
         CcsClient ccsClient = new CcsClient(projectId, apiKey, true);
