@@ -102,3 +102,7 @@ Par défaut il n’y a pas de restrictions sur l’échange de messages entre le
 
 « Last but not least » feature : le démon. Ce dernier permet de garder l’application en tâche de fond afin qu’elle check régulièrement les évènements et qu’elle active automatiquement les fonctionnalités de localisation et de messagerie lorsqu’un évènement démarre. Il devra être léger afin d’économiser l’utilisation de la batterie du mobile.
 
+### TODO
+
+ - Mise à jour de la position des utilisateurs lors de la réception d'un message serveur.
+ - Tester le radar.
