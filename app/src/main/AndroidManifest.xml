@@ -15,7 +15,7 @@
     <uses-permission android:name=".permission.C2D_MESSAGE" />
 
     <!--
-    Uncomment this if the application needs to keep the processor from sleeping when a message is received.
+    Uncomment this if the application needs to keep the processor from sleeping.
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     -->
     <application
