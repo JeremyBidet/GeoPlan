@@ -22,15 +22,15 @@ public class ServerApp {
         return user;
     }
 
-    public FireCloudEvent createEvent(long id, ArrayList<FireCloudUser> owner, String title, String description, ArrayList<FireCloudUser> guests, Date start_date_time, Date end_date_time, String localization, LatLng position) {
-        FireCloudEvent event = new FireCloudEvent(id, owner, title, description, guests, start_date_time, end_date_time, localization, position);
+    public FireCloudEvent createEvent(long id, ArrayList<Long> ownersId, String title, String description, ArrayList<Long> guestsId, Date start_date_time, Date end_date_time, String localization, LatLng position) {
+        FireCloudEvent event = new FireCloudEvent(id, ownersId, title, description, guestsId, start_date_time, end_date_time, localization, position);
         Firebase eventRef = mRootRef.child("Events").child(title);
         eventRef.setValue(event);
         return event;
     }
-    public ArrayList<FireCloudEvent> getAllEvents(long idUser) {
+    public ArrayList<Long> getAllEvents(long idUser) {
         FireCloudUser user = null;
-        ArrayList<FireCloudEvent> eventsUser = user.getEventsUser();
+        ArrayList<Long> eventsUser = user.getEventsUser();
         if (eventsUser == null || eventsUser.isEmpty()) {
 
         }
@@ -58,6 +58,6 @@ public class ServerApp {
     }
 
     public void updateEvent(long eventId) {
-
+        //TODO Code Firebase pour mettre à jour les paramètre de l'event.
     }
 }

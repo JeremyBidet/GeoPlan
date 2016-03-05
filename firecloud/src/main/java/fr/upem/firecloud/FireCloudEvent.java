@@ -13,16 +13,16 @@ public class FireCloudEvent {
     private LatLng position;
     private Date startDateTime;
     private Date endDateTime;
-    private final ArrayList<FireCloudUser> owners;
-    private final ArrayList<FireCloudUser> guests = new ArrayList<>();
+    private final ArrayList<Long> ownersId;
+    private final ArrayList<Long> guestsId = new ArrayList<>();
 
 
-    public FireCloudEvent(long id, ArrayList<FireCloudUser> owners, String title,String description, ArrayList<FireCloudUser> guests, Date startDateTime, Date endDateTime, String localization, LatLng position) {
+    public FireCloudEvent(long id, ArrayList<Long> ownersId, String title,String description, ArrayList<Long> guestsId, Date startDateTime, Date endDateTime, String localization, LatLng position) {
         this.id = id;
-        this.owners = owners;
+        this.ownersId = ownersId;
         this.title = title;
         this.description = description;
-        this.guests.addAll(guests);
+        this.guestsId.addAll(guestsId);
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.localization = localization;
@@ -33,7 +33,7 @@ public class FireCloudEvent {
         return id;
     }
 
-    public ArrayList<FireCloudUser> getOwners() { return owners; }
+    public ArrayList<Long> getOwnersId() { return ownersId; }
 
     public String getTitle() { return title; }
 
@@ -43,11 +43,11 @@ public class FireCloudEvent {
 
     public void setDescription(String description) { this.description = description; }
 
-    public ArrayList<FireCloudUser> getGuests() { return guests; }
+    public ArrayList<Long> getGuestsId() { return guestsId; }
 
-    public void setGuests(ArrayList<FireCloudUser> guests) {
-        this.guests.clear();
-        this.guests.addAll(guests);
+    public void setGuestsId(ArrayList<Long> guestsId) {
+        this.guestsId.clear();
+        this.guestsId.addAll(guestsId);
     }
 
     public Date getStartDateTime() { return startDateTime; }

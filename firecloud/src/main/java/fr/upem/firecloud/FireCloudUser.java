@@ -13,9 +13,9 @@ public class FireCloudUser {
     private final String lastName;
     private LatLng position;
     private final String phoneNumber;
-    private final ArrayList<FireCloudEvent> eventsUser;
+    private final ArrayList<Long> eventsUser;
 
-    public FireCloudUser(long userId, String firstName, String lastName, LatLng position, String phoneNumber, ArrayList<FireCloudEvent> eventsUser) {
+    public FireCloudUser(long userId, String firstName, String lastName, LatLng position, String phoneNumber, ArrayList<Long> eventsUser) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,5 +36,5 @@ public class FireCloudUser {
 
     public String getPhoneNumber() { return phoneNumber; }
 
-    public ArrayList<FireCloudEvent> getEventsUser() { return eventsUser; }
+    public ArrayList<Long> getEventsUser() { return eventsUser; }
 }
