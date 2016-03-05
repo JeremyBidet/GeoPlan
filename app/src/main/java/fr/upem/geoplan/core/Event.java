@@ -112,6 +112,6 @@ public abstract class Event implements Parcelable {
 
     @Override
     public String toString() {
-        return name + "(" + position.latitude + ";" + position.longitude + ") - " + guests.size() + " guests";
+        return name + " (" + position.latitude + ";" + position.longitude + ") - " + guests.size() + " guests";
     }
 }
