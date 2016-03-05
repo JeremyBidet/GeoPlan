@@ -11,20 +11,20 @@ public class FireCloudEvent {
     private String description;
     private String localization;
     private LatLng position;
-    private Date start_date_time;
-    private Date end_date_time;
+    private Date startDateTime;
+    private Date endDateTime;
     private final ArrayList<FireCloudUser> owners;
     private final ArrayList<FireCloudUser> guests = new ArrayList<>();
 
 
-    public FireCloudEvent(long id, ArrayList<FireCloudUser> owners, String title,String description, ArrayList<FireCloudUser> guests, Date start_date_time, Date end_date_time, String localization, LatLng position) {
+    public FireCloudEvent(long id, ArrayList<FireCloudUser> owners, String title,String description, ArrayList<FireCloudUser> guests, Date startDateTime, Date endDateTime, String localization, LatLng position) {
         this.id = id;
         this.owners = owners;
         this.title = title;
         this.description = description;
         this.guests.addAll(guests);
-        this.start_date_time = start_date_time;
-        this.end_date_time = end_date_time;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.localization = localization;
         this.position = position;
     }
@@ -50,13 +50,13 @@ public class FireCloudEvent {
         this.guests.addAll(guests);
     }
 
-    public Date getStart_date_time() { return start_date_time; }
+    public Date getStartDateTime() { return startDateTime; }
 
-    public void setStart_date_time(Date start_date_time) { this.start_date_time = start_date_time; }
+    public void setStartDateTime(Date startDateTime) { this.startDateTime = startDateTime; }
 
-    public Date getEnd_date_time() { return end_date_time; }
+    public Date getEndDateTime() { return endDateTime; }
 
-    public void setEnd_date_time(Date end_date_time) { this.end_date_time = end_date_time; }
+    public void setEndDateTime(Date endDateTime) { this.endDateTime = endDateTime; }
 
     public String getLocalization() { return localization; }
 

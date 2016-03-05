@@ -16,7 +16,7 @@ public class ServerApp {
     }
 
     public FireCloudUser createUser(long idUser, String firstName, String lastName, LatLng position, String phoneNumber) {
-        FireCloudUser user = new FireCloudUser(idUser, firstName, lastName, position, phoneNumber);
+        FireCloudUser user = new FireCloudUser(idUser, firstName, lastName, position, phoneNumber, null);
         Firebase userRef = mRootRef.child("Users").child(firstName.substring(0,1)+lastName);
         userRef.setValue(user);
         return user;
@@ -28,12 +28,36 @@ public class ServerApp {
         eventRef.setValue(event);
         return event;
     }
+    public ArrayList<FireCloudEvent> getAllEvents(long idUser) {
+        FireCloudUser user = null;
+        ArrayList<FireCloudEvent> eventsUser = user.getEventsUser();
+        if (eventsUser == null || eventsUser.isEmpty()) {
 
-    public LatLng getPosition(FireCloudUser user) {
-        return user.getEventPosition();
+        }
+        return eventsUser;
     }
 
-    public void updatePosition(LatLng position, FireCloudUser user) {
+    public LatLng getPosition(long idUser) {
+        //TODO Code Firebase pour récupérer dans la base le user avec cet id.
+        FireCloudUser user = null;
+        return user.getPosition();
+    }
+
+    public void updatePositionUser(LatLng position, long idUser) {
+        //TODO Code Firebase pour récupérer la position dans firebase et le mettre à jour
+        FireCloudUser user = null;
         user.setPosition(position);
+    }
+
+    public void addUserToEvent() {
+        //TODO Code Firebase pour ajouter un utilisateur dans l'event (guests) et un event dans liste event de user (eventsUser)
+    }
+
+    public void removeUserToEvent() {
+        //TODO Code Firebase pour supprimer un utilisateur dans l'event (guests) et un event dans liste event de user (eventsUser)
+    }
+
+    public void updateEvent(long eventId) {
+
     }
 }

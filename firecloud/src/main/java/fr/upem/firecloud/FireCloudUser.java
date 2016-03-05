@@ -5,31 +5,36 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+
 public class FireCloudUser {
-    private final long idUser;
+    private final long userId;
     private final String firstName;
     private final String lastName;
     private LatLng position;
     private final String phoneNumber;
+    private final ArrayList<FireCloudEvent> eventsUser;
 
-
-    public FireCloudUser(long idUser, String firstName, String lastName, LatLng position, String phoneNumber) {
-        this.idUser = idUser;
+    public FireCloudUser(long userId, String firstName, String lastName, LatLng position, String phoneNumber, ArrayList<FireCloudEvent> eventsUser) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.position = position;
         this.phoneNumber = phoneNumber;
+        this.eventsUser = eventsUser;
     }
 
-    public long getIdUser() { return idUser; }
+    public long getUserId() { return userId; }
 
-    public String getfirstName() { return firstName; }
+    public String getFirstName() { return firstName; }
 
-    public String getlastName() { return lastName; }
+    public String getLastName() { return lastName; }
 
-    public LatLng getEventPosition() { return position; }
+    public LatLng getPosition() { return position; }
 
     public void setPosition(LatLng position) { this.position = position; }
 
     public String getPhoneNumber() { return phoneNumber; }
+
+    public ArrayList<FireCloudEvent> getEventsUser() { return eventsUser; }
 }
