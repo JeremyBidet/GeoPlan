@@ -1,17 +1,11 @@
-package fr.upem.geoplan.core.server;
+package fr.upem.firecloud;
 
 import com.firebase.client.Firebase;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.text.DateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 
-import fr.upem.firecloud.FireCloudEvent;
-import fr.upem.firecloud.FireCloudUser;
-
-/**
- * Created by Jeremie on 01/03/2016.
- */
 public class ServerApp {
     private final String path;
     private final Firebase mRootRef;
@@ -21,15 +15,15 @@ public class ServerApp {
         this.mRootRef = new Firebase(path);
     }
 
-    public FireCloudUser createUser(int idUser, String firstName, String lastName, LatLng position, String phoneNumber) {
+    public FireCloudUser createUser(long idUser, String firstName, String lastName, LatLng position, String phoneNumber) {
         FireCloudUser user = new FireCloudUser(idUser, firstName, lastName, position, phoneNumber);
         Firebase userRef = mRootRef.child("Users").child(firstName.substring(0,1)+lastName);
         userRef.setValue(user);
         return user;
     }
 
-    public FireCloudEvent createEvent(int id, String owner, String title, ArrayList<FireCloudUser> guests, DateFormat start_date_time, DateFormat end_date_time, String localization, LatLng position) {
-        FireCloudEvent event = new FireCloudEvent(id, owner, title, guests, start_date_time, end_date_time, localization, position);
+    public FireCloudEvent createEvent(long id, ArrayList<FireCloudUser> owner, String title, String description, ArrayList<FireCloudUser> guests, Date start_date_time, Date end_date_time, String localization, LatLng position) {
+        FireCloudEvent event = new FireCloudEvent(id, owner, title, description, guests, start_date_time, end_date_time, localization, position);
         Firebase eventRef = mRootRef.child("Events").child(title);
         eventRef.setValue(event);
         return event;

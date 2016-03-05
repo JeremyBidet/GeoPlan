@@ -30,7 +30,7 @@ import fr.upem.firecloud.FireCloudUser;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.radar.RadarActivity;
-import fr.upem.geoplan.core.server.ServerApp;
+import fr.upem.firecloud.ServerApp;
 import fr.upem.geoplan.core.server.gcm.Preferences;
 import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
 
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         FireCloudUser userJeremie = server.createUser(2, "Jérémie", "Chattou", new LatLng(48.8385709, 2.561343), "0658596324");
         guests.add(userJeremie);
         guests.add(userTristan);
-        server.createEvent(1, "tfautrel", "Rendez-vous Android", guests, null, null, "UPEM - Copernic", new LatLng(48.8392168, 2.5870625));
+        //server.createEvent(1, "tfautrel", "Rendez-vous Android", guests, null, null, "UPEM - Copernic", new LatLng(48.8392168, 2.5870625));
 
         initializeReceiver();
         registerReceiver();

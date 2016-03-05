@@ -1,28 +1,27 @@
 package fr.upem.firecloud;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.android.gms.maps.model.LatLng;
 
-import java.text.DateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 
-public class FireCloudEvent implements Parcelable{
-    private final int id;
-    private final String owner;
-    private final String title;
+public class FireCloudEvent {
+    private final long id;
+    private String title;
+    private String description;
+    private String localization;
+    private LatLng position;
+    private Date start_date_time;
+    private Date end_date_time;
+    private final ArrayList<FireCloudUser> owners;
     private final ArrayList<FireCloudUser> guests = new ArrayList<>();
-    private DateFormat start_date_time;
-    private DateFormat end_date_time;
-    private final String localization;
-    private final LatLng position;
 
 
-    public FireCloudEvent(int id, String owner, String title, ArrayList<FireCloudUser> guests, DateFormat start_date_time, DateFormat end_date_time, String localization, LatLng position) {
+    public FireCloudEvent(long id, ArrayList<FireCloudUser> owners, String title,String description, ArrayList<FireCloudUser> guests, Date start_date_time, Date end_date_time, String localization, LatLng position) {
         this.id = id;
-        this.owner = owner;
+        this.owners = owners;
         this.title = title;
+        this.description = description;
         this.guests.addAll(guests);
         this.start_date_time = start_date_time;
         this.end_date_time = end_date_time;
@@ -30,52 +29,19 @@ public class FireCloudEvent implements Parcelable{
         this.position = position;
     }
 
-    protected FireCloudEvent(Parcel in) {
-        Double lat = in.readDouble();
-        Double lon = in.readDouble();
-        position = new LatLng(lat, lon);
-        title = in.readString();
-        localization = in.readString();
-        owner = in.readString();
-        id = in.readInt();
-        guests.addAll(in.readArrayList(FireCloudUser.class.getClassLoader()));
-    }
-
-    public static final Creator<FireCloudEvent> CREATOR = new Creator<FireCloudEvent>() {
-        @Override
-        public FireCloudEvent createFromParcel(Parcel in) {
-            return new FireCloudEvent(in);
-        }
-
-        @Override
-        public FireCloudEvent[] newArray(int size) {
-            return new FireCloudEvent[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeDouble(position.latitude);
-        dest.writeDouble(position.longitude);
-        dest.writeString(title);
-        dest.writeString(localization);
-        dest.writeString(owner);
-        dest.writeInt(id);
-        dest.writeValue(guests);
-    }
-
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public String getOwner() { return owner; }
+    public ArrayList<FireCloudUser> getOwners() { return owners; }
 
     public String getTitle() { return title; }
+
+    public void setTitle(String title) { this.title = title; }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
 
     public ArrayList<FireCloudUser> getGuests() { return guests; }
 
@@ -84,15 +50,19 @@ public class FireCloudEvent implements Parcelable{
         this.guests.addAll(guests);
     }
 
-    public DateFormat getStart_date_time() { return start_date_time; }
+    public Date getStart_date_time() { return start_date_time; }
 
-    public void setStart_date_time(DateFormat start_date_time) { this.start_date_time = start_date_time; }
+    public void setStart_date_time(Date start_date_time) { this.start_date_time = start_date_time; }
 
-    public DateFormat getEnd_date_time() { return end_date_time; }
+    public Date getEnd_date_time() { return end_date_time; }
 
-    public void setEnd_date_time(DateFormat end_date_time) { this.end_date_time = end_date_time; }
+    public void setEnd_date_time(Date end_date_time) { this.end_date_time = end_date_time; }
 
     public String getLocalization() { return localization; }
 
+    public void setLocalization(String localization) { this.localization = localization;}
+
     public LatLng getPosition() { return position; }
+
+    public void setPosition(LatLng position) { this.position = position; }
 }
