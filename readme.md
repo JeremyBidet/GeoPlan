@@ -106,3 +106,4 @@ Par défaut il n’y a pas de restrictions sur l’échange de messages entre le
 
  - Mise à jour de la position des utilisateurs lors de la réception d'un message serveur.
  - Tester le radar.
+ - Mettre à jour la position de l'utilisateur avec [LocationListener](http://developer.android.com/reference/android/location/LocationListener.html).
