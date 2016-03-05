@@ -52,10 +52,6 @@ public class Event extends fr.upem.geoplan.core.Event {
         }
     };
 
-    protected Creator<User> getUserCreator() {
-        return User.CREATOR;
-    }
-
     //pour les tests
     public Event(String name, Date start_date_time, Date end_date_time, String localization, int color) {
         this(name, start_date_time, end_date_time, localization, new LatLng(48.8392203, 2.5848739), new ArrayList<User>(), new ArrayList<User>(), "", null, null, color);

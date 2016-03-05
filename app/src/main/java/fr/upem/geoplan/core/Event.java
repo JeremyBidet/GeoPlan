@@ -53,8 +53,6 @@ public abstract class Event implements Parcelable {
         in.readTypedList(owners, getUserCreator());
     }
 
-    protected abstract Creator<User> getUserCreator();
-
     @Override
     public int describeContents() {
         return 0;
@@ -74,6 +72,10 @@ public abstract class Event implements Parcelable {
 
         dest.writeTypedList(guests);
         dest.writeTypedList(owners);
+    }
+
+    protected Creator<User> getUserCreator() {
+        return User.CREATOR;
     }
 
     public String getName() {
