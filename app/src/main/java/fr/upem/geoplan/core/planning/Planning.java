@@ -1,5 +1,7 @@
 package fr.upem.geoplan.core.planning;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,9 +29,9 @@ public class Planning {
     }
 
     public boolean addEvent(Event e) {
-        if(e.getId() == -1) {
+        /*if(e.getId() == -1) {
             return false;
-        }
+        }*/
         return this.events.add(e);
     }
 
@@ -42,7 +44,11 @@ public class Planning {
         return null;
     }
 
-    public List<Event> getEvents() { return Arrays.asList((Event[]) this.events.toArray()); }
+    public List<Event> getEvents() {
+        List<Event> list = new ArrayList<>();
+        list.addAll(this.events);
+        return list;
+    }
 
     public List<Event> getEvents(String name) {
         List<Event> events = new LinkedList<Event>();

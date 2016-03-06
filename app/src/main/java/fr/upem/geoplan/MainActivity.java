@@ -215,11 +215,17 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.filter:
+                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.create:
+                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_settings:
+                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.synchronize:
+                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
