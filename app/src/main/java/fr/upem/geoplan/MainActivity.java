@@ -26,29 +26,25 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import fr.upem.firecloud.FireCloudUser;
+import fr.upem.firecloud.ServerApp;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.radar.RadarActivity;
-import fr.upem.firecloud.ServerApp;
 import fr.upem.geoplan.core.server.gcm.Preferences;
 import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
 
 public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = "GeoPlan";
 
-    private ListView listEvent;
-
     private final ArrayList<Event> events = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        listEvent = (ListView) findViewById(R.id.listEvent);
+        setContent();
 
         events.add(new Event("sex party", new Date(2015, 3, 19, 23, 0), new Date(2015, 3, 20, 7, 0), "upem", Color.RED));
         events.add(new Event("fiesta", new Date(2015, 3, 20, 15, 0), new Date(2015, 3, 20, 18, 0), "chez Jeremie", Color.BLUE));
@@ -59,62 +55,73 @@ public class MainActivity extends AppCompatActivity {
         events.add(new Event("Courses", new Date(2015, 3, 29, 10, 30), new Date(2015, 3, 29, 13, 30), "Aux Halles", Color.MAGENTA));
         events.add(new Event("Projet X", new Date(2015, 3, 29, 22, 0), new Date(2015, 3, 30, 10, 0), "chez Pierre", Color.YELLOW));
 
-        listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event event = (Event) parent.getItemAtPosition(position);
-                startRadarActivity(event);
-            }
-        });
-        EventAdapter adapter = new EventAdapter(MainActivity.this, events);
-        listEvent.setAdapter(adapter);
-
         Firebase.setAndroidContext(this);
         ServerApp server = new ServerApp("https://blazing-inferno-2418.firebaseio.com/");
+
         ArrayList<FireCloudUser> guests = new ArrayList<>();
+        guests.add(server.createUser(2, "Jérémie", "Chattou", new LatLng(48.8385709, 2.561343), "0658596324"));
+        guests.add(server.createUser(1, "Tristan", "Fautrel", new LatLng(48.877535, 2.59016), "0621185284"));
 
-
-        FireCloudUser userTristan = server.createUser(1, "Tristan", "Fautrel", new LatLng(48.877535, 2.59016), "0621185284");
-        FireCloudUser userJeremie = server.createUser(2, "Jérémie", "Chattou", new LatLng(48.8385709, 2.561343), "0658596324");
-        guests.add(userJeremie);
-        guests.add(userTristan);
         //server.createEvent(1, "tfautrel", "Rendez-vous Android", guests, null, null, "UPEM - Copernic", new LatLng(48.8392168, 2.5870625));
 
         initializeReceiver();
         registerReceiver();
         startReceiver();
 
+        // Identify user
+        // Maybe use https://developers.google.com/identity/sign-in/android/
+
+        // Start correct activity
         Intent intent = getIntent();
+        doAction(intent.getAction(), intent.getData());
 
-        String action = intent.getAction();
+        finish();
+    }
 
+    private void doAction(String action, Uri data) {
         if (Intent.ACTION_VIEW.equals(action)) {
-            Uri data = intent.getData();
-            callAction(data);
+            switch (data.getHost()) {
+                case "home":
+                default:
+                    break;
+                case "radar":
+                    try {
+                        String event_id = data.getQueryParameter("eventid");
+                        if (event_id == null) {
+                            throw new IllegalArgumentException("No event found");
+                        }
+                        Log.i(LOG_TAG, "Starting radar for event " + event_id);
+                        Event event = getEventFromId(Integer.parseInt(event_id));
+
+                        Intent intent = new Intent(this, RadarActivity.class);
+                        intent.putExtra("event", event);
+                        startActivity(intent);
+
+                        finish();
+                    } catch (Exception e) {
+                        Toast.makeText(this, R.string.toast_invalid_event, Toast.LENGTH_LONG).show();
+                        Log.i(LOG_TAG, "Invalid event");
+                    }
+                    break;
+            }
         }
     }
 
-    private void callAction(Uri data) {
-        switch (data.getHost()) {
-            case "home":
-            default:
-                break;
-            case "radar":
-                try {
-                    String event_id = data.getQueryParameter("eventid");
-                    if (event_id == null) {
-                        throw new IllegalArgumentException("No event found");
-                    }
-                    Log.i(LOG_TAG, "Starting radar for event " + event_id);
-                    Event event = getEventFromId(Integer.parseInt(event_id));
-                    startRadarActivity(event);
-                    finish();
-                } catch (Exception e) {
-                    Toast.makeText(this, R.string.toast_invalid_event, Toast.LENGTH_LONG).show();
-                    Log.i(LOG_TAG, "Invalid event");
-                }
-                break;
-        }
+    private void setContent() {
+        setContentView(R.layout.activity_planning);
+
+        ListView listEvent = (ListView) findViewById(R.id.listEvent);
+
+        listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) parent.getItemAtPosition(position);
+
+                startRadarActivity(event);
+            }
+        });
+        EventAdapter adapter = new EventAdapter(MainActivity.this, events);
+        listEvent.setAdapter(adapter);
     }
 
     private Event getEventFromId(int id) {
