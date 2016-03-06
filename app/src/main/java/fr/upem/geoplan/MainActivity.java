@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         // test firebase en cours
         Firebase.setAndroidContext(this);
-        ServerApp server = new ServerApp("https://blazing-inferno-2418.firebaseio.com/");
+        ServerApp server = new ServerApp(getString(R.string.database_url));
 
         ArrayList<Long> guests = new ArrayList<>();
         //guests.add(server.createUser(2, "Jérémie", "Chattou", new LatLng(48.8385709, 2.561343), "0658596324"));
