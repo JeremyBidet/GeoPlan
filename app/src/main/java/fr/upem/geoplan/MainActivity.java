@@ -55,12 +55,13 @@ public class MainActivity extends AppCompatActivity {
         events.add(new Event("Courses", new Date(2015, 3, 29, 10, 30), new Date(2015, 3, 29, 13, 30), "Aux Halles", Color.MAGENTA));
         events.add(new Event("Projet X", new Date(2015, 3, 29, 22, 0), new Date(2015, 3, 30, 10, 0), "chez Pierre", Color.YELLOW));
 
+        // test firebase en cours
         Firebase.setAndroidContext(this);
         ServerApp server = new ServerApp("https://blazing-inferno-2418.firebaseio.com/");
 
-        ArrayList<FireCloudUser> guests = new ArrayList<>();
-        guests.add(server.createUser(2, "Jérémie", "Chattou", new LatLng(48.8385709, 2.561343), "0658596324"));
-        guests.add(server.createUser(1, "Tristan", "Fautrel", new LatLng(48.877535, 2.59016), "0621185284"));
+        ArrayList<Long> guests = new ArrayList<>();
+        //guests.add(server.createUser(2, "Jérémie", "Chattou", new LatLng(48.8385709, 2.561343), "0658596324"));
+        //guests.add(server.createUser(1, "Tristan", "Fautrel", new LatLng(48.877535, 2.59016), "0621185284"));
 
         //server.createEvent(1, "tfautrel", "Rendez-vous Android", guests, null, null, "UPEM - Copernic", new LatLng(48.8392168, 2.5870625));
 

@@ -3,7 +3,6 @@ package fr.upem.firecloud;
 import com.firebase.client.Firebase;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.Date;
 import java.util.ArrayList;
 
 public class ServerApp {
@@ -15,14 +14,14 @@ public class ServerApp {
         this.mRootRef = new Firebase(path);
     }
 
-    public FireCloudUser createUser(long idUser, String firstName, String lastName, LatLng position, String phoneNumber) {
-        FireCloudUser user = new FireCloudUser(idUser, firstName, lastName, position, phoneNumber, null);
+    public FireCloudUser createUser(long idUser, String device, String firstName, String lastName, LatLng position, String phoneNumber) {
+        FireCloudUser user = new FireCloudUser(null,phoneNumber,position,lastName,firstName,device,idUser);
         Firebase userRef = mRootRef.child("Users").child(firstName.substring(0,1)+lastName);
         userRef.setValue(user);
         return user;
     }
 
-    public FireCloudEvent createEvent(long id, ArrayList<Long> ownersId, String title, String description, ArrayList<Long> guestsId, Date start_date_time, Date end_date_time, String localization, LatLng position) {
+    public FireCloudEvent createEvent(long id, ArrayList<Long> ownersId, String title, String description, ArrayList<Long> guestsId, long start_date_time, long end_date_time, String localization, LatLng position) {
         FireCloudEvent event = new FireCloudEvent(id, ownersId, title, description, guestsId, start_date_time, end_date_time, localization, position);
         Firebase eventRef = mRootRef.child("Events").child(title);
         eventRef.setValue(event);
@@ -31,9 +30,6 @@ public class ServerApp {
     public ArrayList<Long> getAllEvents(long idUser) {
         FireCloudUser user = null;
         ArrayList<Long> eventsUser = user.getEventsUser();
-        if (eventsUser == null || eventsUser.isEmpty()) {
-
-        }
         return eventsUser;
     }
 

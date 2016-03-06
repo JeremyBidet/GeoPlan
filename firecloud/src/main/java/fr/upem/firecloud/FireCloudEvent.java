@@ -11,13 +11,13 @@ public class FireCloudEvent {
     private String description;
     private String localization;
     private LatLng position;
-    private Date startDateTime;
-    private Date endDateTime;
+    private long startDateTime;
+    private long endDateTime;
     private final ArrayList<Long> ownersId;
     private final ArrayList<Long> guestsId = new ArrayList<>();
 
 
-    public FireCloudEvent(long id, ArrayList<Long> ownersId, String title,String description, ArrayList<Long> guestsId, Date startDateTime, Date endDateTime, String localization, LatLng position) {
+    public FireCloudEvent(long id, ArrayList<Long> ownersId, String title,String description, ArrayList<Long> guestsId, long startDateTime, long endDateTime, String localization, LatLng position) {
         this.id = id;
         this.ownersId = ownersId;
         this.title = title;
@@ -50,13 +50,13 @@ public class FireCloudEvent {
         this.guestsId.addAll(guestsId);
     }
 
-    public Date getStartDateTime() { return startDateTime; }
+    public long getStartDateTime() { return startDateTime; }
 
-    public void setStartDateTime(Date startDateTime) { this.startDateTime = startDateTime; }
+    public void setStartDateTime(long startDateTime) { this.startDateTime = startDateTime; }
 
-    public Date getEndDateTime() { return endDateTime; }
+    public long getEndDateTime() { return endDateTime; }
 
-    public void setEndDateTime(Date endDateTime) { this.endDateTime = endDateTime; }
+    public void setEndDateTime(long endDateTime) { this.endDateTime = endDateTime; }
 
     public String getLocalization() { return localization; }
 
