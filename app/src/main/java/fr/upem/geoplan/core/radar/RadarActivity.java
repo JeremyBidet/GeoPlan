@@ -57,7 +57,7 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_radar_activity);
+        setContentView(R.layout.activity_radar);
 
         event = getIntent().getParcelableExtra("event");
 
