@@ -74,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
         // Start correct activity
         Intent intent = getIntent();
         doAction(intent.getAction(), intent.getData());
-
-        finish();
     }
 
     private void doAction(String action, Uri data) {
