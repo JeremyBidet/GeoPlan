@@ -1,7 +1,20 @@
 package fr.upem.geoplan.core.radar;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +37,8 @@ import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.session.User;
 
 public class RadarActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private final static String LOG_TAG = "GeoPlan";
 
     private Event event;
 
@@ -57,12 +72,10 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_radar);
 
         event = getIntent().getParcelableExtra("event");
 
-        assert event != null;
-        setTitle(event.getName());
+        setContent();
 
         List<User> users = event.getGuests();
         for (User user : users) {
@@ -76,6 +89,20 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
         for (User user : users) {
             updatePosition(user.getID(), new LatLng(eventPosition.latitude + user.getID() / 1000., eventPosition.longitude));
         }
+    }
+
+    @NonNull
+    private void setContent() {
+        setContentView(R.layout.activity_radar);
+
+        assert event != null;
+        setTitle(event.getName());
+
+        final ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+
+        final ColorDrawable color = new ColorDrawable(event.getColor());
+        actionBar.setBackgroundDrawable(color);
     }
 
     private void initializeRadar() {
