@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
@@ -37,7 +39,9 @@ import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
 public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = "GeoPlan";
 
-    ListView listEvent;
+    private ListView listEvent;
+
+    private final ArrayList<Event> events = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
         listEvent = (ListView) findViewById(R.id.listEvent);
 
-        List<Event> events = new ArrayList<>();
         events.add(new Event("sex party", new Date(2015, 3, 19, 23, 0), new Date(2015, 3, 20, 7, 0), "upem", Color.RED));
         events.add(new Event("fiesta", new Date(2015, 3, 20, 15, 0), new Date(2015, 3, 20, 18, 0), "chez Jeremie", Color.BLUE));
         events.add(new Event("karaoke night", new Date(2015, 3, 20, 15, 0), new Date(2015, 3, 21, 0, 0), "chez tristan", Color.GREEN));
@@ -80,6 +83,46 @@ public class MainActivity extends AppCompatActivity {
         initializeReceiver();
         registerReceiver();
         startReceiver();
+
+        Intent intent = getIntent();
+
+        String action = intent.getAction();
+
+        if (Intent.ACTION_VIEW.equals(action)) {
+            Uri data = intent.getData();
+            callAction(data);
+        }
+    }
+
+    private void callAction(Uri data) {
+        switch (data.getHost()) {
+            case "home":
+            default:
+                break;
+            case "radar":
+                try {
+                    String event_id = data.getQueryParameter("eventid");
+                    if (event_id == null) {
+                        throw new IllegalArgumentException("No event found");
+                    }
+                    Log.i(LOG_TAG, "Starting radar for event " + event_id);
+                    Event event = getEventFromId(Integer.parseInt(event_id));
+                    startRadarActivity(event);
+                    finish();
+                } catch (Exception e) {
+                    Toast.makeText(this, R.string.toast_invalid_event, Toast.LENGTH_LONG).show();
+                    Log.i(LOG_TAG, "Invalid event");
+                }
+                break;
+        }
+    }
+
+    private Event getEventFromId(int id) {
+        int index = events.indexOf(new Event(id));
+        if (index == -1) {
+            throw new IllegalArgumentException("Invalid event id");
+        }
+        return events.get(index);
     }
 
     private void startRadarActivity(Event event) {

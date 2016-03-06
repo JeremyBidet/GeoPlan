@@ -66,6 +66,10 @@ public class Event implements Parcelable {
         this.color = in.readInt();
     }
 
+    public Event(int id) {
+        this.id = id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
