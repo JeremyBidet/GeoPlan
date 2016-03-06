@@ -15,7 +15,7 @@
         app:showAsAction="always"
         android:title="Create">
     </item>
-    
+
     <item
         android:id="@+id/synchronize"
         app:showAsAction="never"
