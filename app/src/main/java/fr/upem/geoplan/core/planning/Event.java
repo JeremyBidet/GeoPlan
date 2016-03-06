@@ -177,4 +177,17 @@ public class Event implements Parcelable {
                 4, "type", 19.99f, color);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Event)) {
+            return false;
+        }
+        Event event = (Event) o;
+
+        if (id == -1 && event.id == -1) {
+            return name != null && name.equals(event.name);
+        }
+
+        return event.id == id;
+    }
 }
