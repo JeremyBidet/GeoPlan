@@ -12,7 +12,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -123,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     private void setContent() {
         setContentView(R.layout.activity_planning);
 
-        ListView listEvent = (ListView) findViewById(R.id.listEvent);
+        final ListView listEvent = (ListView) findViewById(R.id.listEvent);
 
         listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -133,6 +135,17 @@ public class MainActivity extends AppCompatActivity {
                 startRadarActivity(event);
             }
         });
+
+        listEvent.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) parent.getItemAtPosition(position);
+                registerForContextMenu(listEvent);
+                openContextMenu(listEvent);
+                return true;
+            }
+        });
+
         EventAdapter adapter = new EventAdapter(MainActivity.this, events);
         listEvent.setAdapter(adapter);
     }
@@ -230,6 +243,30 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(Menu.NONE, 0, Menu.NONE, "Edit");
+        menu.add(Menu.NONE, 1, Menu.NONE, "Synchronize");
+        menu.add(Menu.NONE, 2, Menu.NONE, "Delete");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch(item.getItemId()) {
+            case 0:
+                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
+                return true;
+            case 1:
+                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
+                return true;
+            case 2:
+                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
