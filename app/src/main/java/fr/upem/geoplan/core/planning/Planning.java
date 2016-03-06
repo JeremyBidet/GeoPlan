@@ -54,7 +54,7 @@ public class Planning {
         return events;
     }
 
-    public List<Event> getEvent(int weight) {
+    public List<Event> getEvents(int weight) {
         List<Event> events = new ArrayList<Event>();
         for(Event e : this.events) {
             if(e.getWeight() >= weight) {
@@ -62,6 +62,22 @@ public class Planning {
             }
         }
         return events;
+    }
+
+    public Date getTodayDate() {
+        Calendar c = Calendar.getInstance();
+        int y = c.get(Calendar.YEAR), m = c.get(Calendar.MONTH), d = c.get(Calendar.DATE);
+        c.clear();
+        c.set(y, m, d);
+        return c.getTime();
+    }
+
+    public List<Event> getEventsFromToday() {
+        return getEventsFromStartDate(getTodayDate());
+    }
+
+    public List<Event> getEventsUntilToday() {
+        return getEventsUntilStartDate(getTodayDate());
     }
 
     public List<Event> getEventsFromStartDate(Date start_date) {
@@ -73,11 +89,7 @@ public class Planning {
     }
 
     public List<Event> getEventsToday() {
-        Calendar c = Calendar.getInstance();
-        int y = c.get(Calendar.YEAR), m = c.get(Calendar.MONTH), d = c.get(Calendar.DATE);
-        c.clear();
-        c.set(y, m, d);
-        return getEventsOnlyThisDay(c.getTime());
+        return getEventsOnlyThisDay(getTodayDate());
     }
 
     public List<Event> getEventsOnlyThisDay(Date start_date) {
@@ -92,10 +104,10 @@ public class Planning {
         Calendar c_tomorrow = (Calendar) c_today.clone();
         c_tomorrow.add(Calendar.DATE, 1);
 
-        Date today = c_today.getTime();
-        Date tomorrow = c_tomorrow.getTime();
+        Date today_date = c_today.getTime();
+        Date tomorrow_date = c_tomorrow.getTime();
 
-        return Arrays.asList((Event[]) this.events.subSet(new Event(today), new Event(tomorrow)).toArray());
+        return Arrays.asList((Event[]) this.events.subSet(new Event(today_date), new Event(tomorrow_date)).toArray());
     }
 
     public boolean removeEventById(long id) {
