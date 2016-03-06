@@ -25,7 +25,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 import fr.upem.firecloud.FireCloudUser;
 import fr.upem.firecloud.ServerApp;
@@ -46,14 +46,28 @@ public class MainActivity extends AppCompatActivity {
 
         setContent();
 
-        events.add(new Event("sex party", new Date(2015, 3, 19, 23, 0), new Date(2015, 3, 20, 7, 0), "upem", Color.RED));
-        events.add(new Event("fiesta", new Date(2015, 3, 20, 15, 0), new Date(2015, 3, 20, 18, 0), "chez Jeremie", Color.BLUE));
-        events.add(new Event("karaoke night", new Date(2015, 3, 20, 15, 0), new Date(2015, 3, 21, 0, 0), "chez tristan", Color.GREEN));
-        events.add(new Event("paintball", new Date(2015, 3, 21, 16, 0), new Date(2015, 3, 21, 19, 0), "chez Maxime", Color.GRAY));
-        events.add(new Event("geek party", new Date(2015, 3, 21, 22, 0), new Date(2015, 3, 21, 2, 0), "chez Jeremy", Color.BLACK));
-        events.add(new Event("seance photo", new Date(2015, 3, 28, 14, 0), new Date(2015, 3, 28, 16, 0), "chez Huy", Color.CYAN));
-        events.add(new Event("Courses", new Date(2015, 3, 29, 10, 30), new Date(2015, 3, 29, 13, 30), "Aux Halles", Color.MAGENTA));
-        events.add(new Event("Projet X", new Date(2015, 3, 29, 22, 0), new Date(2015, 3, 30, 10, 0), "chez Pierre", Color.YELLOW));
+        Calendar startCalendar = Calendar.getInstance();
+        Calendar endCalendar = Calendar.getInstance();
+
+        startCalendar.set(2015, Calendar.NOVEMBER, 19, 23, 0);
+        endCalendar.set(2015, Calendar.NOVEMBER, 20, 7, 0);
+        events.add(new Event("sex party", startCalendar.getTime(), endCalendar.getTime(), "upem", Color.RED));
+
+        startCalendar.set(2015, Calendar.DECEMBER, 20, 15, 0);
+        endCalendar.set(2015, Calendar.DECEMBER, 20, 18, 0);
+        events.add(new Event("fiesta", startCalendar.getTime(), endCalendar.getTime(), "chez Jeremie", Color.BLUE));
+
+        startCalendar.set(2016, Calendar.JANUARY, 20, 15, 0);
+        endCalendar.set(2016, Calendar.JANUARY, 21, 0, 0);
+        events.add(new Event("karaoke night", startCalendar.getTime(), endCalendar.getTime(), "chez tristan", Color.GREEN));
+
+        startCalendar.set(2016, Calendar.MARCH, 21, 22, 0);
+        endCalendar.set(2016, Calendar.MARCH, 21, 2, 0);
+        events.add(new Event("geek party", startCalendar.getTime(), endCalendar.getTime(), "chez Jeremy", Color.BLACK));
+
+        startCalendar.set(2016, Calendar.MARCH, 28, 14, 0);
+        endCalendar.set(2016, Calendar.MARCH, 28, 16, 0);
+        events.add(new Event("seance photo", startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
 
         // test firebase en cours
         Firebase.setAndroidContext(this);
