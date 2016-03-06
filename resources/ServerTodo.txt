@@ -59,10 +59,7 @@ Côté serveur => Méthodes pour ajouter facilement dans la base un nouveau user
 				Méthode pour notifier les guests invités à un event ? => Ajouter les requêtes pour ? (Ceci est optionnel si on a du temps)
 				Méthode List<Event> getAllEvents(User user) qui permet de récupérer tous les events associés à un user.
 
-				Push notification pour position, utilisation d'un bouton de synchronisation qui envoie une requête au serveur qui demande au serveur
-				d'actualiser les positions des utilsateurs, ça demande la position des autres.
 
-				Quand push la position de l'utilisateur.... bouton de synchro ? quand il ouvre l'appli
 Requêtes serveur => android :
 	- Push des positions des gens.
 	- Prévenir les users qui sont invités à un event ? Comment ? Quel retour ?
