@@ -15,7 +15,7 @@ import fr.upem.geoplan.core.session.User;
 /**
  * Created by jerem_000 on 11/02/2016.
  */
-public class Event implements Parcelable {
+public class Event implements Parcelable, Comparable<Event> {
 
     private final long id;
     private String name;
@@ -174,6 +174,32 @@ public class Event implements Parcelable {
         }
     };
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Event
+                && ((Event) o).id == id;
+    }
+
+    @Override
+    public int compareTo(Event another) {
+        return this.start_date_time.before(another.getStart_date_time()) ?
+                -1 :
+                this.start_date_time.after(another.getStart_date_time()) ?
+                        1 :
+                        0;
+    }
+
+
+    /**
+     * Initialize a temporary Event used to sort events in planning.<br/>
+     * This Event cannot be added to the planning
+     * @param start_date_time the start datetime used to compare with other events
+     */
+    Event(Date start_date_time) {
+        this.id = -1;
+        this.start_date_time = start_date_time;
+    }
+
     //pour les tests
     public Event(String name, Date start_date_time, Date end_date_time, String localization, int color) {
         this(-1, name, "description", new LatLng(48.8392203, 2.5848739), localization,
@@ -181,17 +207,4 @@ public class Event implements Parcelable {
                 4, "type", 19.99f, color);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Event)) {
-            return false;
-        }
-        Event event = (Event) o;
-
-        if (id == -1 && event.id == -1) {
-            return name != null && name.equals(event.name);
-        }
-
-        return event.id == id;
-    }
 }

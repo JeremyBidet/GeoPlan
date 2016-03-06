@@ -10,6 +10,7 @@ import java.util.Date;
  * Created by pierre on 06/03/2016.
  */
 public class StartDateFormat extends DateFormat {
+
     private long getMilliInDay(int day) {
         final Calendar closeDays = Calendar.getInstance();
         closeDays.set(0, 0, day);
