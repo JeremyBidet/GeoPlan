@@ -17,6 +17,8 @@ import fr.upem.geoplan.R;
  * Created by Huynh on 03/03/2016.
  */
 public class EventAdapter extends ArrayAdapter<Event> {
+    private final StartDateFormat starDdateFormat = new StartDateFormat();
+
     public EventAdapter(Context context, List<Event> events) {
         super(context, 0, events);
     }
@@ -43,8 +45,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
         //on remplit la vue
         viewHolder.nameEvent.setText(event.getName());
-        viewHolder.startingTime.setText(event.getStart_date_time().toString());
-        viewHolder.endTime.setText(event.getEnd_date_time().toString());
+        viewHolder.startingTime.setText(starDdateFormat.format(event.getStart_date_time()));
+        viewHolder.endTime.setText(starDdateFormat.format(event.getEnd_date_time()));
         viewHolder.localization.setText(event.getLocalization());
         viewHolder.icon.setImageDrawable(new ColorDrawable(event.getColor()));
 
