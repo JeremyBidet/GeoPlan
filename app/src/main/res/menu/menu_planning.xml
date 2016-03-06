@@ -15,14 +15,7 @@
         app:showAsAction="always"
         android:title="Create">
     </item>
-
-    <item
-        android:id="@+id/edit"
-        android:icon="@drawable/ic_action_edit"
-        app:showAsAction="always"
-        android:title="Edit">
-    </item>
-
+    
     <item
         android:id="@+id/synchronize"
         app:showAsAction="never"
