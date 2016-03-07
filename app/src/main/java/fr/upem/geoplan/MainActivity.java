@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import fr.upem.firecloud.FireCloudUser;
 import fr.upem.firecloud.ServerApp;
@@ -42,14 +43,12 @@ import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
 public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = "GeoPlan";
 
-    private final ArrayList<Event> events = new ArrayList<>();
+    //private final ArrayList<Event> events = new ArrayList<>();
     private final Planning planning = new Planning();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContent();
 
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
@@ -83,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
         //guests.add(server.createUser(1, "Tristan", "Fautrel", new LatLng(48.877535, 2.59016), "0621185284"));
 
         //server.createEvent(1, "tfautrel", "Rendez-vous Android", guests, null, null, "UPEM - Copernic", new LatLng(48.8392168, 2.5870625));
+
+        setContent();
 
         initializeReceiver();
         registerReceiver();
@@ -155,11 +156,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Event getEventFromId(int id) {
-        int index = events.indexOf(new Event(id));
-        if (index == -1) {
+        Event e = planning.getEventByID(id);
+        if(e == null) {
             throw new IllegalArgumentException("Invalid event id");
         }
-        return events.get(index);
+        return e;
     }
 
     private void startRadarActivity(Event event) {
