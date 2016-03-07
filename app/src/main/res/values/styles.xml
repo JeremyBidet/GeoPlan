@@ -23,9 +23,4 @@
         <item name="android:paddingLeft">0dip</item>
     </style>
 
-    <!-- <style name="ActionButtonStyle" parent="@style/Widget.AppCompat.ActionButton">
-         <item name="android:minWidth">0dip</item>
-         <item name="android:padding">3dip</item>
-     </style> -->
-
 </resources>
