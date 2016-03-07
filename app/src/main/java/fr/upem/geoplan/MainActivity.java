@@ -15,24 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
-import fr.upem.firecloud.FireCloudUser;
-import fr.upem.firecloud.ServerApp;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.planning.Planning;
@@ -73,15 +67,6 @@ public class MainActivity extends AppCompatActivity {
         endCalendar.set(2016, Calendar.MARCH, 28, 16, 0);
         planning.addEvent(new Event("seance photo", startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
 
-        // test firebase en cours
-        Firebase.setAndroidContext(this);
-        ServerApp server = new ServerApp(getString(R.string.database_url));
-
-        ArrayList<Long> guests = new ArrayList<>();
-        //guests.add(server.createUser(2, "Jérémie", "Chattou", new LatLng(48.8385709, 2.561343), "0658596324"));
-        //guests.add(server.createUser(1, "Tristan", "Fautrel", new LatLng(48.877535, 2.59016), "0621185284"));
-
-        //server.createEvent(1, "tfautrel", "Rendez-vous Android", guests, null, null, "UPEM - Copernic", new LatLng(48.8392168, 2.5870625));
 
         setContent();
 
