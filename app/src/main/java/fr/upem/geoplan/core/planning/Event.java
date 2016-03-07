@@ -202,7 +202,7 @@ public class Event implements Parcelable, Comparable<Event> {
 
     //pour les tests
     public Event(String name, Date start_date_time, Date end_date_time, String localization, int color) {
-        this(-1, name, "description", new LatLng(48.8392203, 2.5848739), localization,
+        this(-666, name, "description", new LatLng(48.8392203, 2.5848739), localization,
                 start_date_time, end_date_time, new ArrayList<User>(), new ArrayList<User>(),
                 4, "type", 19.99f, color);
     }

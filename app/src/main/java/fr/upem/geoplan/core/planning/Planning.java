@@ -29,9 +29,9 @@ public class Planning {
     }
 
     public boolean addEvent(Event e) {
-        /*if(e.getId() == -1) {
+        if(e.getId() == -1) {
             return false;
-        }*/
+        }
         return this.events.add(e);
     }
 
@@ -45,9 +45,7 @@ public class Planning {
     }
 
     public List<Event> getEvents() {
-        List<Event> list = new ArrayList<>();
-        list.addAll(this.events);
-        return list;
+        return Arrays.asList(this.events.toArray(new Event[this.events.size()]));
     }
 
     public List<Event> getEvents(String name) {

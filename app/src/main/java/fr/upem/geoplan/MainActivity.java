@@ -56,23 +56,23 @@ public class MainActivity extends AppCompatActivity {
 
         startCalendar.set(2015, Calendar.NOVEMBER, 19, 23, 0);
         endCalendar.set(2015, Calendar.NOVEMBER, 20, 7, 0);
-        events.add(new Event("sex party", startCalendar.getTime(), endCalendar.getTime(), "upem", Color.RED));
+        planning.addEvent(new Event("sex party", startCalendar.getTime(), endCalendar.getTime(), "upem", Color.RED));
 
         startCalendar.set(2015, Calendar.DECEMBER, 20, 15, 0);
         endCalendar.set(2015, Calendar.DECEMBER, 20, 18, 0);
-        events.add(new Event("fiesta", startCalendar.getTime(), endCalendar.getTime(), "chez Jeremie", Color.BLUE));
+        planning.addEvent(new Event("fiesta", startCalendar.getTime(), endCalendar.getTime(), "chez Jeremie", Color.BLUE));
 
         startCalendar.set(2016, Calendar.JANUARY, 20, 15, 0);
         endCalendar.set(2016, Calendar.JANUARY, 21, 0, 0);
-        events.add(new Event("karaoke night", startCalendar.getTime(), endCalendar.getTime(), "chez tristan", Color.GREEN));
+        planning.addEvent(new Event("karaoke night", startCalendar.getTime(), endCalendar.getTime(), "chez tristan", Color.GREEN));
 
         startCalendar.set(2016, Calendar.MARCH, 21, 22, 0);
         endCalendar.set(2016, Calendar.MARCH, 21, 2, 0);
-        events.add(new Event("geek party", startCalendar.getTime(), endCalendar.getTime(), "chez Jeremy", Color.BLACK));
+        planning.addEvent(new Event("geek party", startCalendar.getTime(), endCalendar.getTime(), "chez Jeremy", Color.BLACK));
 
         startCalendar.set(2016, Calendar.MARCH, 28, 14, 0);
         endCalendar.set(2016, Calendar.MARCH, 28, 16, 0);
-        events.add(new Event("seance photo", startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
+        planning.addEvent(new Event("seance photo", startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
 
         // test firebase en cours
         Firebase.setAndroidContext(this);
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        EventAdapter adapter = new EventAdapter(MainActivity.this, events);
+        EventAdapter adapter = new EventAdapter(MainActivity.this, planning.getEvents());
         listEvent.setAdapter(adapter);
     }
 
