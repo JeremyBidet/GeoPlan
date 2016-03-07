@@ -34,6 +34,7 @@ import fr.upem.firecloud.FireCloudUser;
 import fr.upem.firecloud.ServerApp;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
+import fr.upem.geoplan.core.planning.Planning;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.server.gcm.Preferences;
 import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = "GeoPlan";
 
     private final ArrayList<Event> events = new ArrayList<>();
+    private final Planning planning = new Planning();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
+        //menu.setHeaderTitle("Action");
         menu.add(Menu.NONE, 0, Menu.NONE, "Edit");
         menu.add(Menu.NONE, 1, Menu.NONE, "Synchronize");
         menu.add(Menu.NONE, 2, Menu.NONE, "Delete");
