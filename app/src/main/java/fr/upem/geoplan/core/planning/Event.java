@@ -31,7 +31,7 @@ public class Event implements Parcelable, Comparable<Event> {
     private float cost;
     private int color;
 
-    public Event(int id, String name, String description, LatLng position, String localization,
+    public Event(long id, String name, String description, LatLng position, String localization,
                  Date start_date_time, Date end_date_time,
                  Collection<User> guests, Collection<User> owners,
                  int weight, String type, float cost, int color) {
@@ -201,8 +201,8 @@ public class Event implements Parcelable, Comparable<Event> {
     }
 
     //pour les tests
-    public Event(String name, Date start_date_time, Date end_date_time, String localization, int color) {
-        this(-666, name, "description", new LatLng(48.8392203, 2.5848739), localization,
+    public Event(long id, String name, Date start_date_time, Date end_date_time, String localization, int color) {
+        this(id, name, "description", new LatLng(48.8392203, 2.5848739), localization,
                 start_date_time, end_date_time, new ArrayList<User>(), new ArrayList<User>(),
                 4, "type", 19.99f, color);
     }
