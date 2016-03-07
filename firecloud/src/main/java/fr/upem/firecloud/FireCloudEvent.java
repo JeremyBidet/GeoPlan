@@ -2,11 +2,10 @@ package fr.upem.firecloud;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.Date;
 import java.util.ArrayList;
 
 public class FireCloudEvent {
-    private final long id;
+    private final long eventId;
     private String title;
     private String description;
     private String localization;
@@ -17,8 +16,8 @@ public class FireCloudEvent {
     private final ArrayList<Long> guestsId = new ArrayList<>();
 
 
-    public FireCloudEvent(long id, ArrayList<Long> ownersId, String title,String description, ArrayList<Long> guestsId, long startDateTime, long endDateTime, String localization, LatLng position) {
-        this.id = id;
+    public FireCloudEvent(long eventId, ArrayList<Long> ownersId, String title,String description, ArrayList<Long> guestsId, long startDateTime, long endDateTime, String localization, LatLng position) {
+        this.eventId = eventId;
         this.ownersId = ownersId;
         this.title = title;
         this.description = description;
@@ -29,8 +28,8 @@ public class FireCloudEvent {
         this.position = position;
     }
 
-    public long getId() {
-        return id;
+    public long getEventId() {
+        return eventId;
     }
 
     public ArrayList<Long> getOwnersId() { return ownersId; }
