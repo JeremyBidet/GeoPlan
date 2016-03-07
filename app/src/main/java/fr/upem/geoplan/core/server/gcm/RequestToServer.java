@@ -31,11 +31,11 @@ public class RequestToServer {
         return null;
     }
 
-    public static LatLng getPosition(User user) {
+    public static LatLng getPosition(User user) throws IllegalAccessException {
         return null;
     }
 
-    public static void updatePositionUser(LatLng position, User user) {
+    public static void updatePosition(LatLng position) {
     }
 
     public static void addUsersToEvent(List<User> users, Event event) {
