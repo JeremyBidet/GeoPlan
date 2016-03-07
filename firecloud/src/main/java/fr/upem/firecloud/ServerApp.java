@@ -85,35 +85,35 @@ public class ServerApp {
         userRef.updateChildren(userMap);
     }
 
-    public void addUserToEvent(long userId) {
+    public void addUserToEvent(long userId, long eventId) {
         //TODO Code Firebase pour ajouter un utilisateur dans l'event (guests) et un event dans liste event de user (eventsUser)
         Map<String, Object> userMap = new HashMap<String, Object>();
         List<Long> guestsId = new ArrayList<>();
-        Firebase eventGuestsRef = mRootRef.child(NODE_EVENTS).child("guestsId");
+        Firebase eventGuestsRef = mRootRef.child(NODE_EVENTS).child(String.valueOf(eventId)).child("guestsId");
 
         guestsId.add(userId);
         userMap.put("guestsId", guestsId);
         eventGuestsRef.updateChildren(userMap);
     }
 
-    public void addUsersToEvent(List<Long> guestsId) {
+    public void addUsersToEvent(List<Long> guestsId, long eventId) {
         //TODO Code Firebase pour ajouter un utilisateur dans l'event (guests) et un event dans liste event de user (eventsUser)
         Map<String, Object> userMap = new HashMap<String, Object>();
-        Firebase eventGuestsRef = mRootRef.child(NODE_EVENTS).child("guestsId");
+        Firebase eventGuestsRef = mRootRef.child(NODE_EVENTS).child(String.valueOf(eventId)).child("guestsId");;
 
         userMap.put("guestsId", guestsId);
         eventGuestsRef.updateChildren(userMap);
     }
 
-    public void removeUserToEvent(long userId) {
+    public void removeUserToEvent(long userId, long eventId) {
         //TODO Code Firebase pour supprimer un utilisateur dans l'event (guests) et un event dans liste event de user (eventsUser)
-        Firebase eventGuestsRef = mRootRef.child(NODE_EVENTS).child("guestsId").child(String.valueOf(userId));
+        Firebase eventGuestsRef = mRootRef.child(NODE_EVENTS).child(String.valueOf(eventId)).child("guestsId").child(String.valueOf(userId));
         eventGuestsRef.removeValue();
     }
 
-    public void removeUsersToEvent(List<Long> guestsId) {
+    public void removeUsersToEvent(List<Long> guestsId, long eventId) {
         //TODO Code Firebase pour supprimer un utilisateur dans l'event (guests) et un event dans liste event de user (eventsUser)
-        Firebase eventGuestsRef = mRootRef.child(NODE_EVENTS).child("guestsId");
+        Firebase eventGuestsRef = mRootRef.child(NODE_EVENTS).child(String.valueOf(eventId)).child("guestsId");;
         for(long userId : guestsId) {
             Firebase eventRemoveGuestRef =  eventGuestsRef.child(String.valueOf(userId));
             eventRemoveGuestRef.removeValue();
