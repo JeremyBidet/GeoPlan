@@ -33,9 +33,9 @@ dependencies {
     compile project(':firecloud')
     compile 'com.android.support:appcompat-v7:23.2.0'
     /**
-     *  Googe services
+     * Googe services
      *
-     * @link https ://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+     * @link https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
      */
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
