@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
-        //menu.setHeaderTitle("Action");
+        menu.setHeaderTitle("Action sur l'Event");
         menu.add(Menu.NONE, 0, Menu.NONE, "Edit");
         menu.add(Menu.NONE, 1, Menu.NONE, "Synchronize");
         menu.add(Menu.NONE, 2, Menu.NONE, "Delete");
