@@ -131,7 +131,7 @@ changeEndDateTimeEvent request from android :
 {
   "category" : "fr.upem.geoplan.server.gcm.service",
   "data" : {
-    "action" : "changeStartDateTimeEvent",
+    "action" : "changeEndDateTimeEvent",
     "eventId" : eventId,
     "endDateTime" : "date"
   }

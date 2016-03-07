@@ -1,5 +1,7 @@
 package fr.upem.firecloud;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.ConnectionListener;
@@ -19,6 +21,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 import org.xmlpull.v1.XmlPullParser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -249,31 +252,6 @@ public class CcsClient {
     }
 
     /**
-     * Handles an upstream data message from a device application.
-     */
-    public void handleIncomingDataMessage(CcsMessage msg) {
-        if (msg.getPayload().get("action") != null) {
-            //TODO Au lieu de passer par la factory, rajouter un switch de parsing sur toutes les actions possibles.
-            //TODO pour le createUser, faire une nouvelle thread qui va push les positions régulièrement.
-            //TODO Méthodes à ajouter avec FireBase (dans une autre classe)
-            //TODO FireBase : ajout user
-            //TODO FireBase : ajout event
-            //TODO FireBase : getPosition d'un user
-            //TODO FireBase : getPosition d'un user
-            //TODO FireBase : setPosition d'un user (AJOUTER LES REQUETES POUR DANS LE SERVERREQUESTS)
-            //TODO FireBase : addUserToEvent
-            //TODO FireBase : removeUserToEvent
-            //TODO FireBase : changeStartDateTimeEvent
-            //TODO FireBase : getAllEvents (paramétré par un user).
-            PayloadProcessor processor = ProcessorFactory.getProcessor(msg.getPayload().get("action"));
-            processor.handleMessage(msg);
-        }
-        else{
-            System.err.println("No action in this message with a payload. Can't proceed.");
-        }
-    }
-
-    /**
      * Handles an ACK.
      *
      * By default, it only logs a INFO message, but subclasses could override it
@@ -302,6 +280,23 @@ public class CcsClient {
     }
 
     /**
+     * Creates a JSON encoded ACK message for an upstream message received from
+     * an application.
+     *
+     * @param to RegistrationId of the device who sent the upstream message.
+     * @param messageId messageId of the upstream message to be acknowledged to
+     * CCS.
+     * @return JSON encoded ack.
+     */
+    public static String createJsonAck(String to, String messageId) {
+        Map<String, Object> message = new HashMap<>();
+        message.put("message_type", "ack");
+        message.put("to", to);
+        message.put("message_id", messageId);
+        return JSONValue.toJSONString(message);
+    }
+
+    /**
      * Creates a JSON encoded GCM message.
      *
      * @param to RegistrationId of the target device (Required).
@@ -314,7 +309,7 @@ public class CcsClient {
      * @return JSON encoded GCM message.
      */
     public static String createJsonMessage(String to, String messageId, Map<String, String> payload,
-                                           String collapseKey, Long timeToLive, Boolean delayWhileIdle) {
+                                            String collapseKey, Long timeToLive, Boolean delayWhileIdle) {
         return createJsonMessage(createAttributeMap(to, messageId, payload,
                 collapseKey, timeToLive, delayWhileIdle));
     }
@@ -324,7 +319,7 @@ public class CcsClient {
     }
 
     public static Map createAttributeMap(String to, String messageId, Map<String, String> payload,
-                                         String collapseKey, Long timeToLive, Boolean delayWhileIdle) {
+                                          String collapseKey, Long timeToLive, Boolean delayWhileIdle) {
         Map<String, Object> message = new HashMap<>();
         if (to != null) {
             message.put("to", to);
@@ -346,20 +341,63 @@ public class CcsClient {
     }
 
     /**
-     * Creates a JSON encoded ACK message for an upstream message received from
-     * an application.
-     *
-     * @param to RegistrationId of the device who sent the upstream message.
-     * @param messageId messageId of the upstream message to be acknowledged to
-     * CCS.
-     * @return JSON encoded ack.
+     * Handles an upstream data message from a device application.
      */
-    public static String createJsonAck(String to, String messageId) {
-        Map<String, Object> message = new HashMap<>();
-        message.put("message_type", "ack");
-        message.put("to", to);
-        message.put("message_id", messageId);
-        return JSONValue.toJSONString(message);
+    public void handleIncomingDataMessage(CcsMessage message) {
+        if (message.getPayload().get("action") != null) {
+            Map<String, Object> payload;
+            switch(message.getPayload().get("action")){
+                //TODO pour getters => id en long
+                //TODO pour les setters => id en long
+                case "createEvent" :
+                    //TODO adds a new thread which will push regularly according to the event parameters
+                    //TODO the position of each user linked to the event.
+                    //TODO
+                    payload = new HashMap<>();
+                    payload.putAll(message.getPayload());
+                    payload.remove("action");
+
+                    break;
+                case "createUser" :
+                    payload = new HashMap<>();
+                    payload.putAll(message.getPayload());
+                    payload.remove("action");
+                    payload.put("device", message.getFrom());
+                    //TODO sends the payload to the firebase part.
+                    //TODO parse the args to create a new user in firebase
+                    break;
+                case "getPosition" :
+                    //TODO
+                    //TODO return answer
+                    break;
+                case "addUserToEvent" :
+                    //TODO
+                    break;
+                case "removeUserToEvent" :
+                    //TODO
+                    break;
+                case "updateEvent" :
+                    //TODO
+                    break;
+                case "updateUser" :
+                    //TODO
+                    break;
+                case "getAllEvents" :
+                    //TODO
+                    //TODO return answer
+                    break;
+                case "askUserPositions" :
+                    //TODO
+                    //TODO return answer
+                    break;
+            }
+            PayloadProcessor processor = ProcessorFactory.getProcessor(message.getPayload().get("action"));
+            processor.handleMessage(message);
+        }
+        else{
+            System.err.println("No action in this message with a payload. Can't proceed.");
+        }
     }
+
 }
 

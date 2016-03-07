@@ -8,6 +8,7 @@ import java.util.Map;
 import static fr.upem.firecloud.CcsClient.createJsonMessage;
 
 public class ServerMain {
+
     public static void main(String[] args) {
         final String projectId = "geoplan-cd1dd";
         final String apiKey = args[0];
