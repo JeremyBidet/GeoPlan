@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_planning);
 
         final ListView listEvent = (ListView) findViewById(R.id.listEvent);
-        getSupportActionBar().setIcon(R.drawable.geoplan);
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
         listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
