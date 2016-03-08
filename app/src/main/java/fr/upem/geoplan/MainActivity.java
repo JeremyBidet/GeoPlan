@@ -37,6 +37,8 @@ import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
 public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = "GeoPlan";
 
+    private User currentUser;
+
     //private final ArrayList<Event> events = new ArrayList<>();
     private final Planning planning = new Planning();
 
@@ -67,12 +69,13 @@ public class MainActivity extends AppCompatActivity {
         endCalendar.set(2016, Calendar.MARCH, 28, 16, 0);
         planning.addEvent(new Event("seance photo", startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
 
-
         setContent();
 
         initializeReceiver();
         registerReceiver();
         startReceiver();
+
+        currentUser = RequestToServer.createUser(this);
 
         // Identify user
         // Maybe use https://developers.google.com/identity/sign-in/android/

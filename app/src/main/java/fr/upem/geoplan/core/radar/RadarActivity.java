@@ -1,20 +1,9 @@
 package fr.upem.geoplan.core.radar;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.InflateException;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,16 +27,14 @@ import fr.upem.geoplan.core.session.User;
 
 public class RadarActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private final static String LOG_TAG = "GeoPlan";
-
     private Event event;
 
-    private final ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
 
     /**
      * Map markers
      */
-    private final ConcurrentHashMap<Long, Marker> mapMarkers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Marker> mapMarkers = new ConcurrentHashMap<>();
 
     /**
      * The map
@@ -62,7 +49,7 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
     /**
      * Radar label associated by user
      */
-    private final HashMap<Long, String> radarPinsLabel = new HashMap<>();
+    private final HashMap<String, String> radarPinsLabel = new HashMap<>();
 
     /**
      * Shown radar markers
@@ -87,11 +74,10 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
 
         LatLng eventPosition = event.getPosition();
         for (User user : users) {
-            updatePosition(user.getID(), new LatLng(eventPosition.latitude + user.getID() / 1000., eventPosition.longitude));
+            updatePosition(user.getID(), new LatLng(eventPosition.latitude + Math.random() / 100., eventPosition.longitude));
         }
     }
 
-    @NonNull
     private void setContent() {
         setContentView(R.layout.activity_radar);
 
@@ -114,7 +100,7 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
         HashMap<String, Bundle> usersBundles = new HashMap<>();
 
         for (User user : users.values()) {
-            long userId = user.getID();
+            String userId = user.getID();
             String label = user.getFirstname() + user.getLastname();
             radarPinsLabel.put(userId, label);
             Bundle newBundle = new Bundle();
@@ -138,13 +124,13 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
      * @param userId   - Id of the user.
      * @param position - New position of the user.
      */
-    public void updatePosition(long userId, LatLng position) {
+    public void updatePosition(String userId, LatLng position) {
         System.out.println("User " + userId + "\tposition " + position);
         updatePositionMap(userId, position);
         updatePositionRadar(userId, position);
     }
 
-    private void updatePositionMap(long userId, LatLng position) {
+    private void updatePositionMap(String userId, LatLng position) {
         if (mMap != null) {
             Marker marker = mMap.addMarker(new MarkerOptions().position(position));
             Marker oldMarker = mapMarkers.replace(userId, marker);
@@ -156,7 +142,7 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private final Object lockRadar = new Object();
 
-    private void updatePositionRadar(long userId, LatLng position) {
+    private void updatePositionRadar(String userId, LatLng position) {
         String label = radarPinsLabel.get(userId);
         RadarPoint marker = new RadarPoint(label, (float) position.latitude, (float) position.longitude);
         synchronized (lockRadar) {
