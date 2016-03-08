@@ -26,7 +26,7 @@ import fr.upem.geoplan.core.server.gcm.Preferences;
  */
 public class RegistrationIntentService extends IntentService {
 
-    private static final String TAG = "GeoPlan";
+    private static final String TAG = "GeoPlanGCMRegService";
     private static final String[] EVENTS = {"global"};
 
     public RegistrationIntentService() {
@@ -48,7 +48,7 @@ public class RegistrationIntentService extends IntentService {
             String token = instanceID.getToken(getString(R.string.sender_id),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             // [END get_token]
-            Log.i(TAG, "GCM Registration Token: " + token);
+            Log.i(TAG, "GCM Token: " + token);
 
             // TODO: Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token);

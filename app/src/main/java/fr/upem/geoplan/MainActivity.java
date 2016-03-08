@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Event getEventFromId(int id) {
         Event e = planning.getEventByID(id);
-        if(e == null) {
+        if (e == null) {
             throw new IllegalArgumentException("Invalid event id");
         }
         return e;
@@ -213,8 +213,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         isReceiverRegistered = false;
+
         super.onPause();
     }
+
 
     private void registerReceiver() {
         if (!isReceiverRegistered) {
@@ -257,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Action sur l'Event");
         menu.add(Menu.NONE, 0, Menu.NONE, "Edit");
         menu.add(Menu.NONE, 1, Menu.NONE, "Synchronize");
@@ -267,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case 0:
                 Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
                 return true;
