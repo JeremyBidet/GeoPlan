@@ -1,1 +1,1 @@
-include ':app', ':android-radar-master', ':firecloud'
+include ':app', ':firecloud'
