@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,16 +27,20 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import fr.upem.geoplan.core.LocationUpdater;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.planning.Planning;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.server.gcm.Preferences;
+import fr.upem.geoplan.core.server.gcm.RequestToServer;
 import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
+import fr.upem.geoplan.core.session.User;
 
 public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = "GeoPlan";
@@ -76,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         startReceiver();
 
         currentUser = RequestToServer.createUser(this);
+        startLocationUpdater();
 
         // Identify user
         // Maybe use https://developers.google.com/identity/sign-in/android/
@@ -83,6 +92,15 @@ public class MainActivity extends AppCompatActivity {
         // Start correct activity
         Intent intent = getIntent();
         doAction(intent.getAction(), intent.getData());
+    }
+
+    private void startLocationUpdater() {
+        assert currentUser != null;
+
+        Intent intent = new Intent(this, LocationUpdater.class);
+        intent.putExtra("user", currentUser);
+
+        startService(intent);
     }
 
     private void doAction(String action, Uri data) {
