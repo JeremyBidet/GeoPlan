@@ -1,7 +1,10 @@
 package fr.upem.geoplan.core.radar;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
@@ -173,6 +176,14 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
 
         final LatLng eventPosition = event.getPosition();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(eventPosition));
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            // TODO Show rationale and request permission.
+        }
+        
         final MarkerOptions eventMarkerOptions = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.radar_marker_event))
                 .position(eventPosition)
