@@ -23,6 +23,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,6 +54,7 @@ public class CcsClient {
     private final String apiKey;
     private final String projectId;
     private final boolean debuggable;
+    private final DataBaseCommunicator dataBaseCommunicator = new DataBaseCommunicator();
 
     /**
      * Indicates whether the connection is in draining state, which means that it
@@ -123,9 +125,20 @@ public class CcsClient {
     /**
      * Sends a packet with contents provided.
      */
-    public void send(String jsonRequest) {
+    protected void send(String jsonRequest) {
         Packet request = new GcmPacketExtension(jsonRequest).toPacket();
         connection.sendPacket(request);
+    }
+
+    /**
+     * Sends a downstream message to GCM.
+     *
+     */
+    public void sendDownstreamMessage(String jsonRequest) {
+        System.out.println("Trying to send downtream message...");
+        while(connectionDraining);
+        send(jsonRequest);
+        System.out.println("Message sent");
     }
 
 
@@ -280,38 +293,51 @@ public class CcsClient {
     }
 
     /**
-     * Creates a JSON encoded ACK message for an upstream message received from
-     * an application.
+     * Creates a JSON encoded ACK message for an upstream message received
+     * from an application.
      *
      * @param to RegistrationId of the device who sent the upstream message.
-     * @param messageId messageId of the upstream message to be acknowledged to
-     * CCS.
+     * @param messageId messageId of the upstream message to be acknowledged to CCS.
      * @return JSON encoded ack.
      */
-    public static String createJsonAck(String to, String messageId) {
-        Map<String, Object> message = new HashMap<>();
+    protected static String createJsonAck(String to, String messageId) {
+        Map<String, Object> message = new HashMap<String, Object>();
         message.put("message_type", "ack");
         message.put("to", to);
         message.put("message_id", messageId);
         return JSONValue.toJSONString(message);
     }
 
+
     /**
      * Creates a JSON encoded GCM message.
      *
      * @param to RegistrationId of the target device (Required).
-     * @param messageId Unique messageId for which CCS will send an "ack/nack"
-     * (Required).
+     * @param messageId Unique messageId for which CCS will send an
+     *         "ack/nack" (Required).
      * @param payload Message content intended for the application. (Optional).
      * @param collapseKey GCM collapse_key parameter (Optional).
      * @param timeToLive GCM time_to_live parameter (Optional).
      * @param delayWhileIdle GCM delay_while_idle parameter (Optional).
      * @return JSON encoded GCM message.
      */
-    public static String createJsonMessage(String to, String messageId, Map<String, String> payload,
-                                            String collapseKey, Long timeToLive, Boolean delayWhileIdle) {
-        return createJsonMessage(createAttributeMap(to, messageId, payload,
-                collapseKey, timeToLive, delayWhileIdle));
+    public static String createJsonMessage(String to, String messageId,
+                                           Map<String, String> payload, String collapseKey, Long timeToLive,
+                                           Boolean delayWhileIdle) {
+        Map<String, Object> message = new HashMap<>();
+        message.put("to", to);
+        if (collapseKey != null) {
+            message.put("collapse_key", collapseKey);
+        }
+        if (timeToLive != null) {
+            message.put("time_to_live", timeToLive);
+        }
+        if (delayWhileIdle != null && delayWhileIdle) {
+            message.put("delay_while_idle", true);
+        }
+        message.put("message_id", messageId);
+        message.put("data", payload);
+        return JSONValue.toJSONString(message);
     }
 
     public static String createJsonMessage(Map map) {
@@ -319,7 +345,7 @@ public class CcsClient {
     }
 
     public static Map createAttributeMap(String to, String messageId, Map<String, String> payload,
-                                          String collapseKey, Long timeToLive, Boolean delayWhileIdle) {
+                                         String collapseKey, Long timeToLive, Boolean delayWhileIdle) {
         Map<String, Object> message = new HashMap<>();
         if (to != null) {
             message.put("to", to);
@@ -346,34 +372,54 @@ public class CcsClient {
     public void handleIncomingDataMessage(CcsMessage message) {
         if (message.getPayload().get("action") != null) {
             Map<String, Object> payload;
-            switch(message.getPayload().get("action")){
-                //TODO pour getters => id en long
-                //TODO pour les setters => id en long
+            switch(message.getPayload().remove("action")){
                 case "createEvent" :
-                    //TODO adds a new thread which will push regularly according to the event parameters
-                    //TODO the position of each user linked to the event.
-                    //TODO
                     payload = new HashMap<>();
                     payload.putAll(message.getPayload());
-                    payload.remove("action");
-
+                    //_id generated automatically
+                    Map<String, String> map = dataBaseCommunicator.createEvent(payload);
+                    map.put("action", "receiveEventId");
+                    sendDownstreamMessage(createJsonMessage(
+                                    message.getFrom(), getRandomMessageId(), map, null, null, true)
+                    );
                     break;
                 case "createUser" :
                     payload = new HashMap<>();
                     payload.putAll(message.getPayload());
-                    payload.remove("action");
                     payload.put("device", message.getFrom());
-                    //TODO sends the payload to the firebase part.
-                    //TODO parse the args to create a new user in firebase
+                    dataBaseCommunicator.createUser(payload);
                     break;
-                case "getPosition" :
-                    //TODO
-                    //TODO return answer
+                case "pushPosition" :
+                    //Receive userId, lat, lng, eventId
+                    payload = new HashMap<>();
+                    payload.putAll(message.getPayload());
+                    String eventId = (String) payload.remove("eventId");
+                    dataBaseCommunicator.pushPosition(new HashMap<>(payload));
+                    List<String> devices = dataBaseCommunicator.getOwnerDevices(eventId);
+                    HashMap<String, String> newPayload = new HashMap<>();
+                    newPayload.put("userId", (String)payload.get("userId"));
+                    newPayload.put("lat", (String)payload.get("lat"));
+                    newPayload.put("lng", (String)payload.get("lng"));
+                    for(String device : devices){
+                        sendDownstreamMessage(createJsonMessage(
+                                device, getRandomMessageId(), newPayload, null, null, true
+                        ));
+                    }
                     break;
                 case "addUserToEvent" :
+                    payload = new HashMap<>();
+                    payload.putAll(message.getPayload());
+                    String userId = (String) payload.get("userId");
+                    payload.put("_id", userId);
+                    dataBaseCommunicator.addUserToEvent(payload);
                     //TODO
                     break;
                 case "removeUserToEvent" :
+                    payload = new HashMap<>();
+                    payload.putAll(message.getPayload());
+                    String userId2 = (String) payload.get("userId");
+                    payload.put("_id", userId2);
+                    dataBaseCommunicator.addUserToEvent(payload);
                     //TODO
                     break;
                 case "updateEvent" :
@@ -382,7 +428,17 @@ public class CcsClient {
                 case "updateUser" :
                     //TODO
                     break;
-                case "getAllEvents" :
+                case "getAllEventsOwned" :
+                    payload = new HashMap<>();
+                    payload.putAll(message.getPayload());
+
+                    //TODO
+                    //TODO return answer
+                    break;
+                case "getAllEventsGuested" :
+                    payload = new HashMap<>();
+                    payload.putAll(message.getPayload());
+
                     //TODO
                     //TODO return answer
                     break;
