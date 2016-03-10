@@ -2,7 +2,6 @@ package fr.upem.geoplan.core.server.gcm.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -82,6 +81,7 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
+        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
     }
 
     /**
