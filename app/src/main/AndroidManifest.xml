@@ -112,6 +112,8 @@
             android:exported="true"
             android:label="LocationUpdater"
             android:permission="android.permission.ACCESS_FINE_LOCATION" />
+
+        <activity android:name=".NewEventActivity"></activity>
     </application>
 
 </manifest>

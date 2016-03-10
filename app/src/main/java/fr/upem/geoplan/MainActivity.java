@@ -250,7 +250,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.create:
-                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, NewEventActivity.class);
+                startActivity(intent);
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_settings:
