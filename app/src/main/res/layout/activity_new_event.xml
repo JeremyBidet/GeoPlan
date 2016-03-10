@@ -18,7 +18,7 @@
 
         <EditText
             android:layout_margin="8dp"
-            android:layout_width="245dp"
+            android:layout_width="280dp"
             android:layout_height="28dp"
             android:hint="@string/email_adress"
             android:inputType="textEmailAddress"
@@ -50,7 +50,7 @@
 
         <EditText
             android:layout_margin="8dp"
-            android:layout_width="245dp"
+            android:layout_width="280dp"
             android:layout_height="28dp"
             android:id="@+id/editNameEvent"
             android:hint="@string/event_name"
@@ -76,7 +76,7 @@
 
         <EditText
             android:layout_margin="8dp"
-            android:layout_width="245dp"
+            android:layout_width="280dp"
             android:layout_height="28dp"
             android:id="@+id/editPosition"
             android:hint="@string/position"

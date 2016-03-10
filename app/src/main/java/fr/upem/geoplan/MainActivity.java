@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver();
         startReceiver();
 
-        currentUser = RequestToServer.createUser(this);
+        //currentUser = RequestToServer.createUser(this);
         startLocationUpdater();
 
         // Identify user

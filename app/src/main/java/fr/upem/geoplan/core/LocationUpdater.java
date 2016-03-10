@@ -61,7 +61,7 @@ public class LocationUpdater extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.i(TAG, "Location updated " + location);
-        RequestToServer.updatePosition(new LatLng(location.getLatitude(), location.getLongitude()));
+       // RequestToServer.updatePosition(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
     @Override
