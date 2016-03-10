@@ -16,5 +16,7 @@ public class NewEventActivity extends AppCompatActivity {
         image_name_event.setImageResource(R.drawable.event_name);
         ImageView image_position = (ImageView)findViewById(R.id.imageViewPosition);
         image_position.setImageResource(R.drawable.position);
+        setTitle("New event");
+
     }
 }

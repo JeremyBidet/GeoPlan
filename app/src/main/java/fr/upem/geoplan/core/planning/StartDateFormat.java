@@ -69,11 +69,23 @@ public class StartDateFormat extends DateFormat {
         } else {
             long deltaDays = day - now.get(Calendar.DAY_OF_MONTH);
             if (deltaDays > 0) {
-                buffer
-                        .append(String.format("in %d days", deltaDays));
+                if(deltaDays == 1) {
+                    buffer
+                            .append(String.format("in %d day", deltaDays));
+                }
+                else {
+                    buffer
+                            .append(String.format("in %d days", deltaDays));
+                }
             } else {
-                buffer
-                        .append(String.format("%d days ago", deltaDays));
+                if(deltaDays == -1) {
+                    buffer
+                            .append(String.format("%d day ago", -deltaDays));
+                }
+                else {
+                    buffer
+                            .append(String.format("%d days ago", -deltaDays));
+                }
             }
         }
 

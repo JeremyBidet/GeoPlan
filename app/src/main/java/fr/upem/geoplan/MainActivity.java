@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         endCalendar.set(2016, Calendar.MARCH, 21, 2, 0);
         planning.addEvent(new Event(-669, "geek party", startCalendar.getTime(), endCalendar.getTime(), "chez Jeremy", Color.BLACK));
 
-        startCalendar.set(2016, Calendar.MARCH, 10, 3, 0);
-        endCalendar.set(2016, Calendar.MARCH, 9, 16, 30);
+        startCalendar.set(2016, Calendar.MARCH, 9, 3, 0);
+        endCalendar.set(2016, Calendar.MARCH, 10, 16, 30);
         planning.addEvent(new Event(-670, "seance photo", startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
 
         for(int i=0; i<20; i++) {
