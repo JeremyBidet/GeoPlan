@@ -121,7 +121,7 @@
                     android:layout_width="171dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtStartDate"
-                    android:background="@drawable/edit_text_style"
+                    android:background="@drawable/edit_date_style"
                      />
 
                 <EditText
@@ -129,7 +129,7 @@
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtStartTime"
-                    android:background="@drawable/edit_text_style"
+                    android:background="@drawable/edit_date_style"
                     android:layout_weight="0.45" />
             </LinearLayout>
 
@@ -187,7 +187,7 @@
                 android:layout_width="171dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtEndDate"
-                android:background="@drawable/edit_text_style"
+                android:background="@drawable/edit_date_style"
                  />
 
             <EditText
@@ -195,7 +195,7 @@
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtEndTime"
-                android:background="@drawable/edit_text_style"
+                android:background="@drawable/edit_date_style"
                 android:layout_weight="0.45" />
         </LinearLayout>
 
