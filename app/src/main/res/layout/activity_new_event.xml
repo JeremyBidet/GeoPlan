@@ -115,17 +115,22 @@
                 android:weightSum="1">
 
                 <EditText
+                    android:paddingLeft="45dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_width="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_width="171dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtStartDate"
-                    android:layout_weight="0.48" />
+                    android:background="@drawable/edit_text_style"
+                     />
 
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:paddingLeft="30dp"
+                    android:layout_width="75dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtStartTime"
-                    android:layout_weight="0.48" />
+                    android:background="@drawable/edit_text_style"
+                    android:layout_weight="0.45" />
             </LinearLayout>
 
             <LinearLayout
@@ -136,7 +141,7 @@
 
                 <Button
                     android:layout_marginLeft="60dp"
-                    android:layout_marginRight="85dp"
+                    android:layout_marginRight="65dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Set Date"
@@ -176,17 +181,22 @@
             android:weightSum="1">
 
             <EditText
+                android:paddingLeft="45dp"
                 android:layout_marginLeft="16dp"
-                android:layout_width="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_width="171dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtEndDate"
-                android:layout_weight="0.48" />
+                android:background="@drawable/edit_text_style"
+                 />
 
             <EditText
-                android:layout_width="wrap_content"
+                android:paddingLeft="30dp"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtEndTime"
-                android:layout_weight="0.48" />
+                android:background="@drawable/edit_text_style"
+                android:layout_weight="0.45" />
         </LinearLayout>
 
         <LinearLayout
@@ -196,8 +206,9 @@
             android:layout_weight="0.38">
 
             <Button
+
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="85dp"
+                android:layout_marginRight="65dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Set Date"
