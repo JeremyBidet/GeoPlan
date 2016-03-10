@@ -1,46 +1,57 @@
 package fr.upem.geoplan.core.server.gcm;
 
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import fr.upem.geoplan.core.planning.Event;
+import fr.upem.geoplan.core.session.User;
 
 public class RequestToServer {
-    public static void createUser(long userId, Map<String, Object> userJSON) {
+    private static String USER_ID = null;
+
+    public static User createUser(Context context) {
+        if (USER_ID == null) {
+            TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+            USER_ID = tele.getDeviceId();
+        }
+
+        return new User(USER_ID);
     }
 
-    public static void createEvent(long eventId, Map<String, Object> eventJSON) {
+    public static void createEvent(Event event) {
     }
 
-    public static ArrayList<Long> getAllEvents(long userId) {
+    public static ArrayList<Event> getAllEvents() {
+        //userId
         return null;
     }
 
-    public static LatLng getPosition(long userID) {
+    public static LatLng getPosition(User user) throws IllegalAccessException {
         return null;
     }
 
-    public static void updatePositionUser(LatLng position, long userId) {
+    public static void updatePosition(LatLng position) {
     }
 
-    public static void addUserToEvent(long userId, long eventId) {
+    public static void addUsersToEvent(List<User> users, Event event) {
     }
 
-    public static void addUsersToEvent(List<Long> guestsId, long eventId) {
-    }
-
-    public static void removeUserToEvent(long userId, long eventId) {
-    }
-
-    public static void removeUsersToEvent(List<Long> guestsId, long eventId) {
+    public static void removeUsersToEvent(List<User> users, Event event) {
 
     }
 
-    public static void updateEvent(long eventId, Map<String, Object> eventJSON) {
+    public static void updateEvent(Event event) {
     }
 
-    public static void updateEvent(long eventId, ArrayList<Long> ownersId, String title, String description, ArrayList<Long> guestsId, long startDateTime, long endDateTime, String localization, LatLng position) {
+    /*
+    public static void updateUser(User user) {
     }
+    */
 }

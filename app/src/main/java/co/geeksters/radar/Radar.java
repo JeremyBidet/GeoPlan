@@ -15,6 +15,8 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Random;
 
+import fr.upem.geoplan.R;
+
 /**
  * Created by Karam Ahkouk on 03/06/15.
  */
@@ -33,7 +35,7 @@ public class Radar extends View {
         return points;
     }
 
-    private ArrayList<RadarPoint> points  = new ArrayList<RadarPoint>();
+    private ArrayList<RadarPoint> points = new ArrayList<RadarPoint>();
 
     private RadarPoint referencePoint;
 
@@ -42,20 +44,20 @@ public class Radar extends View {
 
     private final int DEFAULT_PINS_RADIUS = 12;
     private final int DEFAULT_CENTER_PIN_RADIUS = 18;
-    private final int DEFAULT_PINS_COLORS = getResources().getColor(R.color.light_green);
-    private final int DEFAULT_CENTER_PIN_COLOR = getResources().getColor(R.color.red);
-    private final int DEFAULT_BACKGROUND_COLOR = getResources().getColor(R.color.dark_green);
+    private final int DEFAULT_PINS_COLORS = getResources().getColor(R.color.radarPins);
+    private final int DEFAULT_CENTER_PIN_COLOR = getResources().getColor(R.color.radarCenter);
+    private final int DEFAULT_BACKGROUND_COLOR = getResources().getColor(R.color.radarBackground);
 
-    private  int pinsImage;
-    private  int centerPinImage;
+    private int pinsImage;
+    private int centerPinImage;
 
-    private  int radarBackground ;
-    private  int maxDistance ;
-    private  int pinsRadius ;
-    private  int centerPinRadius ;
-    private  int pinsColor ;
-    private  int centerPinColor ;
-    private  int backgroundColor;
+    private int radarBackground;
+    private int maxDistance;
+    private int pinsRadius;
+    private int centerPinRadius;
+    private int pinsColor;
+    private int centerPinColor;
+    private int backgroundColor;
 
 
     public Radar(Context context) {
@@ -70,7 +72,7 @@ public class Radar extends View {
         super(context, attrs, defStyle);
         this.context = context;
 
-        referencePoint = new RadarPoint("example", 10.00000f,22.0000f);
+        referencePoint = new RadarPoint("example", 10.00000f, 22.0000f);
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.radar, 0, 0);
 
@@ -119,19 +121,19 @@ public class Radar extends View {
 
         if (radarBackground != 0) {
             drawImage(0, 0, radarBackground, width);
-        }else{
+        } else {
             drawPin(width / 2, width / 2, getBackgroundColor(), width / 2);
         }
 
         if (centerPinImage != 0) {
             long pnt = (width / 2) - getCenterPinRadius();
-            drawImage(pnt,pnt, centerPinImage, getCenterPinRadius()*2);
-        }else{
+            drawImage(pnt, pnt, centerPinImage, getCenterPinRadius() * 2);
+        } else {
             drawPin(width / 2, width / 2, getCenterPinColor(), getCenterPinRadius());
         }
 
-        int pxCanvas = width/2;
-        int metterDistance ;
+        int pxCanvas = width / 2;
+        int metterDistance;
 
         maxDistance = getMaxDistance();
 
@@ -142,7 +144,7 @@ public class Radar extends View {
         ArrayList<Location> locations = buildLocations(u0);
 
 
-        metterDistance = zoomDistance + (zoomDistance/16);
+        metterDistance = zoomDistance + (zoomDistance / 16);
         if (metterDistance > maxDistance) metterDistance = maxDistance;
 
         drawPins(u0, locations, pxCanvas, metterDistance);
@@ -150,7 +152,7 @@ public class Radar extends View {
     }
 
 
-    ArrayList<Location> buildLocations(Location referenceLocation){
+    ArrayList<Location> buildLocations(Location referenceLocation) {
 
         zoomDistance = 0;
 
@@ -168,10 +170,10 @@ public class Radar extends View {
             }
         }
 
-        return locations ;
+        return locations;
     }
 
-    void drawPins(Location referenceLocation, ArrayList<Location> locations, int pxCanvas, int metterDistance){
+    void drawPins(Location referenceLocation, ArrayList<Location> locations, int pxCanvas, int metterDistance) {
 
         Random rand = new Random();
 
@@ -181,55 +183,54 @@ public class Radar extends View {
 
             if (distance > maxDistance) continue;
 
-            int virtualDistance = (distance * pxCanvas / metterDistance) ;
+            int virtualDistance = (distance * pxCanvas / metterDistance);
 
-            int angle = rand.nextInt(360)+1;
+            int angle = rand.nextInt(360) + 1;
 
-            long cX = pxCanvas + Math.round(virtualDistance*Math.cos(angle*Math.PI/180));
-            long cY = pxCanvas + Math.round(virtualDistance*Math.sin(angle * Math.PI / 180));
+            long cX = pxCanvas + Math.round(virtualDistance * Math.cos(angle * Math.PI / 180));
+            long cY = pxCanvas + Math.round(virtualDistance * Math.sin(angle * Math.PI / 180));
 
             pinsInCanvas.add(new RadarPoint(points.get(i).identifier, cX, cY, getPinsRadius()));
 
             if (pinsImage != 0) {
                 long pnt = cX - getPinsRadius();
                 long pnt2 = cY - getPinsRadius();
-                drawImage(pnt, pnt2, pinsImage, getPinsRadius()*2);
-            }else{
+                drawImage(pnt, pnt2, pinsImage, getPinsRadius() * 2);
+            } else {
                 drawPin(cX, cY, getPinsColor(), getPinsRadius());
             }
         }
     }
 
 
-    float distanceBetween(Location l1, Location l2)
-    {
-        float lat1= (float)l1.getLatitude();
-        float lon1=(float)l1.getLongitude();
-        float lat2=(float)l2.getLatitude();
-        float lon2=(float)l2.getLongitude();
+    float distanceBetween(Location l1, Location l2) {
+        float lat1 = (float) l1.getLatitude();
+        float lon1 = (float) l1.getLongitude();
+        float lat2 = (float) l2.getLatitude();
+        float lon2 = (float) l2.getLongitude();
         float R = 6371; // km
-        float dLat = (float)((lat2-lat1)*Math.PI/180);
-        float dLon = (float)((lon2-lon1)*Math.PI/180);
-        lat1 = (float)(lat1*Math.PI/180);
-        lat2 = (float)(lat2*Math.PI/180);
+        float dLat = (float) ((lat2 - lat1) * Math.PI / 180);
+        float dLon = (float) ((lon2 - lon1) * Math.PI / 180);
+        lat1 = (float) (lat1 * Math.PI / 180);
+        lat2 = (float) (lat2 * Math.PI / 180);
 
-        float a = (float)(Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2));
-        float c = (float)(2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+        float a = (float) (Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2));
+        float c = (float) (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
         float d = R * c * 1000;
 
         return d;
     }
 
-    public void drawImage(long x, long y, int image,int size){
+    public void drawImage(long x, long y, int image, int size) {
         Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), image);
 
-        Bitmap scaledBitmap =  Bitmap.createScaledBitmap(myBitmap, size, size, true);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(myBitmap, size, size, true);
 
-        canvas.drawBitmap( scaledBitmap, x, y, null);
+        canvas.drawBitmap(scaledBitmap, x, y, null);
     }
 
-    public void drawPin(long x, long y, int Color,int radius){
+    public void drawPin(long x, long y, int Color, int radius) {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color);
@@ -253,7 +254,7 @@ public class Radar extends View {
                 // check if we've touched inside some circle
                 return getTouchedCircle(xTouch, yTouch);
         }
-        return  null;
+        return null;
     }
 
     private String getTouchedCircle(final int xTouch, final int yTouch) {
@@ -261,7 +262,7 @@ public class Radar extends View {
 
         for (RadarPoint rPoint : pinsInCanvas) {
 
-            if ((rPoint.x - xTouch) * (rPoint.x - xTouch) + (rPoint.y - yTouch) * (rPoint.y - yTouch) <= rPoint.radius * rPoint.radius * (rPoint.radius/2)) {
+            if ((rPoint.x - xTouch) * (rPoint.x - xTouch) + (rPoint.y - yTouch) * (rPoint.y - yTouch) <= rPoint.radius * rPoint.radius * (rPoint.radius / 2)) {
                 touched = rPoint;
                 break;
             }

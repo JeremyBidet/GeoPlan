@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="radarBackground">#105602</color>
+    <color name="radarPins">#31BD16</color>
+    <color name="radarCenter">#B00000</color>
+
+</resources>

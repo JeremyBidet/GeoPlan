@@ -24,18 +24,22 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
+import fr.upem.geoplan.core.LocationUpdater;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.planning.Planning;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.server.gcm.Preferences;
+import fr.upem.geoplan.core.server.gcm.RequestToServer;
 import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
+import fr.upem.geoplan.core.session.User;
 
 public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = "GeoPlan";
+
+    private User currentUser;
 
     //private final ArrayList<Event> events = new ArrayList<>();
     private final Planning planning = new Planning();
@@ -79,12 +83,24 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver();
         startReceiver();
 
+        currentUser = RequestToServer.createUser(this);
+        startLocationUpdater();
+
         // Identify user
         // Maybe use https://developers.google.com/identity/sign-in/android/
 
         // Start correct activity
         Intent intent = getIntent();
         doAction(intent.getAction(), intent.getData());
+    }
+
+    private void startLocationUpdater() {
+        assert currentUser != null;
+
+        Intent intent = new Intent(this, LocationUpdater.class);
+        intent.putExtra("user", currentUser);
+
+        startService(intent);
     }
 
     private void doAction(String action, Uri data) {
@@ -120,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_planning);
 
         final ListView listEvent = (ListView) findViewById(R.id.listEvent);
-        getSupportActionBar().setIcon(R.drawable.geoplan);
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
         listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -153,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Event getEventFromId(int id) {
         Event e = planning.getEventByID(id);
-        if(e == null) {
+        if (e == null) {
             throw new IllegalArgumentException("Invalid event id");
         }
         return e;
@@ -203,8 +219,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         isReceiverRegistered = false;
+
         super.onPause();
     }
+
 
     private void registerReceiver() {
         if (!isReceiverRegistered) {
@@ -247,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Action sur l'Event");
         menu.add(Menu.NONE, 0, Menu.NONE, "Edit");
         menu.add(Menu.NONE, 1, Menu.NONE, "Synchronize");
@@ -257,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case 0:
                 Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
                 return true;

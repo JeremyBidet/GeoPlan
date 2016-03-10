@@ -9,22 +9,19 @@ import fr.upem.geoplan.core.planning.Planning;
  * Created by jerem_000 on 03/03/2016.
  */
 public class User implements Parcelable {
+    private final String id;
+    private String email;
+    private String firstname;
+    private String lastname;
+    private String phone;
 
-    private final long id;
-    private final String email;
-    private final String firstname;
-    private final String lastname;
-    private final String phone;
-
-    public User(long id, String email, String firstname, String lastname, String phone) {
+    public User(String id) {
         this.id = id;
-        this.email = email;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.phone = phone;
     }
 
-    public long getID() { return this.id; }
+    public String getID() {
+        return this.id;
+    }
 
     public String getEmail() {
         return this.email;
@@ -38,7 +35,11 @@ public class User implements Parcelable {
         return this.lastname;
     }
 
-    public String getPhone() { return this.phone; };
+    public String getPhone() {
+        return this.phone;
+    }
+
+    ;
 
     public Planning syncPlanning() {
         Planning p = new Planning();
@@ -47,7 +48,7 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
-        this.id = in.readLong();
+        this.id = in.readString();
         this.email = in.readString();
         this.firstname = in.readString();
         this.lastname = in.readString();
@@ -61,7 +62,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.id);
+        dest.writeString(this.id);
         dest.writeString(this.email);
         dest.writeString(this.firstname);
         dest.writeString(this.lastname);
