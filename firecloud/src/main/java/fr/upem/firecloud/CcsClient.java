@@ -9,7 +9,6 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.DefaultPacketExtension;
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.PacketExtension;
 import org.jivesoftware.smack.provider.PacketExtensionProvider;
@@ -96,7 +95,7 @@ public class CcsClient {
         }
 
         private Packet toPacket() {
-            Message message = new Message();
+            org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
             message.addExtension(this);
             return message;
         }
@@ -188,7 +187,7 @@ public class CcsClient {
             @Override
             public void processPacket(Packet packet) {
                 System.out.println("The following packet has been received :\n" + packet.toXML());
-                Message incomingMessage = (Message) packet;
+                org.jivesoftware.smack.packet.Message incomingMessage = (org.jivesoftware.smack.packet.Message) packet;
                 GcmPacketExtension gcmPacket
                         = (GcmPacketExtension) incomingMessage.getExtension(GCM_NAMESPACE);
                 String json = gcmPacket.getJson();
@@ -201,7 +200,7 @@ public class CcsClient {
                     System.err.println("An error occurred while parsing the following json :\n" + json + "\n" + e);
                 }
             }
-        }, new PacketTypeFilter(Message.class));
+        }, new PacketTypeFilter(org.jivesoftware.smack.packet.Message.class));
 
         // Log all outgoing packets
         connection.addPacketInterceptor(new PacketInterceptor() {
@@ -209,7 +208,7 @@ public class CcsClient {
             public void interceptPacket(Packet packet) {
                 System.out.println("Trying to send the following packet :\n" + packet.toXML());
             }
-        }, new PacketTypeFilter(Message.class));
+        }, new PacketTypeFilter(org.jivesoftware.smack.packet.Message.class));
 
         connection.login(projectId + "@gcm.googleapis.com", apiKey);
         System.out.println("The project " + projectId + " has been correctly recognized by Google with the right ApiKey.");
@@ -220,7 +219,7 @@ public class CcsClient {
         Object messageType = jsonMap.get("message_type");
 
         if (messageType == null) {
-            CcsMessage msg = getMessage(jsonMap);
+            Message msg = getMessage(jsonMap);
             // Normal upstream data message
             handleIncomingDataMessage(msg);
             // Send ACK to CCS
@@ -238,13 +237,10 @@ public class CcsClient {
     }
 
     /**
-     * Creates a CcsMessage from the json of the message.
+     * Creates a Message from the json of the message.
      */
-    private CcsMessage getMessage(Map<String, Object> jsonObject) {
+    private Message getMessage(Map<String, Object> jsonObject) {
         String from = jsonObject.get("from").toString();
-
-        // PackageName of the application that sent this message.
-        String category = jsonObject.get("category").toString();
 
         // unique id of this message
         String messageId = jsonObject.get("message_id").toString();
@@ -252,7 +248,7 @@ public class CcsClient {
         @SuppressWarnings("unchecked")
         Map<String, String> payload = (Map<String, String>) jsonObject.get("data");
 
-        return new CcsMessage(from, category, messageId, payload);
+        return new Message(from, messageId, payload);
     }
 
     /**
@@ -333,7 +329,7 @@ public class CcsClient {
     /**
      * Handles an upstream data message from a device application.
      */
-    public void handleIncomingDataMessage(CcsMessage message) {
+    public void handleIncomingDataMessage(Message message) {
         if (message.getPayload().get("action") != null) {
             Map<String, Object> payload;
             switch(message.getPayload().remove("action")){
@@ -428,9 +424,10 @@ public class CcsClient {
                     ));
                     //action = "receivedUsers"
                     break;
+                default :
+                    System.err.println("Unknown action");
+                    break;
             }
-            PayloadProcessor processor = ProcessorFactory.getProcessor(message.getPayload().get("action"));
-            processor.handleMessage(message);
         }
         else{
             System.err.println("No action in this message with a payload. Can't proceed.");
