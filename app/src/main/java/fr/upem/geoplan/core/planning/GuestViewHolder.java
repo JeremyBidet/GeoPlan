@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Created by Huynh on 03/03/2016.
+ * Created by Jeremy on 03/03/2016.
  */
 public class GuestViewHolder {
     public EditText guest;

@@ -19,7 +19,7 @@ import fr.upem.geoplan.R;
 import fr.upem.geoplan.core.session.User;
 
 /**
- * Created by Huynh on 03/03/2016.
+ * Created by Jeremy on 03/03/2016.
  */
 public class GuestAdapter extends ArrayAdapter<User> {
 
