@@ -50,8 +50,6 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         image_name_event.setImageResource(R.drawable.event_name);
         ImageView image_position = (ImageView)findViewById(R.id.imageViewPosition);
         image_position.setImageResource(R.drawable.position);
-        ImageView image_guests = (ImageView)findViewById(R.id.imageViewGuest);
-        image_guests.setImageResource(R.drawable.guest);
         setTitle("New event");
 
         btnCalendarStart = (Button) findViewById(R.id.startingDate);
