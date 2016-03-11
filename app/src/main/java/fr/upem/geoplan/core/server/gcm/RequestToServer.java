@@ -2,13 +2,16 @@ package fr.upem.geoplan.core.server.gcm;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GcmListenerService;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -17,22 +20,34 @@ import java.util.ArrayList;
 
 import fr.upem.geoplan.R;
 import fr.upem.geoplan.core.planning.Event;
+import fr.upem.geoplan.core.server.gcm.service.GeoplanGcmListenerService;
 import fr.upem.geoplan.core.session.User;
 
 public class RequestToServer {
-    private String USER_ID = null;
+    private static final String TAG = "GeoPlan";
+    private static String USER_ID = null;
+
     private final Context context;
     private final GoogleCloudMessaging gcm;
     private final String SenderID;
 
-    public RequestToServer(Context context) {
+    /**
+     * Create an instance RequestToServer to initialize GCM.
+     *
+     * @param context Context of application.
+     */
+    public RequestToServer(Context context, Intent intent) {
         this.context = context;
         this.gcm =  GoogleCloudMessaging.getInstance(context);
-        this.SenderID = String.valueOf(R.string.sender_id);
+        this.SenderID = context.getString(R.string.sender_id);
+
     }
 
-
-
+    /**
+     * Send a Data bundle to AppServer (FirecCloud) through GCM.
+     *
+     * @param dataSend Data bundle containing message data as key/value pairs to send at GCM.
+     */
     private void sendGCMMessage(Bundle dataSend) {
         final Bundle dataTmp = dataSend;
 
@@ -51,7 +66,6 @@ public class RequestToServer {
                 return msg;
             }
 
-
             @Override
             protected void onPostExecute(String msg) {
                 if(msg !=null) {
@@ -64,10 +78,11 @@ public class RequestToServer {
 
     }
 
-    private void receivedGCMMessage() {
-
-    }
-
+    /**
+     * Create a message ID which is incremented from the last ID.
+     *
+     * @return A message ID.
+     */
     private int getNextMsgId() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int id = prefs.getInt(DataConstantGcm.KEY_MSG_ID, 0);
@@ -77,6 +92,12 @@ public class RequestToServer {
         return id;
     }
 
+    /**
+     * Create an user in AppServer.
+     *
+     * @param user An User object containing all parameters to send AppServer.
+     * @return A user created.
+     */
     public User createUser(User user) {
         if (USER_ID == null) {
             TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -94,13 +115,20 @@ public class RequestToServer {
         return new User(USER_ID);
     }
 
+    /**
+     * Create an event in AppServer.
+     *
+     * @param event An Event object containing all parameters to send AppServer.
+     */
     public void createEvent(Event event) {
         Bundle data = new Bundle();
-        //reception je reçois l'id (_id), action="receivedEventId"
+
         data.putString("action", DataConstantGcm.ACTION_CREATE_EVENT);
         data.putString(DataConstantGcm.EVENT_NAME, event.getName());
         data.putString(DataConstantGcm.EVENT_DESCRIPTION, event.getDescription());
         data.putString(DataConstantGcm.EVENT_LOCALIZATION, event.getLocalization());
+        data.putDouble(DataConstantGcm.POSITION_LATITUDE, event.getPosition().latitude);
+        data.putDouble(DataConstantGcm.POSITION_LONGITUDE, event.getPosition().longitude);
         data.putLong(DataConstantGcm.EVENT_START_DATE_TIME, event.getStart_date_time().getTime());
         data.putLong(DataConstantGcm.EVENT_END_DATE_TIME, event.getEnd_date_time().getTime());
         data.putString(DataConstantGcm.EVENT_GUESTS_ID, event.getName());
@@ -111,6 +139,11 @@ public class RequestToServer {
         sendGCMMessage(data);
     }
 
+    /**
+     * Search and get all events associated to owner.
+     *
+     * @return An ArrayList containing all events associated to owner.
+     */
     public ArrayList<Event> getAllEventsOwned() {
         TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         USER_ID = tele.getDeviceId();
@@ -120,10 +153,17 @@ public class RequestToServer {
         data.putString("action", DataConstantGcm.ACTION_GET_ALL_EVENTS_OWNED);
         data.putString(DataConstantGcm.USER_ID, USER_ID);
         sendGCMMessage(data);
+
+        // Necessite peut-être attente serveur donc un wait avec une méthode à appeler ici.
         return null;
 
     }
 
+    /**
+     * Search and get all events associated to guest.
+     *
+     * @return An ArrayList containing all events associated to guest.
+     */
     public ArrayList<Event> getAllEventsGuested() {
         TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         USER_ID = tele.getDeviceId();
@@ -133,24 +173,39 @@ public class RequestToServer {
         data.putString("action", DataConstantGcm.ACTION_GET_ALL_EVENTS_GUESTED);
         data.putString(DataConstantGcm.USER_ID, USER_ID);
         sendGCMMessage(data);
+
+        // Necessite peut-être attente serveur donc un wait avec une méthode à appeler ici.
+
         return null;
 
     }
 
-    public ArrayList<String> getUsers() {
+    /**
+     * Get all users registered in our application.
+     *
+     * @return An ArrayList containing all Users registered in AppServer (Database).
+     */
+    public ArrayList<User> getUsers() {
         Bundle data = new Bundle();
 
         data.putString("action", DataConstantGcm.ACTION_GET_USERS);
         sendGCMMessage(data);
+
+        // Necessite peut-être attente serveur donc un wait avec une méthode à appeler ici.
         return null;
     }
 
+    /**
+     * Update position of user.
+     *
+     * @param position Position GPS to update.
+     * @param eventId  Event ID.
+     */
     public void updatePosition(LatLng position, long eventId) {
         TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         USER_ID = tele.getDeviceId();
 
         Bundle data = new Bundle();
-        // en envoie userID, lat, lng, eventID
         // autre méthode on reçoit tous les param user + lat + lng (methode getPosition.
         data.putString("action", DataConstantGcm.ACTION_UPDATE_POSITION);
         data.putString(DataConstantGcm.USER_ID, USER_ID);
@@ -160,6 +215,30 @@ public class RequestToServer {
         sendGCMMessage(data);
     }
 
+    /**
+     *
+     * @param user
+     * @return
+     * @throws IllegalAccessException
+     */
+    public LatLng getPosition(User user) throws IllegalAccessException {
+        Bundle data = new Bundle();
+
+        data.putString("action", DataConstantGcm.ACTION_GET_POSITION_USER);
+        data.putString(DataConstantGcm.USER_ID, user.getID());
+        sendGCMMessage(data);
+
+
+        // Necessite peut-être attente serveur donc un wait avec une méthode à appeler ici.
+        return null;
+    }
+
+    /**
+     * Add an user in Event.
+     *
+     * @param user User to add.
+     * @param event Specific event to add the user.
+     */
     public void addUserToEvent(User user, Event event) {
         Bundle data = new Bundle();
         String userId = user.getID();
@@ -170,6 +249,12 @@ public class RequestToServer {
         sendGCMMessage(data);
     }
 
+    /**
+     * Remove an user in Event.
+     *
+     * @param user User to remove.
+     * @param event Specific event to remove the user.
+     */
     public void removeUserToEvent(User user, Event event) {
         Bundle data = new Bundle();
         String userId = user.getID();
@@ -180,8 +265,15 @@ public class RequestToServer {
         sendGCMMessage(data);
     }
 
+    /**
+     * Update event's parameters.
+     *
+     * @param event An Event object containing parameters to update.
+     */
     public void updateEvent(Event event) {
         Bundle data = new Bundle();
+        ArrayList<String> guestsId = new ArrayList<>();
+        ArrayList<String> ownersId = new ArrayList<>();
 
         data.putString("action", DataConstantGcm.ACTION_UPDATE_EVENT);
         data.putLong(DataConstantGcm.EVENT_ID, event.getId());
@@ -192,27 +284,32 @@ public class RequestToServer {
         data.putString(DataConstantGcm.EVENT_LOCALIZATION, event.getLocalization());
         data.putLong(DataConstantGcm.EVENT_START_DATE_TIME, event.getStart_date_time().getTime());
         data.putLong(DataConstantGcm.EVENT_END_DATE_TIME, event.getEnd_date_time().getTime());
-        sendGCMMessage(data);
-        // boucle for
-        //event.getOwners()
-        //event.getGuests()
 
+        for(User owner:event.getGuests()) {
+            ownersId.add(owner.getID());
+        }
+        for(User guest:event.getGuests()) {
+            guestsId.add(guest.getID());
+        }
+        data.putStringArrayList(DataConstantGcm.EVENT_GUESTS_ID, guestsId);
+        data.putStringArrayList(DataConstantGcm.EVENT_OWNERS_ID, ownersId);
+        sendGCMMessage(data);
     }
 
-    public static void updateUser(User user, LatLng position) {
+    /**
+     * Update user's parameters.
+     *
+     * @param user An User object containing parameters to update.
+     * @param position Position GPS of user.
+     */
+    public void updateUser(User user, LatLng position) {
         Bundle data = new Bundle();
 
         data.putString("action", DataConstantGcm.ACTION_UPDATE_USER);
-                data.putDouble(DataConstantGcm.POSITION_LATITUDE, position.latitude);
+        data.putString(DataConstantGcm.USER_ID, user.getID());
+        data.putDouble(DataConstantGcm.POSITION_LATITUDE, position.latitude);
         data.putDouble(DataConstantGcm.POSITION_LONGITUDE, position.longitude);
+        sendGCMMessage(data);
     }
-
-    public static LatLng getPosition(User user) throws IllegalAccessException {
-        Bundle data = new Bundle();
-
-        return null;
-    }
-
-
 
 }
