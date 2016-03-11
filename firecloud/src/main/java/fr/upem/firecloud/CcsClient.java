@@ -319,7 +319,7 @@ public class CcsClient {
      * @return JSON encoded GCM message.
      */
     public static String createJsonMessage(String to, String messageId,
-                                           Map<String, String> payload, String collapseKey, Long timeToLive,
+                                           Map<String, Object> payload, String collapseKey, Long timeToLive,
                                            Boolean delayWhileIdle) {
         Map<String, Object> message = new HashMap<>();
         message.put("to", to);
@@ -374,8 +374,8 @@ public class CcsClient {
                     payload = new HashMap<>();
                     payload.putAll(message.getPayload());
                     //_id generated automatically
-                    Map<String, String> map = dataBaseCommunicator.createEvent(payload);
-                    map.put("action", "receiveEventId");
+                    Map<String, Object> map = dataBaseCommunicator.createEvent(payload);
+                    map.put("action", "receivedEventId");
                     sendDownstreamMessage(createJsonMessage(
                                     message.getFrom(), getRandomMessageId(), map, null, null, true)
                     );
@@ -386,17 +386,18 @@ public class CcsClient {
                     payload.put("device", message.getFrom());
                     dataBaseCommunicator.createUser(payload);
                     break;
-                case "pushPosition" :
+                case "updatePosition" :
                     //Receive userId, lat, lng, eventId
                     payload = new HashMap<>();
                     payload.putAll(message.getPayload());
                     String eventId = (String) payload.remove("eventId");
-                    dataBaseCommunicator.pushPosition(new HashMap<>(payload));
+                    dataBaseCommunicator.updatePosition(new HashMap<>(payload));
                     List<String> devices = dataBaseCommunicator.getOwnerDevices(eventId);
-                    HashMap<String, String> newPayload = new HashMap<>();
-                    newPayload.put("userId", (String)payload.get("userId"));
-                    newPayload.put("lat", (String)payload.get("lat"));
-                    newPayload.put("lng", (String)payload.get("lng"));
+                    Map<String, Object> newPayload = dataBaseCommunicator.getUser((String) payload.get("userId"));
+                    newPayload.put("action", "userPosition");
+                    newPayload.remove("device");
+                    newPayload.put("lat", payload.get("lat"));
+                    newPayload.put("lng", payload.get("lng"));
                     for(String device : devices){
                         sendDownstreamMessage(createJsonMessage(
                                 device, getRandomMessageId(), newPayload, null, null, true
@@ -409,39 +410,53 @@ public class CcsClient {
                     String userId = (String) payload.get("userId");
                     payload.put("_id", userId);
                     dataBaseCommunicator.addUserToEvent(payload);
-                    //TODO
                     break;
                 case "removeUserToEvent" :
                     payload = new HashMap<>();
                     payload.putAll(message.getPayload());
                     String userId2 = (String) payload.get("userId");
                     payload.put("_id", userId2);
-                    dataBaseCommunicator.addUserToEvent(payload);
-                    //TODO
+                    dataBaseCommunicator.removeUserToEvent(payload);
                     break;
                 case "updateEvent" :
-                    //TODO
+                    payload = new HashMap<>();
+                    payload.putAll(message.getPayload());
+                    dataBaseCommunicator.updateEvent(payload);
                     break;
                 case "updateUser" :
-                    //TODO
+                    payload = new HashMap<>();
+                    payload.putAll(message.getPayload());
+                    payload.put("device", message.getFrom());
+                    dataBaseCommunicator.updateUser(payload);
                     break;
                 case "getAllEventsOwned" :
+                    //action = "receivedEventsOwned"
+                    //receive : userId
                     payload = new HashMap<>();
                     payload.putAll(message.getPayload());
-
-                    //TODO
-                    //TODO return answer
+                    Map<String, Object> eventsOwned = dataBaseCommunicator.getAllEventsOwned((String) payload.get("userId"));
+                    eventsOwned.put("action", "receivedEventsOwned");
+                    sendDownstreamMessage(createJsonMessage(
+                                    message.getFrom(), getRandomMessageId(), eventsOwned, null, null, true)
+                    );
                     break;
                 case "getAllEventsGuested" :
+                    //action = "receivedEventsGuested"
                     payload = new HashMap<>();
                     payload.putAll(message.getPayload());
-
-                    //TODO
-                    //TODO return answer
+                    Map<String, Object> eventsGuested = dataBaseCommunicator.getAllEventsGuested((String) payload.get("userId"));
+                    eventsGuested.put("action", "receivedEventsGuested");
+                    sendDownstreamMessage(createJsonMessage(
+                                    message.getFrom(), getRandomMessageId(), eventsGuested, null, null, true)
+                    );
                     break;
-                case "askUserPositions" :
-                    //TODO
-                    //TODO return answer
+                case "getAllUsers" :
+                    Map<String, Object> users = dataBaseCommunicator.getUsers();
+                    users.put("action", "receivedUsers");
+                    sendDownstreamMessage(createJsonMessage(
+                            message.getFrom(), getRandomMessageId(), users, null, null, true
+                    ));
+                    //action = "receivedUsers"
                     break;
             }
             PayloadProcessor processor = ProcessorFactory.getProcessor(message.getPayload().get("action"));
