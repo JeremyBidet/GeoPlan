@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Planning planning;
 
-    private ListView listEvent = (ListView) findViewById(R.id.listEvent);
+    private ListView listEvent;
 
     private void init() {
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             planning = new Planning();
         }
-
 
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
@@ -114,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planning);
+
+        listEvent = (ListView) findViewById(R.id.listEvent);
 
         init();
 
