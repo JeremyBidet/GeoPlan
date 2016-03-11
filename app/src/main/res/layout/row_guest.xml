@@ -17,7 +17,7 @@
         android:layout_height="28dp"
         android:hint="Guests"
         android:ems="10"
-        android:id="@+id/guest"
+        android:id="@+id/editTextGuest"
         android:paddingLeft="8dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
