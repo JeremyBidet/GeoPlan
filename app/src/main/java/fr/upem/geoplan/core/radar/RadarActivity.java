@@ -135,7 +135,12 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private void updatePositionMap(String userId, LatLng position) {
         if (mMap != null) {
-            Marker marker = mMap.addMarker(new MarkerOptions().position(position));
+            User user = users.get(userId);
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(position)
+                    .title(user.getDisplayName())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.radar_marker_user));
+            Marker marker = mMap.addMarker(markerOptions);
             Marker oldMarker = mapMarkers.replace(userId, marker);
             if (oldMarker != null) {
                 oldMarker.remove();

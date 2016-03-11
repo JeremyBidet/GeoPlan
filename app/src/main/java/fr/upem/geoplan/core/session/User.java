@@ -81,4 +81,7 @@ public class User implements Parcelable {
         }
     };
 
+    public String getDisplayName() {
+        return firstname + " " + lastname.substring(0, 1).toUpperCase() + ".";
+    }
 }
