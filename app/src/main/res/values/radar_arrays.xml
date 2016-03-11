@@ -5,4 +5,9 @@
         <item>Message</item>
         <item>Remove</item>
     </string-array>
+    <string-array name="dialog_touch_send_text_action">
+        <item>Faster !</item>
+        <item>All OK ?</item>
+        <item>Canceled</item>
+    </string-array>
 </resources>
