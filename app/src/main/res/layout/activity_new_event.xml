@@ -76,6 +76,35 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/layout_border_description"
+                android:weightSum="1">
+
+                <EditText
+                    android:layout_margin="8dp"
+                    android:layout_width="280dp"
+                    android:layout_height="28dp"
+                    android:hint="@string/description"
+                    android:id="@+id/editDescription"
+                    android:paddingLeft="8dp"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/edit_text_style"
+                    />
+
+                <ImageView
+                    android:layout_marginTop="11dp"
+                    android:layout_width="55dp"
+                    android:layout_height="22dp"
+                    android:id="@+id/imageViewDescription"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginBottom="1dp"
                 android:background="@drawable/layout_border_position"
@@ -229,37 +258,11 @@
                         android:id="@+id/endingTime" />
                 </LinearLayout>
             </LinearLayout>
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/layout_border_guests"
-                android:weightSum="1">
 
-                <EditText
-                    android:layout_margin="8dp"
-                    android:layout_width="280dp"
-                    android:layout_height="28dp"
-                    android:hint="Guests"
-                    android:ems="10"
-                    android:id="@+id/guests"
-                    android:paddingLeft="8dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:background="@drawable/edit_text_style"
-                    />
-
-                <ImageView
-                    android:layout_marginTop="11dp"
-                    android:layout_width="55dp"
-                    android:layout_height="22dp"
-                    android:id="@+id/imageViewGuests"
-                    />
-
-            </LinearLayout>
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listGuests" />
 
         </LinearLayout>
 

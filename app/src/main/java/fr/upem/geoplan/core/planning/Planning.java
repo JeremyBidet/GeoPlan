@@ -1,6 +1,10 @@
 package fr.upem.geoplan.core.planning;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,17 +19,55 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
+import fr.upem.geoplan.core.session.User;
+
 /**
  * Created by jerem_000 on 11/02/2016.
  */
-public class Planning {
+public class Planning implements Parcelable {
 
-    private final SortedSet<Event> events;
-    private final LinkedList<Event> removed_events;
+    private SortedSet<Event> events;
+    private LinkedList<Event> removed_events;
 
     public Planning() {
         this.events = new TreeSet< Event>();
         this.removed_events = new LinkedList<Event>();
+    }
+
+    public Planning(Parcel in) {
+        this.events = new TreeSet<>();
+        this.removed_events = new LinkedList<Event>();
+        List<Event> tmp = new ArrayList<Event>();
+        in.readTypedList(tmp, getEventCreator());
+        in.readTypedList(removed_events, getEventCreator());
+        this.events.addAll(tmp);
+    }
+
+    protected Creator<Event> getEventCreator() {
+        return Event.CREATOR;
+    }
+
+    public static final Creator<Planning> CREATOR = new Creator<Planning>() {
+        @Override
+        public Planning createFromParcel(Parcel in) {
+            return new Planning(in);
+        }
+
+        @Override
+        public Planning[] newArray(int size) {
+            return new Planning[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(this.getEvents());
+        dest.writeTypedList(this.removed_events);
     }
 
     public boolean addEvent(Event e) {

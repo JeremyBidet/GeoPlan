@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
@@ -42,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
     private User currentUser;
 
-    private final Planning planning = new Planning();
+    private Planning planning;
 
-    private final ListView listEvent = (ListView) findViewById(R.id.listEvent);
+    private ListView listEvent = (ListView) findViewById(R.id.listEvent);
 
     private void init() {
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
@@ -54,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event = (Event) parent.getItemAtPosition(position);
-
                 startRadarActivity(event);
             }
         });
@@ -71,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initPlanning() {
+        Intent intent = getIntent();
+        if(intent.hasExtra("planning")) {
+            planning = (Planning) intent.getParcelableExtra("planning");
+        } else {
+            planning = new Planning();
+        }
+
+
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
 
@@ -266,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.create:
                 Intent intent = new Intent(this, NewEventActivity.class);
+                intent.putExtra("planning", planning);
                 startActivity(intent);
                 return true;
             //noinspection SimplifiableIfStatement

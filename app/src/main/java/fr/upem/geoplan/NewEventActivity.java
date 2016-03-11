@@ -2,6 +2,7 @@ package fr.upem.geoplan;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,24 +10,38 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TimePicker;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-public class NewEventActivity extends AppCompatActivity implements
-        View.OnClickListener {
+import fr.upem.geoplan.core.planning.Event;
+import fr.upem.geoplan.core.planning.GuestAdapter;
+import fr.upem.geoplan.core.planning.Planning;
+import fr.upem.geoplan.core.session.User;
+
+public class NewEventActivity extends AppCompatActivity implements View.OnClickListener {
+
     final Calendar c = Calendar.getInstance();
     int mYear = c.get(Calendar.YEAR);
     int mMonth = c.get(Calendar.MONTH);
     int mDay = c.get(Calendar.DAY_OF_MONTH);
     int mHour = c.get(Calendar.HOUR_OF_DAY);
     int mMinute = c.get(Calendar.MINUTE);
-    Button btnCalendarStart, btnTimePickerStart, btnCalendarEnd, btnTimePickerEnd;
+    Button btnCalendarStart, btnTimePickerStart, btnCalendarEnd, btnTimePickerEnd, validateButton, cancelButton;
     EditText txtDateStart, txtDateEnd, txtTimeStart, txtTimeEnd;
+    ListView listGuests;
+
+    private Planning planning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent i = getIntent();
+        planning = (Planning) i.getParcelableExtra("planning");
 
         setContentView(R.layout.activity_new_event);
         ImageView image_organisateur = (ImageView)findViewById(R.id.imageViewEmail);
@@ -35,7 +50,7 @@ public class NewEventActivity extends AppCompatActivity implements
         image_name_event.setImageResource(R.drawable.event_name);
         ImageView image_position = (ImageView)findViewById(R.id.imageViewPosition);
         image_position.setImageResource(R.drawable.position);
-        ImageView image_guests = (ImageView)findViewById(R.id.imageViewGuests);
+        ImageView image_guests = (ImageView)findViewById(R.id.imageViewGuest);
         image_guests.setImageResource(R.drawable.guest);
         setTitle("New event");
 
@@ -43,6 +58,8 @@ public class NewEventActivity extends AppCompatActivity implements
         btnTimePickerStart = (Button) findViewById(R.id.startingTime);
         btnCalendarEnd = (Button) findViewById(R.id.endingDate);
         btnTimePickerEnd = (Button) findViewById(R.id.endingTime);
+        validateButton = (Button) findViewById(R.id.validateButton);
+        cancelButton = (Button) findViewById(R.id.cancelButton);
 
         txtDateStart = (EditText) findViewById(R.id.txtStartDate);
         txtTimeStart = (EditText) findViewById(R.id.txtStartTime);
@@ -53,7 +70,15 @@ public class NewEventActivity extends AppCompatActivity implements
         btnTimePickerStart.setOnClickListener(this);
         btnCalendarEnd.setOnClickListener(this);
         btnTimePickerEnd.setOnClickListener(this);
+        validateButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);
 
+        listGuests = (ListView) findViewById(R.id.listGuests);
+
+        List<User> guests = new ArrayList<User>();
+        guests.add(new User());
+        GuestAdapter adapter = new GuestAdapter(NewEventActivity.this, guests);
+        listGuests.setAdapter(adapter);
     }
 
     @Override
@@ -144,6 +169,23 @@ public class NewEventActivity extends AppCompatActivity implements
                         }
                     }, mHour, mMinute, false);
             tpd.show();
+        }
+        if(v == validateButton) {
+            // TODO:
+            // retreive datas from fields
+            // set a new Event() with datas
+            // add this event to planning
+            planning.addEvent(new Event(-999));
+            // then exit this activity
+            // come back to main activity
+            // send new planning
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("planning", planning);
+            startActivity(intent);
+        }
+        if(v == cancelButton) {
+            // TODO:
+            // exit this activity
         }
     }
 }
