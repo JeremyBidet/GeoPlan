@@ -25,6 +25,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.Calendar;
+import java.util.List;
 
 import fr.upem.geoplan.core.LocationUpdater;
 import fr.upem.geoplan.core.planning.Event;
@@ -41,13 +42,35 @@ public class MainActivity extends AppCompatActivity {
 
     private User currentUser;
 
-    //private final ArrayList<Event> events = new ArrayList<>();
     private final Planning planning = new Planning();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private final ListView listEvent = (ListView) findViewById(R.id.listEvent);
 
+    private void init() {
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+
+        listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) parent.getItemAtPosition(position);
+
+                startRadarActivity(event);
+            }
+        });
+
+        listEvent.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) parent.getItemAtPosition(position);
+                registerForContextMenu(listEvent);
+                openContextMenu(listEvent);
+                return true;
+            }
+        });
+    }
+
+    private void initPlanning() {
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
 
@@ -76,8 +99,19 @@ public class MainActivity extends AppCompatActivity {
             endCalendar.set(2016, Calendar.MARCH, 28, 16, i+20+1);
             planning.addEvent(new Event(-i-671, "seance photo"+i, startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
         }
+    }
 
-        setContent();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_planning);
+
+        init();
+
+        initPlanning();
+
+        setListContent(planning.getEvents());
+        setListPosition(planning.getPosition());
 
         initializeReceiver();
         registerReceiver();
@@ -132,39 +166,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setContent() {
-        setContentView(R.layout.activity_planning);
-
-        final ListView listEvent = (ListView) findViewById(R.id.listEvent);
-        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-        listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event event = (Event) parent.getItemAtPosition(position);
-
-                startRadarActivity(event);
-            }
-        });
-
-        listEvent.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Event event = (Event) parent.getItemAtPosition(position);
-                registerForContextMenu(listEvent);
-                openContextMenu(listEvent);
-                return true;
-            }
-        });
-
-        EventAdapter adapter = new EventAdapter(MainActivity.this, planning.getEvents());
-        listEvent.setAdapter(adapter);
-        listEvent.setSelection(3);
+    private void setListContent(List<Event> events) {
         // TODO:
-        // au démragge récupérer l'index du premier event à partir de la date actuelle
-        // modifier setContent() pour permettre de modifier les events afficher
-        // extraire la ListView dans l'activité et non la méthode
-        // appeler setContent(...) après chaque modification de la liste (voir comment l'updateListener de la ListView ou de l'Adapter fonctionne)
+        // to add sections, two ways:
+        // 1)   change row_event.xml to add a section (TextView, ImageView, etc...)
+        //      add a boolean to Event to check if this event is the first of this day
+        //      display the section in row_event.xml only if the boolean is true
+        // 2)   Adapater can have multiple type of View inside.
+        //      Add a new View to the adatper which displays a section each time we reach a new day
+        EventAdapter adapter = new EventAdapter(MainActivity.this, events);
+        listEvent.setAdapter(adapter);
+    }
+
+    private void setListPosition(int position) {
+        listEvent.setSelection(position);
     }
 
     private Event getEventFromId(int id) {

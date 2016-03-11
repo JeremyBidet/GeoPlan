@@ -186,7 +186,9 @@ public class Event implements Parcelable, Comparable<Event> {
                 -1 :
                 this.start_date_time.after(another.getStart_date_time()) ?
                         1 :
-                        0;
+                        this.id == another.id ?
+                            0 :
+                            1;
     }
 
 
