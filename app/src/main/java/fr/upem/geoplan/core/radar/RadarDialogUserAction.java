@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import fr.upem.geoplan.R;
+import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.session.User;
 
 public class RadarDialogUserAction extends DialogFragment implements DialogInterface.OnClickListener {
@@ -19,6 +20,8 @@ public class RadarDialogUserAction extends DialogFragment implements DialogInter
 
     private User user;
 
+    private Event event;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -26,6 +29,7 @@ public class RadarDialogUserAction extends DialogFragment implements DialogInter
         Bundle bundle = getArguments();
 
         user = bundle.getParcelable("user");
+        event = bundle.getParcelable("event");
 
         assert user != null;
         builder.setTitle(user.getDisplayName()).setItems(R.array.dialog_touch_user_action, this);
@@ -63,6 +67,7 @@ public class RadarDialogUserAction extends DialogFragment implements DialogInter
         RadarDialogSendTextAction dialog = new RadarDialogSendTextAction();
         Bundle bundle = new Bundle();
         bundle.putParcelable("user", user);
+        bundle.putParcelable("event", event);
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), "SendText");
     }

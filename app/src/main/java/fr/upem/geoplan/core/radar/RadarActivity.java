@@ -108,6 +108,7 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
             radarPinsLabel.put(userId, label);
             Bundle newBundle = new Bundle();
             newBundle.putParcelable("user", user);
+            newBundle.putParcelable("event", event);
             usersBundles.put(label, newBundle);
         }
 
