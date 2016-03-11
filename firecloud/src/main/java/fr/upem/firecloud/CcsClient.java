@@ -27,16 +27,10 @@ import java.util.UUID;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- * Sample Smack implementation of a client for GCM Cloud Connection Server.
- * Most of it has been taken more or less verbatim from Googles
- * documentation: http://developer.android.com/google/gcm/ccs.html
- * <br>
- * But some additions have been made. Bigger changes are annotated like that:
- * "/// new".
- * <br>
- * Those changes have to do with parsing certain type of messages
- * as well as with sending messages to a list of recipients. The original code
- * only covers sending one message to exactly one recipient.
+ * Sample Smack implementation of a client for GCM Cloud Connection Server. This
+ * code can be run as a standalone CCS client.
+ *
+ * For illustration purposes only.
  */
 public class CcsClient {
 
@@ -132,7 +126,7 @@ public class CcsClient {
      *
      */
     public void sendDownstreamMessage(String jsonRequest) {
-        System.out.println("Trying to send downtream message...");
+        System.out.println("Trying to send downstream message...");
         while(connectionDraining);
         send(jsonRequest);
         System.out.println("Message sent");
@@ -277,7 +271,6 @@ public class CcsClient {
     /**
      * Handles a NACK.
      *
-     * <p>
      * By default, it only logs a INFO message, but subclasses could override it
      * to properly handle NACKS.
      */
@@ -298,7 +291,7 @@ public class CcsClient {
      * @return JSON encoded ack.
      */
     protected static String createJsonAck(String to, String messageId) {
-        Map<String, Object> message = new HashMap<String, Object>();
+        Map<String, Object> message = new HashMap<>();
         message.put("message_type", "ack");
         message.put("to", to);
         message.put("message_id", messageId);
@@ -337,32 +330,6 @@ public class CcsClient {
         return JSONValue.toJSONString(message);
     }
 
-    public static String createJsonMessage(Map map) {
-        return JSONValue.toJSONString(map);
-    }
-
-    public static Map createAttributeMap(String to, String messageId, Map<String, String> payload,
-                                         String collapseKey, Long timeToLive, Boolean delayWhileIdle) {
-        Map<String, Object> message = new HashMap<>();
-        if (to != null) {
-            message.put("to", to);
-        }
-        if (collapseKey != null) {
-            message.put("collapse_key", collapseKey);
-        }
-        if (timeToLive != null) {
-            message.put("time_to_live", timeToLive);
-        }
-        if (delayWhileIdle != null && delayWhileIdle) {
-            message.put("delay_while_idle", true);
-        }
-        if (messageId != null) {
-            message.put("message_id", messageId);
-        }
-        message.put("data", payload);
-        return message;
-    }
-
     /**
      * Handles an upstream data message from a device application.
      */
@@ -375,6 +342,9 @@ public class CcsClient {
                     payload.putAll(message.getPayload());
                     //_id generated automatically
                     Map<String, Object> map = dataBaseCommunicator.createEvent(payload);
+                    if(map == null){
+                        break;
+                    }
                     map.put("action", "receivedEventId");
                     sendDownstreamMessage(createJsonMessage(
                                     message.getFrom(), getRandomMessageId(), map, null, null, true)
@@ -394,7 +364,7 @@ public class CcsClient {
                     dataBaseCommunicator.updatePosition(new HashMap<>(payload));
                     List<String> devices = dataBaseCommunicator.getOwnerDevices(eventId);
                     Map<String, Object> newPayload = dataBaseCommunicator.getUser((String) payload.get("userId"));
-                    newPayload.put("action", "userPosition");
+                    newPayload.put("action", "receivedUserPosition");
                     newPayload.remove("device");
                     newPayload.put("lat", payload.get("lat"));
                     newPayload.put("lng", payload.get("lng"));
