@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="reference_point_label">Me</string>
-    <string name="users_number_format">%d users</string>
+    <string name="users_number_format">%d participants</string>
     <string name="activity_radar_name">Radar</string>
 </resources>
