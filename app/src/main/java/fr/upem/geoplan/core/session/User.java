@@ -3,6 +3,8 @@ package fr.upem.geoplan.core.session;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import fr.upem.geoplan.core.planning.Planning;
 
 /**
@@ -10,13 +12,20 @@ import fr.upem.geoplan.core.planning.Planning;
  */
 public class User implements Parcelable {
     private final String id;
-    private String email;
-    private String firstname;
-    private String lastname;
-    private String phone;
+
+    private String email = "";
+    private String firstname = "";
+    private String lastname = "";
+    private String phone = "";
+
+    private LatLng position = null;
 
     public User(String id) {
         this.id = id;
+    }
+
+    public User() {
+        this((String) null);
     }
 
     public String getID() {
@@ -39,7 +48,9 @@ public class User implements Parcelable {
         return this.phone;
     }
 
-    ;
+    public LatLng getPosition() {
+        return position;
+    }
 
     public Planning syncPlanning() {
         Planning p = new Planning();
@@ -53,6 +64,9 @@ public class User implements Parcelable {
         this.firstname = in.readString();
         this.lastname = in.readString();
         this.phone = in.readString();
+        Double lat = in.readDouble();
+        Double lng = in.readDouble();
+        this.position = new LatLng(lat, lng);
     }
 
     @Override
@@ -67,6 +81,8 @@ public class User implements Parcelable {
         dest.writeString(this.firstname);
         dest.writeString(this.lastname);
         dest.writeString(this.phone);
+        dest.writeDouble(this.position.latitude);
+        dest.writeDouble(this.position.longitude);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -82,6 +98,50 @@ public class User implements Parcelable {
     };
 
     public String getDisplayName() {
-        return firstname + " " + lastname.substring(0, 1).toUpperCase() + ".";
+        StringBuilder displayName = new StringBuilder();
+
+        displayName.append(firstname);
+
+        if (lastname.length() > 0) {
+            displayName.append(lastname.substring(0, 1).toUpperCase()).append(".");
+        }
+
+        return displayName.toString();
+    }
+
+    public void setEmail(String email) {
+        assert email != null;
+
+        this.email = email;
+    }
+
+    public void setFirstname(String firstname) {
+        assert firstname != null;
+
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname) {
+        assert lastname != null;
+
+        this.lastname = lastname;
+    }
+
+    public void setPhone(String phone) {
+        assert phone != null;
+
+        this.phone = phone;
+    }
+
+    public void setPosition(LatLng location) {
+        this.position = location;
+    }
+
+    @Override
+    public String toString() {
+        if (id == null) {
+            return "Unregistered user";
+        }
+        return "User " + id;
     }
 }
