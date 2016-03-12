@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 Event event = (Event) parent.getItemAtPosition(position);
                 registerForContextMenu(listEvent);
                 openContextMenu(listEvent);
-                return true;
+                return false;
             }
         });
     }
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        registerForContextMenu(listEvent);
+
         Event e = (Event) listEvent.getItemAtPosition(info.position);
         switch (item.getItemId()) {
             case 0:
