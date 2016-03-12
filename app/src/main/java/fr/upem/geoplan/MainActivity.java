@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
         Event e = (Event) listEvent.getItemAtPosition(info.position);
         switch (item.getItemId()) {
             case 0:
-                if(!e.getOwners().contains(currentUser)) {
+                if(e.getOwners().contains(currentUser)) {
                     Toast.makeText(this, "You are not the owner of this event!", Toast.LENGTH_LONG).show();
                     return true;
                 }

@@ -124,8 +124,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         Intent i = getIntent();
         if (i.hasExtra("create") && i.getBooleanExtra("create", false)) {
             setProtocol(Protocol.CREATE, -2);
-        } else if (i.hasExtra("edit") && i.getBooleanExtra("edit", false) && i.hasExtra("event") && i.getIntExtra("event", -1) != -1) {
-            setProtocol(Protocol.EDIT, i.getIntExtra("event", -1));
+        } else if (i.hasExtra("edit") && i.getBooleanExtra("edit", false) && i.hasExtra("event") && i.getLongExtra("event", -1) != -1) {
+            setProtocol(Protocol.EDIT, i.getLongExtra("event", -1));
         }
     }
 
@@ -195,7 +195,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private void prepareToEdit() {
         setTitle(event.getName());
 
-        editEmail.setText(event.getOwners().get(0).getDisplayName());
+        //editEmail.setText(event.getOwners().get(0).getDisplayName());
+        editEmail.setText("BIDET");
         editNameEvent.setText(event.getName());
         editDescription.setText(event.getDescription());
         editPosition.setText(event.getLocalization());
@@ -214,7 +215,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         String end_time = c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
         txtTimeEnd.setText(end_time);
 
-        editColor.setText(event.getColor());
+        //editColor.setText(event.getColor());
+        editColor.setText("blue");
         editCost.setText(Float.toString(event.getCost()));
 
         guests = event.getGuests();
