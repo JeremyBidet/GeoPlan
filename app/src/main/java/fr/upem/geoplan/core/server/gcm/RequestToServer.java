@@ -24,7 +24,6 @@ import fr.upem.geoplan.core.server.gcm.service.GeoplanGcmListenerService;
 import fr.upem.geoplan.core.session.User;
 
 public class RequestToServer {
-    private static final String TAG = "GeoPlan";
     private static String USER_ID = null;
 
     private final Context context;

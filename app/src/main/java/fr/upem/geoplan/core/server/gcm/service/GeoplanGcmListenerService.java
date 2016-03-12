@@ -1,6 +1,9 @@
 package fr.upem.geoplan.core.server.gcm.service;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -14,11 +17,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
+import fr.upem.geoplan.R;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.server.gcm.DataConstantGcm;
 import fr.upem.geoplan.core.session.User;
 
 public class GeoplanGcmListenerService extends GcmListenerService {
+    public static final int MESSAGE_NOTIFICATION_ID = 435345;
     private static final String TAG = "GeoPlan";
     private LatLng positionUser;
     private ArrayList<Event> guestEvents;
@@ -63,10 +68,12 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                     lat = data.getLong(DataConstantGcm.POSITION_LATITUDE);
                     lng = data.getLong(DataConstantGcm.POSITION_LONGITUDE);
                     positionUser = new LatLng(lat, lng);
+                    sendNotification("Réception position utilisateur");
                     break;
                 case "receivedEventGuested":
                     try {
                         guestEvents = parseToGetAllEvent(data);
+                        sendNotification("Réception events propriétaire");
                     } catch (JSONException e) {
                         Log.e("GCMListenerService", e.getMessage());
                     }
@@ -74,6 +81,7 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                 case "receivedEventOwned":
                     try {
                         ownerEvents = parseToGetAllEvent(data);
+                        sendNotification("Réception events invité");
                     } catch (JSONException e) {
                         Log.e("GCMListenerService", e.getMessage());
                     }
@@ -90,7 +98,6 @@ public class GeoplanGcmListenerService extends GcmListenerService {
             // message received from some topic.
         } else {
             // normal downstream message.
-
         }
     }
 
@@ -194,4 +201,20 @@ public class GeoplanGcmListenerService extends GcmListenerService {
         }
         return json;
     }
+
+    /**
+     * Create and show a simple notification containing the received GCM message.
+     *
+     * @param message GCM message received.
+     */
+    private void sendNotification(String message) {
+        Context context = getBaseContext();
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.mipmap.ic_launcher).setContentTitle("GeoPlan-GCM")
+                .setContentText(message);
+        NotificationManager mNotificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(MESSAGE_NOTIFICATION_ID, mBuilder.build());
+    }
+    
 }
