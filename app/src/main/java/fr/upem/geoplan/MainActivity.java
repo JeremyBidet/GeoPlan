@@ -25,6 +25,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.Calendar;
+import java.util.List;
 
 import fr.upem.geoplan.core.LocationUpdater;
 import fr.upem.geoplan.core.planning.Event;
@@ -37,18 +38,49 @@ import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
 import fr.upem.geoplan.core.session.User;
 
 public class MainActivity extends AppCompatActivity {
+
     private final static String LOG_TAG = "GeoPlan";
 
-    private User currentUser;
+    public static User currentUser;
+    public static Planning planning;
 
     private RequestToServer requestToServer;
 
-    //private final ArrayList<Event> events = new ArrayList<>();
-    private final Planning planning = new Planning();
+    private ListView listEvent;
+    private EventAdapter adapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void initList() {
+        listEvent = (ListView) findViewById(R.id.listEvent);
+
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+
+        listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) parent.getItemAtPosition(position);
+                startRadarActivity(event);
+            }
+        });
+
+        listEvent.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) parent.getItemAtPosition(position);
+                registerForContextMenu(listEvent);
+                openContextMenu(listEvent);
+                return false;
+            }
+        });
+    }
+
+    private void initPlanning(Intent intent) {
+        if(intent.hasExtra("planning")) {
+            planning = intent.getParcelableExtra("planning");
+        } else {
+            planning = new Planning();
+            // TODO: get planning from database
+        }
 
         requestToServer = new RequestToServer(getBaseContext());
 
@@ -80,8 +112,19 @@ public class MainActivity extends AppCompatActivity {
             endCalendar.set(2016, Calendar.MARCH, 28, 16, i+20+1);
             planning.addEvent(new Event(-i-671, "seance photo"+i, startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
         }
+    }
 
-        setContent();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        setContentView(R.layout.activity_planning);
+
+        initPlanning(intent);
+        initList();
+
+        setListContent(planning.getEvents());
+        setListPosition(planning.getPosition());
 
         initializeReceiver();
         registerReceiver();
@@ -97,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         startLocationUpdater();
 
         // Start correct activity
-        Intent intent = getIntent();
         doAction(intent.getAction(), intent.getData());
     }
 
@@ -123,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                             throw new IllegalArgumentException("No event found");
                         }
                         Log.i(LOG_TAG, "Starting radar for event " + event_id);
-                        Event event = getEventFromId(Integer.parseInt(event_id));
+                        Event event = planning.getEventByID(Integer.parseInt(event_id));
 
                         Intent intent = new Intent(this, RadarActivity.class);
                         intent.putExtra("event", event);
@@ -139,47 +181,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setContent() {
-        setContentView(R.layout.activity_planning);
-
-        final ListView listEvent = (ListView) findViewById(R.id.listEvent);
-        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-        listEvent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event event = (Event) parent.getItemAtPosition(position);
-
-                startRadarActivity(event);
-            }
-        });
-
-        listEvent.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Event event = (Event) parent.getItemAtPosition(position);
-                registerForContextMenu(listEvent);
-                openContextMenu(listEvent);
-                return true;
-            }
-        });
-
-        EventAdapter adapter = new EventAdapter(MainActivity.this, planning.getEvents());
+    private void setListContent(List<Event> events) {
+        // TODO: add sections
+        // to add sections, two ways:
+        // 1)   change row_event.xml to add a section (TextView, ImageView, etc...)
+        //      add a boolean to Event to check if this event is the first of this day
+        //      display the section in row_event.xml only if the boolean is true
+        // 2)   Adapater can have multiple type of View inside.
+        //      Add a new View to the adatper which displays a section each time we reach a new day
+        adapter = new EventAdapter(MainActivity.this, events);
         listEvent.setAdapter(adapter);
-        listEvent.setSelection(3);
-        // TODO:
-        // au démragge récupérer l'index du premier event à partir de la date actuelle
-        // modifier setContent() pour permettre de modifier les events afficher
-        // extraire la ListView dans l'activité et non la méthode
-        // appeler setContent(...) après chaque modification de la liste (voir comment l'updateListener de la ListView ou de l'Adapter fonctionne)
     }
 
-    private Event getEventFromId(int id) {
-        Event e = planning.getEventByID(id);
-        if (e == null) {
-            throw new IllegalArgumentException("Invalid event id");
-        }
-        return e;
+    private void setListPosition(int position) {
+        listEvent.setSelection(position);
     }
 
     private void startRadarActivity(Event event) {
@@ -257,7 +272,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.create:
-                Intent intent = new Intent(this, NewEventActivity.class);
+                Intent intent = new Intent(this, EventActivity.class);
+                intent.putExtra("create", true);
                 startActivity(intent);
                 return true;
             //noinspection SimplifiableIfStatement
@@ -283,15 +299,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        Event e = (Event) listEvent.getItemAtPosition(info.position);
         switch (item.getItemId()) {
             case 0:
-                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
+                if(e.getOwners().contains(currentUser)) {
+                    Toast.makeText(this, "You are not the owner of this event!", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                Intent intent = new Intent(this, EventActivity.class);
+                intent.putExtra("edit", true);
+                intent.putExtra("event", e.getId());
+                startActivity(intent);
                 return true;
             case 1:
-                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
+                // TODO: call synchronize method on this event
+                Toast.makeText(this, "Synchronizing...", Toast.LENGTH_LONG).show();
                 return true;
             case 2:
-                Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
+                if(!e.getOwners().contains(currentUser)) {
+                    Toast.makeText(this, "You are not the owner of this event!", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                planning.removeEvent(e);
+                Toast.makeText(this, "Event " + e.getName() + " removed!", Toast.LENGTH_LONG).show();
                 return true;
         }
         return super.onContextItemSelected(item);

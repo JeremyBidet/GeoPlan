@@ -1,6 +1,10 @@
 package fr.upem.geoplan.core.planning;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,17 +19,55 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
+import fr.upem.geoplan.core.session.User;
+
 /**
  * Created by jerem_000 on 11/02/2016.
  */
-public class Planning {
+public class Planning implements Parcelable {
 
-    private final SortedSet<Event> events;
-    private final LinkedList<Event> removed_events;
+    private SortedSet<Event> events;
+    private LinkedList<Event> removed_events;
 
     public Planning() {
         this.events = new TreeSet< Event>();
         this.removed_events = new LinkedList<Event>();
+    }
+
+    public Planning(Parcel in) {
+        this.events = new TreeSet<>();
+        this.removed_events = new LinkedList<Event>();
+        List<Event> tmp = new ArrayList<Event>();
+        in.readTypedList(tmp, getEventCreator());
+        in.readTypedList(removed_events, getEventCreator());
+        this.events.addAll(tmp);
+    }
+
+    protected Creator<Event> getEventCreator() {
+        return Event.CREATOR;
+    }
+
+    public static final Creator<Planning> CREATOR = new Creator<Planning>() {
+        @Override
+        public Planning createFromParcel(Parcel in) {
+            return new Planning(in);
+        }
+
+        @Override
+        public Planning[] newArray(int size) {
+            return new Planning[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(this.getEvents());
+        dest.writeTypedList(this.removed_events);
     }
 
     public boolean addEvent(Event e) {
@@ -33,6 +75,40 @@ public class Planning {
             return false;
         }
         return this.events.add(e);
+    }
+
+    /**
+     * Get the position in the list of the first event which start after today (not today at 00:00 but current time).
+     * @return the position in the list, or 0 if there is no event after today
+     */
+    public int getPosition() {
+        return getPosition(getFirstEventToday());
+    }
+
+    /**
+     * Get the position of this event in the list.
+     * @param event the event to get the position from the list
+     * @return the position in the list, or 0 if this event does not exists in the list
+     */
+    public int getPosition(Event event) {
+        int i = 0;
+        for(Event e : this.events) {
+            if(e.equals(event)) {
+                return i;
+            }
+            i++;
+        }
+        return 0;
+    }
+
+    private Event getFirstEventToday() {
+        Date today = new Date();
+        for(Event e : this.events) {
+            if(e.getStart_date_time().after(today)) {
+                return e;
+            }
+        }
+        return null;
     }
 
     public Event getEventByID(long id) {
@@ -99,16 +175,16 @@ public class Planning {
     public List<Event> getEventsOnlyThisDay(Date start_date) {
         List<Event> events = new ArrayList<>();
 
-        Calendar c_today = Calendar.getInstance();
-        c_today.setTime(start_date);
-        int y = c_today.get(Calendar.YEAR), m = c_today.get(Calendar.MONTH), d = c_today.get(Calendar.DATE);
-        c_today.clear();
-        c_today.set(y, m, d);
+        Calendar c_day = Calendar.getInstance();
+        c_day.setTime(start_date);
+        int y = c_day.get(Calendar.YEAR), m = c_day.get(Calendar.MONTH), d = c_day.get(Calendar.DATE);
+        c_day.clear();
+        c_day.set(y, m, d);
 
-        Calendar c_tomorrow = (Calendar) c_today.clone();
+        Calendar c_tomorrow = (Calendar) c_day.clone();
         c_tomorrow.add(Calendar.DATE, 1);
 
-        Date today_date = c_today.getTime();
+        Date today_date = c_day.getTime();
         Date tomorrow_date = c_tomorrow.getTime();
 
         return Arrays.asList((Event[]) this.events.subSet(new Event(today_date), new Event(tomorrow_date)).toArray());

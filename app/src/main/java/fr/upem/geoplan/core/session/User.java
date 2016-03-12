@@ -11,8 +11,8 @@ import fr.upem.geoplan.core.planning.Planning;
  * Created by jerem_000 on 03/03/2016.
  */
 public class User implements Parcelable {
-    private final String id;
 
+    private final String id;
     private String email = "";
     private String firstname = "";
     private String lastname = "";
@@ -28,6 +28,14 @@ public class User implements Parcelable {
         user.writeToParcel(parcel, PARCELABLE_WRITE_RETURN_VALUE);
 
         readFromParcel(parcel);
+    }
+
+    public User(String id, String email, String firstname, String lastname, String phone) {
+        this.id = id;
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.phone = phone;
     }
 
     public User() {
@@ -151,5 +159,11 @@ public class User implements Parcelable {
             return "Unregistered user";
         }
         return "User " + id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof User
+                && ((User) o).id.equals(this.id);
     }
 }

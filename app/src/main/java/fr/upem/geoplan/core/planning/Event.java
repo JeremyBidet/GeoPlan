@@ -17,7 +17,7 @@ import fr.upem.geoplan.core.session.User;
  */
 public class Event implements Parcelable, Comparable<Event> {
 
-    private final long id;
+    private long id;
     private String name;
     private String description;
     private LatLng position;
@@ -66,7 +66,7 @@ public class Event implements Parcelable, Comparable<Event> {
         this.color = in.readInt();
     }
 
-    public Event(int id) {
+    public Event(long id) {
         this.id = id;
     }
 
@@ -96,6 +96,7 @@ public class Event implements Parcelable, Comparable<Event> {
     public long getId() {
         return this.id;
     }
+    public void setId(long id) { this.id = id; }
 
     public String getName() {
         return this.name;
@@ -186,7 +187,9 @@ public class Event implements Parcelable, Comparable<Event> {
                 -1 :
                 this.start_date_time.after(another.getStart_date_time()) ?
                         1 :
-                        0;
+                        this.id == another.id ?
+                            0 :
+                            1;
     }
 
 

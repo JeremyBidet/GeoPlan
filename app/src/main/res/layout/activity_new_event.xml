@@ -4,6 +4,7 @@
     tools:context="fr.upem.geoplan.NewEventActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="450dp"
@@ -11,8 +12,8 @@
         <LinearLayout android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/layout_border_picker"
-        >
+            android:background="@drawable/layout_border_picker">
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -69,6 +70,35 @@
                     android:layout_width="55dp"
                     android:layout_height="22dp"
                     android:id="@+id/imageViewEventName" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/layout_border_description"
+                android:weightSum="1">
+
+                <EditText
+                    android:layout_margin="8dp"
+                    android:layout_width="280dp"
+                    android:layout_height="28dp"
+                    android:hint="@string/description"
+                    android:id="@+id/editDescription"
+                    android:paddingLeft="8dp"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/edit_text_style"
+                    />
+
+                <ImageView
+                    android:layout_marginTop="11dp"
+                    android:layout_width="55dp"
+                    android:layout_height="22dp"
+                    android:id="@+id/imageViewDescription"
+                    />
 
             </LinearLayout>
 
@@ -210,7 +240,6 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:layout_weight="0.38">
 
                     <Button
@@ -229,37 +258,40 @@
                         android:id="@+id/endingTime" />
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/layout_border_guests"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.38"
                 android:weightSum="1">
 
                 <EditText
                     android:layout_margin="8dp"
-                    android:layout_width="280dp"
+                    android:layout_width="100dp"
                     android:layout_height="28dp"
-                    android:hint="Guests"
-                    android:ems="10"
-                    android:id="@+id/guests"
+                    android:id="@+id/editColor"
+                    android:hint="@string/color"
                     android:paddingLeft="8dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
                     android:background="@drawable/edit_text_style"
-                    />
+                    android:layout_alignParentLeft="true"/>
 
-                <ImageView
-                    android:layout_marginTop="11dp"
-                    android:layout_width="55dp"
-                    android:layout_height="22dp"
-                    android:id="@+id/imageViewGuests"
-                    />
-
+                <EditText
+                    android:layout_margin="8dp"
+                    android:layout_width="100dp"
+                    android:layout_height="28dp"
+                    android:id="@+id/editCost"
+                    android:hint="@string/cost"
+                    android:paddingLeft="8dp"
+                    android:background="@drawable/edit_text_style"/>
             </LinearLayout>
+
+            <ListView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="500dp"
+                android:id="@+id/listGuests"
+                />
 
         </LinearLayout>
 

@@ -42,4 +42,5 @@ public class DataConstantGcm {
     public static String ACTION_REMOVE_USERS_TO_EVENT = "removeUserToEvent";
     public static String ACTION_UPDATE_EVENT = "updateEvent";
     public static String ACTION_UPDATE_USER = "updateUser";
+    public static String ACTION_GET_POSITION_USER ="askUserPositions";
 }

@@ -7,4 +7,7 @@
     <string name="email_adress">Email adress</string>
     <string name="event_name">Event name</string>
     <string name="position">Position</string>
+    <string name="description">Description</string>
+    <string name="color">Color</string>
+    <string name="cost">Cost</string>
 </resources>
