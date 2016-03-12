@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import fr.upem.geoplan.R;
@@ -23,6 +24,7 @@ public class RadarDialogSendTextAction extends DialogFragment implements DialogI
     public static final int TEXT_FASTER = 0;
     public static final int TEXT_CHECK = TEXT_FASTER + 1;
     public static final int TEXT_CANCEL = TEXT_CHECK + 1;
+    private static final String LOG_TAG = "RadarDialogText";
 
     private User user;
     private Event event;
@@ -101,7 +103,11 @@ public class RadarDialogSendTextAction extends DialogFragment implements DialogI
         SmsManager sms = SmsManager.getDefault();
         try {
             sms.sendTextMessage(user.getPhone(), null, body, sentPI, deliveredPI);
+        } catch (IllegalArgumentException e) {
+            Log.i(LOG_TAG, "Cannot send message", e);
+            Toast.makeText(context, String.format("Cannot send message\n%s", e.getLocalizedMessage()), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
+            Log.e(LOG_TAG, "Cannot send message", e);
             Toast.makeText(context, String.format("Cannot send message\n%s", e.getLocalizedMessage()), Toast.LENGTH_SHORT).show();
         }
 

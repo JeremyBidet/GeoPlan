@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -20,6 +21,7 @@ import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.session.User;
 
 public class RequestToServer {
+    private static final String LOG_TAG = "RequestToServer";
     private String USER_ID = null;
     private final Context context;
     private final GoogleCloudMessaging gcm;
@@ -54,7 +56,8 @@ public class RequestToServer {
 
             @Override
             protected void onPostExecute(String msg) {
-                if(msg !=null) {
+                if (msg != null) {
+                    Log.w(LOG_TAG, String.format("send message failed (%s)", msg));
                     Toast.makeText(context,
                             "send message failed: " + msg,
                             Toast.LENGTH_LONG).show();
