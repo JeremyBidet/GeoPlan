@@ -41,12 +41,16 @@ public class MainActivity extends AppCompatActivity {
 
     private User currentUser;
 
+    private RequestToServer requestToServer;
+
     //private final ArrayList<Event> events = new ArrayList<>();
     private final Planning planning = new Planning();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestToServer = new RequestToServer(getBaseContext());
 
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
@@ -83,11 +87,14 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver();
         startReceiver();
 
-        //currentUser = RequestToServer.createUser(this);
-        startLocationUpdater();
-
+        currentUser = new User();
         // Identify user
         // Maybe use https://developers.google.com/identity/sign-in/android/
+        currentUser.setFirstname("Jean");
+        currentUser.setFirstname("Dupont");
+        currentUser = requestToServer.createUser(currentUser);
+
+        startLocationUpdater();
 
         // Start correct activity
         Intent intent = getIntent();

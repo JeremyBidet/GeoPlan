@@ -91,7 +91,7 @@ public class RequestToServer {
         data.putString(DataConstantGcm.EMAIL, user.getEmail());
         sendGCMMessage(data);
 
-        return new User(USER_ID);
+        return new User(USER_ID, user);
     }
 
     public void createEvent(Event event) {

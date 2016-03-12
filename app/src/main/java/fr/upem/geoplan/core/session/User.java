@@ -20,12 +20,18 @@ public class User implements Parcelable {
 
     private LatLng position = null;
 
-    public User(String id) {
+    public User(String id, User user) {
         this.id = id;
+
+        Parcel parcel = Parcel.obtain();
+
+        user.writeToParcel(parcel, PARCELABLE_WRITE_RETURN_VALUE);
+
+        readFromParcel(parcel);
     }
 
     public User() {
-        this((String) null);
+        id = null;
     }
 
     public String getID() {
