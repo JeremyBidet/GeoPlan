@@ -37,6 +37,26 @@ public class GeoplanGcmListenerService extends GcmListenerService {
         String message = data.getString("message");
         double lat, lng;
 
+        // Variable for user
+        String userId;
+        String email, firstName, lastName, phone;
+        LatLng userPosition;
+
+        // Variable for Event
+        long eventId;
+        String eventName;
+        String description;
+        LatLng eventPosition;
+        String localization;
+        Date startDateTime;
+        Date endDateTime;
+        ArrayList<User> guests = new ArrayList<>();
+        ArrayList<User> owners = new ArrayList<>();
+        String type;
+        int weight;
+        float cost;
+        int color;
+
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
 
@@ -46,7 +66,7 @@ public class GeoplanGcmListenerService extends GcmListenerService {
             String action = data.getString(DataConstantGcm.ACTION);
             switch (action) {
                 case "receivedEventID":
-                    long eventId = Long.getLong(data.getString(DataConstantGcm.EVENT_ID));
+                    eventId = Long.getLong(data.getString(DataConstantGcm.EVENT_ID));
                     break;
                 case "updatePosition":
                     /*String userId = data.getString(DataConstantGcm.USER_ID);
@@ -65,26 +85,53 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                     positionUser = new LatLng(lat, lng);
                     break;
                 case "receivedEventGuested":
-                    try {
-                        guestEvents = parseToGetAllEvent(data);
-                    } catch (JSONException e) {
-                        Log.e("GCMListenerService", e.getMessage());
-                    }
+                    guestEvents = new ArrayList<>();
+                    //data
+                    eventId = Long.parseLong(data.getString(DataConstantGcm.EVENT_ID));
+                    eventName = data.getString(DataConstantGcm.EVENT_NAME);
+                    description = data.getString(DataConstantGcm.EVENT_DESCRIPTION);
+                    localization = data.getString(DataConstantGcm.EVENT_LOCALIZATION);
+                    lat = data.getDouble(DataConstantGcm.POSITION_LATITUDE);
+                    lng = data.getDouble(DataConstantGcm.POSITION_LONGITUDE);
+                    eventPosition = new LatLng(lat, lng);
+                    startDateTime = new Date(data.getLong(DataConstantGcm.EVENT_START_DATE_TIME));
+                    endDateTime = new Date(data.getLong(DataConstantGcm.EVENT_END_DATE_TIME));
+                    //data
+                    //data
+                    weight = data.getInt(DataConstantGcm.EVENT_WEIGHT);
+                    type = data.getString(DataConstantGcm.EVENT_TYPE);
+                    cost = data.getFloat(DataConstantGcm.EVENT_COST);
+                    color = data.getInt(DataConstantGcm.EVENT_COLOR);
                     break;
                 case "receivedEventOwned":
-                    try {
-                        ownerEvents = parseToGetAllEvent(data);
-                    } catch (JSONException e) {
-                        Log.e("GCMListenerService", e.getMessage());
-                    }
+                    ownerEvents = new ArrayList<>();
+                    //data
+                    eventId = Long.parseLong(data.getString(DataConstantGcm.EVENT_ID));
+                    eventName = data.getString(DataConstantGcm.EVENT_NAME);
+                    description = data.getString(DataConstantGcm.EVENT_DESCRIPTION);
+                    localization = data.getString(DataConstantGcm.EVENT_LOCALIZATION);
+                    lat = data.getDouble(DataConstantGcm.POSITION_LATITUDE);
+                    lng = data.getDouble(DataConstantGcm.POSITION_LONGITUDE);
+                    eventPosition = new LatLng(lat, lng);
+                    startDateTime = new Date(data.getLong(DataConstantGcm.EVENT_START_DATE_TIME));
+                    endDateTime = new Date(data.getLong(DataConstantGcm.EVENT_END_DATE_TIME));
+                    //data
+                    //data
+                    weight = data.getInt(DataConstantGcm.EVENT_WEIGHT);
+                    type = data.getString(DataConstantGcm.EVENT_TYPE);
+                    cost = data.getFloat(DataConstantGcm.EVENT_COST);
+                    color = data.getInt(DataConstantGcm.EVENT_COLOR);
                     break;
                 case "receivedUsers":
-                    try {
-                        JSONObject json = bundleToJsonObject(data);
-                        usersRegistered = parserToGetUser(json.getJSONArray("users"));
-                    } catch (JSONException e) {
-                        Log.e("GCMListenerService", e.getMessage());
-                    }
+                    usersRegistered = new ArrayList<>();
+                    Bundle dataUsers = data.getBundle("users");
+                    userId = data.getString(DataConstantGcm.USER_ID);
+                    firstName = data.getString(DataConstantGcm.FIRST_NAME);
+                    lastName = data.getString(DataConstantGcm.LAST_NAME);
+                    phone = data.getString(DataConstantGcm.PHONE);
+                    email = data.getString(DataConstantGcm.EMAIL);
+                    lat = data.getLong(DataConstantGcm.POSITION_LATITUDE);
+                    lng = data.getLong(DataConstantGcm.POSITION_LONGITUDE);
                     break;
             }
             // message received from some topic.
