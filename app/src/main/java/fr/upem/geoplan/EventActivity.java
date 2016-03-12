@@ -333,8 +333,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             syncEvent();
         }
         if(v == cancelButton) {
-            // TODO: cancel event
-            // exit this activity
+           this.finish();
         }
     }
 }
