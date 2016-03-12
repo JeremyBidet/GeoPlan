@@ -59,12 +59,17 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
-        this.id = in.readString();
+        id = readFromParcel(in);
+    }
+
+    private String readFromParcel(Parcel in) {
+        String id = in.readString();
         this.email = in.readString();
         this.firstname = in.readString();
         this.lastname = in.readString();
         this.phone = in.readString();
         this.position = in.readParcelable(null);
+        return id;
     }
 
     @Override
