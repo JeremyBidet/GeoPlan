@@ -1,6 +1,6 @@
 CreateEvent request from android :
 
-'''json
+```json
 {
   "category" : "fr.upem.geoplan.server.gcm.service",
   "data" : {
@@ -29,14 +29,14 @@ CreateEvent request from android :
   "message-id" : "id",
   "from" : "from"
 }
-'''
+```
 
 Request from server :
 
 Only an ACK
 
 createUser request from android :
-'''json
+```json
 {
 "category" : "fr.upem.geoplan.server.gcm.service",
 "data" : {
@@ -51,14 +51,14 @@ createUser request from android :
       "phoneNumber" : 01020202020
 }
 }
-'''
+```
 
 Request from server :
 
 Only an ACK
 
 getPosition request from android :
-'''json
+```json
 {
   "category" : "fr.upem.geoplan.server.gcm.service",
   "data" : {
@@ -66,10 +66,10 @@ getPosition request from android :
     "userId" : userId
   }
 }
-'''
+```
 
 Answer from server :
-'''json
+```json
 {
   "data" : {
     "action" : "answerGetPosition",
@@ -81,11 +81,11 @@ Answer from server :
   },
   "to" : "deviceId"
 }
-'''
+```
 
 
 addUserToEvent request from android :
-'''json
+```json
 {
   "category" : "fr.upem.geoplan.server.gcm.service",
   "data" : {
@@ -94,14 +94,14 @@ addUserToEvent request from android :
     "eventId" : eventId
   }
 }
-'''
+```
 
 Request from server :
 
 ACK only
 
 removeUserToEvent request from android :
-'''json
+```json
 {
   "category" : "fr.upem.geoplan.server.gcm.service",
   "data" : {
@@ -110,11 +110,11 @@ removeUserToEvent request from android :
     "eventId" : eventId
   }
 }
-'''
+```
 
 changeStartDateTimeEvent request from android :
 
-'''json
+```json
 {
   "category" : "fr.upem.geoplan.server.gcm.service",
   "data" : {
@@ -123,11 +123,11 @@ changeStartDateTimeEvent request from android :
     "startDateTime" : "date"
   }
 }
-'''
+```
 
 changeEndDateTimeEvent request from android :
 
-'''json
+```json
 {
   "category" : "fr.upem.geoplan.server.gcm.service",
   "data" : {
@@ -136,10 +136,10 @@ changeEndDateTimeEvent request from android :
     "endDateTime" : "date"
   }
 }
-'''
+```
 
 getAllEvents request from android :
-'''json
+```json
 {
   "category" : "fr.upem.geoplan.server.gcm.service",
   "data" : {
@@ -147,4 +147,4 @@ getAllEvents request from android :
     "userId" : userId
   }
 }
-'''
+```
