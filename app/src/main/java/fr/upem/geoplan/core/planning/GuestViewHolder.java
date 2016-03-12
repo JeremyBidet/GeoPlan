@@ -11,5 +11,5 @@ import android.widget.TextView;
 public class GuestViewHolder {
     public EditText guest;
     public ImageView imageViewGuest;
-    public Button addGuest;
+    public Button removeGuest;
 }
