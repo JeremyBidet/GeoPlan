@@ -3,6 +3,7 @@ package fr.upem.geoplan;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -112,6 +113,14 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         current_user = MainActivity.currentUser;
         planning = MainActivity.planning;
 
+        /*final String[] PROJECTION =
+                {
+                        ContactsContract.CommonDataKinds.Email.ADDRESS,
+                        ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME,
+                        ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME,
+                        ContactsContract.CommonDataKinds.Phone.NUMBER
+                };*/
+        
         Intent i = getIntent();
         if (i.hasExtra("create") && i.getBooleanExtra("create", false)) {
             setProtocol(Protocol.CREATE, -2);
