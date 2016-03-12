@@ -260,14 +260,16 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.38"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_border_email_adress"
                 android:weightSum="1">
 
                 <EditText
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="55dp"
                     android:layout_width="100dp"
                     android:layout_height="28dp"
                     android:id="@+id/editColor"
@@ -277,7 +279,8 @@
                     android:layout_alignParentLeft="true"/>
 
                 <EditText
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="50dp"
                     android:layout_width="100dp"
                     android:layout_height="28dp"
                     android:id="@+id/editCost"

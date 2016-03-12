@@ -2,15 +2,20 @@ package fr.upem.geoplan;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListPopupWindow;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
@@ -20,12 +25,13 @@ import java.util.Date;
 import java.util.List;
 
 import fr.upem.geoplan.core.planning.Event;
+import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.planning.GuestAdapter;
 import fr.upem.geoplan.core.planning.Planning;
 import fr.upem.geoplan.core.server.gcm.RequestToServer;
 import fr.upem.geoplan.core.session.User;
 
-public class EventActivity extends AppCompatActivity implements View.OnClickListener {
+public class EventActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     final Calendar c = Calendar.getInstance();
     int mYear = c.get(Calendar.YEAR);
@@ -76,6 +82,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private enum Protocol {CREATE, EDIT;}
 
     private Protocol protocol;
+
+    ListPopupWindow listPopupWindow;
 
     private void setProtocol(Protocol protocol, long id) {
         this.protocol = protocol;
@@ -173,7 +181,15 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         cancelButton.setOnClickListener(this);
 
         listGuests = (ListView) findViewById(R.id.listGuests);
-
+/*      TODO
+        listPopupWindow = new ListPopupWindow(
+                EventActivity.this);
+        listPopupWindow.setAdapter(new ArrayAdapter(
+                EventActivity.this,
+                R.layout.list_item, getContactsEmails()));
+        listPopupWindow.setOnItemClickListener(
+                EventActivity.this);
+*/
         View header = getLayoutInflater().inflate(R.layout.header_guest, null);
         Button addGuest = (Button) header.findViewById(R.id.addGuest);
         addGuest.setOnClickListener(new View.OnClickListener() {
@@ -184,6 +200,19 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         listGuests.addHeaderView(header);
+/*      TODO
+        editEmail.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                listPopupWindow.show();
+            }
+        });*/
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view,
+                            int position, long id) {
+        editEmail.setText(getContactsEmails().indexOf(position));
+        listPopupWindow.dismiss();
     }
 
     private void prepareToCreate() {
@@ -337,5 +366,18 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         if (v == cancelButton) {
             this.finish();
         }
+    }
+
+    public List<String> getContactsEmails() {
+        ArrayList<String> mails = new ArrayList<String>();
+        ContentResolver cr = getContentResolver();
+        Cursor emailCur = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, null, null, null);
+
+        while (emailCur.moveToNext()) {
+            String email = emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+            mails.add(email);
+        }
+        emailCur.close();
+        return mails;
     }
 }
