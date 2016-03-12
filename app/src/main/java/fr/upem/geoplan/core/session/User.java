@@ -64,9 +64,7 @@ public class User implements Parcelable {
         this.firstname = in.readString();
         this.lastname = in.readString();
         this.phone = in.readString();
-        Double lat = in.readDouble();
-        Double lng = in.readDouble();
-        this.position = new LatLng(lat, lng);
+        this.position = in.readParcelable(null);
     }
 
     @Override
@@ -81,8 +79,7 @@ public class User implements Parcelable {
         dest.writeString(this.firstname);
         dest.writeString(this.lastname);
         dest.writeString(this.phone);
-        dest.writeDouble(this.position.latitude);
-        dest.writeDouble(this.position.longitude);
+        dest.writeParcelable(this.position, flags);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
