@@ -7,6 +7,7 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -171,6 +172,15 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         cancelButton.setOnClickListener(this);
 
         listGuests = (ListView) findViewById(R.id.listGuests);
+
+        listGuests.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                User user = (User) parent.getItemAtPosition(position);
+                adapter.remove(user);
+                return true;
+            }
+        });
 
         View header = getLayoutInflater().inflate(R.layout.header_guest, null);
         Button addGuest = (Button) header.findViewById(R.id.addGuest);

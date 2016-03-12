@@ -37,7 +37,6 @@ public class GuestAdapter extends ArrayAdapter<User> {
             viewHolder.guest = (EditText) convertView.findViewById(R.id.editTextGuest);
             viewHolder.imageViewGuest = (ImageView) convertView.findViewById(R.id.imageViewGuest);
             viewHolder.imageViewGuest.setImageResource(R.drawable.guest);
-            viewHolder.removeGuest = (Button) convertView.findViewById(R.id.removeGuest);
             convertView.setTag(viewHolder);
         }
 
