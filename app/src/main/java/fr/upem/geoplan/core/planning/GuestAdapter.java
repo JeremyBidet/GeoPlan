@@ -46,25 +46,18 @@ public class GuestAdapter extends ArrayAdapter<User> {
         }
 
         //getItem(position) va recupérer l'item [position] de la List<Event> events
-        User guest = getItem(position);
+        final User guest = getItem(position);
 
         //on remplit la vue
         viewHolder.guest.setText(guest.getEmail());
-        viewHolder.guest.setEnabled(false);
-
-        final GuestViewHolder viewHolder_copy = viewHolder;
-        if(position == (getCount()-1)) {
-            viewHolder.addGuest.setVisibility(View.VISIBLE);
-            viewHolder.addGuest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    add(new User());
-                }
-            });
-        } else {
-            viewHolder.addGuest.setVisibility(View.GONE);
-        }
+        viewHolder.addGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               remove(guest);
+            }
+        });
 
         return convertView;
     }
+
 }

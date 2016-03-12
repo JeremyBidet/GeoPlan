@@ -113,7 +113,7 @@
             android:label="LocationUpdater"
             android:permission="android.permission.ACCESS_FINE_LOCATION" />
 
-        <activity android:name=".NewEventActivity"></activity>
+        <activity android:name=".EventActivity"></activity>
     </application>
 
 </manifest>

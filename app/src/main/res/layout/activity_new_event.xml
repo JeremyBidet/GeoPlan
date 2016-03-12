@@ -4,6 +4,7 @@
     tools:context="fr.upem.geoplan.NewEventActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="450dp"
@@ -11,8 +12,8 @@
         <LinearLayout android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/layout_border_picker"
-        >
+            android:background="@drawable/layout_border_picker">
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -258,10 +259,37 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <ListView
-                android:layout_marginTop="15dp"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.38"
+                android:weightSum="1">
+
+                <EditText
+                    android:layout_margin="8dp"
+                    android:layout_width="100dp"
+                    android:layout_height="28dp"
+                    android:id="@+id/editColor"
+                    android:hint="@string/color"
+                    android:paddingLeft="8dp"
+                    android:background="@drawable/edit_text_style"
+                    android:layout_alignParentLeft="true"/>
+
+                <EditText
+                    android:layout_margin="8dp"
+                    android:layout_width="100dp"
+                    android:layout_height="28dp"
+                    android:id="@+id/editCost"
+                    android:hint="@string/cost"
+                    android:paddingLeft="8dp"
+                    android:background="@drawable/edit_text_style"/>
+            </LinearLayout>
+
+            <ListView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="500dp"
                 android:id="@+id/listGuests"
                 />
 
