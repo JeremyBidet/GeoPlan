@@ -225,7 +225,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void updateEvent() {
-        // TODO: update event fields
         event.setName(editNameEvent.getText().toString());
         event.setDescription(editDescription.getText().toString());
         event.setLocalization(editPosition.getText().toString());
