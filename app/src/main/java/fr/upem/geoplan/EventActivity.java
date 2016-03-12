@@ -178,6 +178,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 guests.add(new User());
+                adapter.notifyDataSetChanged();
             }
         });
         listGuests.addHeaderView(header);
