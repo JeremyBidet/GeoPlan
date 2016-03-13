@@ -33,7 +33,7 @@ import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.planning.Planning;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.server.gcm.Preferences;
-import fr.upem.geoplan.core.server.gcm.RequestToServer;
+import fr.upem.geoplan.core.server.gcm.service.RequestToServer;
 import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
 import fr.upem.geoplan.core.session.User;
 

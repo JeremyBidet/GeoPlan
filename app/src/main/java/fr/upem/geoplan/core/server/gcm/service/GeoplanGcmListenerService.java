@@ -25,10 +25,6 @@ import fr.upem.geoplan.core.session.User;
 public class GeoplanGcmListenerService extends GcmListenerService {
     public static final int MESSAGE_NOTIFICATION_ID = 435345;
     private static final String TAG = "GeoPlan";
-    private LatLng positionUser;
-    private ArrayList<Event> guestEvents;
-    private ArrayList<Event> ownerEvents;
-    private ArrayList<User> usersRegistered;
 
     /**
      * Called when message is received.
@@ -51,7 +47,11 @@ public class GeoplanGcmListenerService extends GcmListenerService {
             String action = data.getString(DataConstantGcm.ACTION);
             switch (action) {
                 case "receivedEventID": // inutile pour les autres teams
-                    long eventId = Long.getLong(data.getString(DataConstantGcm.EVENT_ID));
+                    synchronized (LockData.lockReceivedEventId) {
+                        LockData.receivedEventId = data.getString(DataConstantGcm.EVENT_ID);
+                        LockData.doneReceivedEventId = true;
+                        LockData.lockReceivedEventId.notify();
+                    }
                     break;
                 case "updatePosition": // inutile pour les autres teams
                     /*String userId = data.getString(DataConstantGcm.USER_ID);
@@ -60,38 +60,55 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                     String phone = data.getString(DataConstantGcm.PHONE);
                     String email = data.getString(DataConstantGcm.EMAIL);*/
                     //besoin que de ça pour server mais inutile pour le reste de l'application.
-                    lat = data.getLong(DataConstantGcm.POSITION_LATITUDE);
-                    lng = data.getLong(DataConstantGcm.POSITION_LONGITUDE);
-                    positionUser = new LatLng(lat, lng);
+
                     break;
                 case "receivedUserPosition":
-                    lat = data.getLong(DataConstantGcm.POSITION_LATITUDE);
-                    lng = data.getLong(DataConstantGcm.POSITION_LONGITUDE);
-                    positionUser = new LatLng(lat, lng);
-                    sendNotification("Réception position utilisateur");
-                    break;
-                case "receivedEventGuested":
-                    try {
-                        guestEvents = parseToGetAllEvent(data);
-                        sendNotification("Réception events propriétaire");
-                    } catch (JSONException e) {
-                        Log.e("GCMListenerService", e.getMessage());
+                    synchronized (LockData.lockReceivedUserPosition) {
+                        lat = data.getLong(DataConstantGcm.POSITION_LATITUDE);
+                        lng = data.getLong(DataConstantGcm.POSITION_LONGITUDE);
+                        //LockData.receivedUserPosition = new LatLng(lat, lng);
+                        LockData.doneReceivedUserPosition = true;
+                        LockData.lockReceivedUserPosition.notify();
+                        sendNotification("Réception position utilisateur");
                     }
                     break;
-                case "receivedEventOwned":
-                    try {
-                        ownerEvents = parseToGetAllEvent(data);
-                        sendNotification("Réception events invité");
-                    } catch (JSONException e) {
-                        Log.e("GCMListenerService", e.getMessage());
+                case "receivedEventsGuested":
+                    //TODO check "s" on event on server
+                    synchronized (LockData.lockReceivedEventsGuested) {
+                        try {
+                            LockData.receivedEventsGuested = parseToGetAllEvent(data);
+                            LockData.doneReceivedEventsGuested = true;
+                            LockData.lockReceivedEventsGuested.notify();
+                            sendNotification("Réception events propriétaire");
+                        }catch(JSONException e){
+                            Log.e("GCMListenerService", e.getMessage());
+                        }
                     }
                     break;
-                case "receivedUsers":
-                    try {
-                        JSONObject json = bundleToJsonObject(data);
-                        usersRegistered = parserToGetUser(json.getJSONArray("users"));
-                    } catch (JSONException e) {
-                        Log.e("GCMListenerService", e.getMessage());
+                case "receivedEventsOwned":
+                    //TODO check "s" on event on server
+                    synchronized (LockData.lockReceivedEventsGuested) {
+                        try {
+                            LockData.receivedEventsOwned = parseToGetAllEvent(data);
+                            LockData.doneReceivedEventsOwned = true;
+                            LockData.lockReceivedEventsOwned.notify();
+                            sendNotification("Réception events propriétaire");
+                        }catch(JSONException e){
+                            Log.e("GCMListenerService", e.getMessage());
+                        }
+                    }
+                    break;
+                case "receivedUserAccordingToEmail":
+                    //TODO Same thing on server
+                    synchronized (LockData.lockReceivedUserAccordingToMail) {
+
+                            // ancien code getUsers
+                            JSONObject json = bundleToJsonObject(data);
+                            //LockData.receivedUserAccordingToMail = parserToGetUser(json.getJSONArray("users"));
+                            LockData.doneReceivedUserAccordingToMail =  true;
+                            LockData.lockReceivedUserAccordingToMail.notify();
+                            sendNotification("Réception events propriétaire");
+
                     }
                     break;
             }
@@ -147,7 +164,7 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                 cost = new Float(eventJsonObject.getDouble(DataConstantGcm.EVENT_COST));
                 color = eventJsonObject.getInt(DataConstantGcm.EVENT_COLOR);
 
-                guestEvents.add(new Event(eventId, eventName, description, eventPosition, localization,
+                listEvent.add(new Event(eventId, eventName, description, eventPosition, localization,
                         startDateTime, endDateTime, guests, owners, weight, type, cost, color));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -216,5 +233,5 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(MESSAGE_NOTIFICATION_ID, mBuilder.build());
     }
-    
+
 }
