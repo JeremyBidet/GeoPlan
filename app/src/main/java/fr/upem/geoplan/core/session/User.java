@@ -12,21 +12,17 @@ import fr.upem.geoplan.core.planning.Planning;
  */
 public class User implements Parcelable {
 
-    private final String id;
+    private String id;
     private String email = "";
     private String firstname = "";
     private String lastname = "";
     private String phone = "";
-
     private LatLng position = null;
 
     public User(String id, User user) {
         this.id = id;
-
         Parcel parcel = Parcel.obtain();
-
         user.writeToParcel(parcel, PARCELABLE_WRITE_RETURN_VALUE);
-
         readFromParcel(parcel);
     }
 
@@ -39,31 +35,8 @@ public class User implements Parcelable {
     }
 
     public User() {
-        id = null;
-    }
-
-    public String getID() {
-        return this.id;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public String getFirstname() {
-        return this.firstname;
-    }
-
-    public String getLastname() {
-        return this.lastname;
-    }
-
-    public String getPhone() {
-        return this.phone;
-    }
-
-    public LatLng getPosition() {
-        return position;
+        this.id = "";
+        this.email = "";
     }
 
     public Planning syncPlanning() {
@@ -125,6 +98,30 @@ public class User implements Parcelable {
         return displayName.toString();
     }
 
+    public String getID() {
+        return this.id;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getFirstname() {
+        return this.firstname;
+    }
+
+    public String getLastname() {
+        return this.lastname;
+    }
+
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public LatLng getPosition() {
+        return position;
+    }
+
     public void setEmail(String email) {
         assert email != null;
 
@@ -155,15 +152,15 @@ public class User implements Parcelable {
 
     @Override
     public String toString() {
-        if (id == null) {
+        if (email.equals("")) {
             return "Unregistered user";
         }
-        return "User " + id;
+        return "User " + this.email;
     }
 
     @Override
     public boolean equals(Object o) {
         return o instanceof User
-                && ((User) o).id.equals(this.id);
+                && ((User) o).email.equals(this.email);
     }
 }
