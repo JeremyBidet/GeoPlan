@@ -104,9 +104,7 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                         String email = data.getString(DataConstantGcm.EMAIL);
                         LatLng userPosition = new LatLng(data.getLong(DataConstantGcm.POSITION_LATITUDE),
                                 data.getLong(DataConstantGcm.POSITION_LONGITUDE));
-
-                        User userTmp = new User(userId, email, firstName, lastName, phone);
-                        userTmp.setPosition(userPosition);
+                        User userTmp = new User(userId, email, firstName, lastName, phone, userPosition);
                         LockData.receivedUserAccordingToMail = userTmp;
                         LockData.doneReceivedUserAccordingToMail =  true;
                         LockData.lockReceivedUserAccordingToMail.notify();
@@ -196,8 +194,7 @@ public class GeoplanGcmListenerService extends GcmListenerService {
             email = userJsonObj.getString(DataConstantGcm.EMAIL);
             userPosition = new LatLng(userJsonObj.getLong(DataConstantGcm.POSITION_LATITUDE), userJsonObj.getLong(DataConstantGcm.POSITION_LONGITUDE));
 
-            User userTmp = new User(userId, email, firstName, lastName, phone);
-            userTmp.setPosition(userPosition);
+            User userTmp = new User(userId, email, firstName, lastName, phone, userPosition);
             listUsers.add(userTmp);
 
         }
