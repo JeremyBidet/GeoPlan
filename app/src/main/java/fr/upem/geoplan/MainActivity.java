@@ -1,5 +1,7 @@
 package fr.upem.geoplan;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -54,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
     private void getCurrentUser() {
         requestToServer = new RequestToServer(getApplicationContext());
         // TODO: get the e-mail of the current connected Google account
+        AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        Account[] account_list = manager.getAccounts();
+        ArrayList<String> gmails = new ArrayList<String>();
+        for(Account account : account_list) {
+            gmails.add(account.name);
+            Log.i("Gmail", account.name);
+        }
         String email = "";
         String firstname = "";
         String lastname = "";
