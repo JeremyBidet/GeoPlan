@@ -48,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
     public static User currentUser;
     public static Planning planning;
 
-    private RequestToServer requestToServer;
+    public static RequestToServer requestToServer;
 
     private ListView listEvent;
     private EventAdapter adapter;
 
     private void getCurrentUser() {
         requestToServer = new RequestToServer(getApplicationContext());
-        // TODO: get the e-mail of the current connected Google account
+        // TODO: get the datas of the current connected Google account: email, names, phone
         AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
         Account[] account_list = manager.getAccounts();
         ArrayList<String> gmails = new ArrayList<String>();
@@ -63,12 +63,13 @@ public class MainActivity extends AppCompatActivity {
             gmails.add(account.name);
             Log.i("Gmail", account.name);
         }
+        // TODO: set datas of the google account here
         String email = "";
         String firstname = "";
         String lastname = "";
         String phone = "";
-        //requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
-        //currentUser = requestToServer.getUserAccordingToEmail(email);
+        requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
+        currentUser = requestToServer.getUserAccordingToEmail(email);
     }
 
     private void initList() {

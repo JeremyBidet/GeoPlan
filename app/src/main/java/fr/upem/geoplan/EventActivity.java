@@ -28,6 +28,7 @@ import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.planning.GuestAdapter;
 import fr.upem.geoplan.core.planning.Planning;
+import fr.upem.geoplan.core.server.gcm.service.RequestToServer;
 import fr.upem.geoplan.core.session.User;
 
 public class EventActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
@@ -89,7 +90,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         switch (protocol) {
             case CREATE:
                 event = new Event(id);
-                requestEvent();
                 init();
                 prepareToCreate();
                 break;
@@ -103,16 +103,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void requestEvent() {
-        // TODO: sync the event on the server
-        // get the server generated id and set it to the event
-        long event_id = -1;
-        event.setId(event_id);
-    }
-
     private void syncEvent() {
-        // TODO: update the event on the server
-        // the event has already been created when requestEvent() was called
+        MainActivity.requestToServer.updateEvent(event);
     }
 
     @Override
@@ -180,7 +172,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         cancelButton.setOnClickListener(this);
 
         listGuests = (ListView) findViewById(R.id.listGuests);
-/*      TODO
+/*
         listPopupWindow = new ListPopupWindow(
                 EventActivity.this);
         listPopupWindow.setAdapter(new ArrayAdapter(
@@ -199,7 +191,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         listGuests.addHeaderView(header);
-/*      TODO
+        /*
         editEmail.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 listPopupWindow.show();
@@ -361,6 +353,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         if (v == validateButton) {
             updateEvent();
             syncEvent();
+            this.finish();
         }
         if (v == cancelButton) {
             this.finish();
