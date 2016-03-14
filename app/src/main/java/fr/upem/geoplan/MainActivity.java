@@ -1,7 +1,5 @@
 package fr.upem.geoplan;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -38,8 +35,8 @@ import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.planning.Planning;
 import fr.upem.geoplan.core.radar.RadarActivity;
 import fr.upem.geoplan.core.server.gcm.Preferences;
-import fr.upem.geoplan.core.server.gcm.service.RequestToServer;
 import fr.upem.geoplan.core.server.gcm.service.RegistrationIntentService;
+import fr.upem.geoplan.core.server.gcm.service.RequestToServer;
 import fr.upem.geoplan.core.session.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private EventAdapter adapter;
 
     private void getCurrentUser() {
+        /*
         requestToServer = new RequestToServer(getApplicationContext());
         // TODO: get the datas of the current connected Google account: email, names, phone
         AccountManager manager = AccountManager.get(this);
@@ -80,11 +78,14 @@ public class MainActivity extends AppCompatActivity {
 
         assert accounts.length > 0;
         String firstname = accounts[0].name;
+        */
 
-        String lastname = "";
-        String phone = phoneNumber;
-        requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
-        currentUser = requestToServer.getUserAccordingToEmail(email);
+        String email = "john.doe@gmail.com";
+        String firstname = "John";
+        String lastname = "Doe";
+        String phone = "0606060606";
+        /*requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
+        currentUser = requestToServer.getUserAccordingToEmail(email);*/
     }
 
     private void initList() {
@@ -116,18 +117,20 @@ public class MainActivity extends AppCompatActivity {
         if(intent.hasExtra("planning")) {
             planning = intent.getParcelableExtra("planning");
         } else {
-            ArrayList<Event> event_guested = requestToServer.getAllEventsGuested(currentUser.getID());
-            ArrayList<Event> event_owned = requestToServer.getAllEventsOwned(currentUser.getID());
+            //ArrayList<Event> event_guested = requestToServer.getAllEventsGuested(currentUser.getID());
+            //ArrayList<Event> event_owned = requestToServer.getAllEventsOwned(currentUser.getID());
             planning = new Planning();
-            for(Event e : event_guested) {
-                planning.addEvent(e);
-            }
-            for(Event e : event_owned) {
-                planning.addEvent(e);
+
+            Calendar c = Calendar.getInstance();
+            Calendar c2 = Calendar.getInstance();
+            for(int i=0; i<30; i++) {
+                c.set(2016, 3, i+1, i%24, i);
+                c2.set(2016, 3, i+1, i%24, i+10);
+                planning.addEvent(new Event(-i-700, "Event " + i, "Description " + i, new LatLng(i+50.342, i-39.543), i + " Main street", c.getTime(), c2.getTime(), new ArrayList<User>(), new ArrayList<User>(), i+1, "Type " + (i%10), i+10.99f, i));
             }
         }
 
-        /*requestToServer = new RequestToServer(getBaseContext());
+        /*requestToServer = new RequestToServer(getBaseContext());*/
 
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
@@ -156,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
             startCalendar.set(2016, Calendar.MARCH, 28, 14, i+1);
             endCalendar.set(2016, Calendar.MARCH, 28, 16, i+20+1);
             planning.addEvent(new Event(-i-671, "seance photo"+i, startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
-        }*/
+        }
     }
 
     @Override
@@ -353,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case 1:
                 // TODO: call synchronize method on this event
-                requestToServer.updateEvent(e);
+                //requestToServer.updateEvent(e);
                 Toast.makeText(this, "Synchronizing...", Toast.LENGTH_LONG).show();
                 return true;
             case 2:
