@@ -59,6 +59,14 @@ public class MainActivity extends AppCompatActivity {
         // TODO: get the datas of the current connected Google account: email, names, phone
         AccountManager manager = AccountManager.get(this);
         Account[] mail = manager.getAccountsByType("com.google");
+
+        // If not account ask for a new one
+        if (mail.length == 0) {
+            Intent launchIntent = new Intent(Settings.ACTION_ADD_ACCOUNT);
+            startActivity(launchIntent);
+            return;
+        }
+
         Account[] accounts = manager.getAccounts();
         TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String phoneNumber = tele.getLine1Number();
@@ -67,13 +75,12 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Accounts", account.name);
         }
         // TODO: set datas of the google account here
-        String firstname = "", email = "";
-        if (mail.length > 0) {
-            email = mail[0].name;
-        }
-        if (accounts.length > 0) {
-            firstname = accounts[0].name;
-        }
+        assert mail.length > 0;
+        String email = mail[0].name;
+
+        assert accounts.length > 0;
+        String firstname = accounts[0].name;
+
         String lastname = "";
         String phone = phoneNumber;
         requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
