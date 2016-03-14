@@ -51,6 +51,6 @@ final class DataConstantGcm {
     static String RECEIVED_USER_POSITION = "receivedUserPosition";
     static String RECEIVED_EVENTS_GUESTED = "receivedEventsGuested";
     static String RECEIVED_EVENTS_OWNED = "receivedEventsOwned";
-    static String RECEIVED_USER_ACCORDING_TO_EMAIL = "receivedUserAccordingToEmail";
+    static String RECEIVED_USER_ACCORDING_TO_MAIL = "receivedUserAccordingToMail";
 
 }

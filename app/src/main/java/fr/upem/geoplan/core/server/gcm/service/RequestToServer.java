@@ -106,10 +106,10 @@ public class RequestToServer {
                             extracted = LockData.class.getDeclaredField(fieldName).get(null);
                         }
                     } catch (NoSuchFieldException e) {
-                        Log.e(LOG_TAG, "Error in LockData, some fields are missing");
+                        Log.e(LOG_TAG, "Error in LockData, some fields are missing.");
                         return null;
                     } catch (IllegalAccessException e) {
-                        Log.e(LOG_TAG, "Error in LockData, can't access some fields");
+                        Log.e(LOG_TAG, "Error in LockData, can't access some fields.");
                         return null;
                     } catch (InterruptedException e) {
                         return null;
@@ -241,7 +241,7 @@ public class RequestToServer {
         data.putString("action", DataConstantGcm.ACTION_GET_USER_ACCORDING_TO_EMAIL);
         data.putString(DataConstantGcm.EMAIL, emailUser);
         sendGCMMessage(data);
-        return (User)extractObjectFromDataLock(DataConstantGcm.RECEIVED_USER_ACCORDING_TO_EMAIL);
+        return (User)extractObjectFromDataLock(DataConstantGcm.RECEIVED_USER_ACCORDING_TO_MAIL);
     }
 
     /**

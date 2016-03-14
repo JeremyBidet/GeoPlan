@@ -196,7 +196,6 @@ public class GeoplanGcmListenerService extends GcmListenerService {
 
             User userTmp = new User(userId, email, firstName, lastName, phone, userPosition);
             listUsers.add(userTmp);
-
         }
 
         return listUsers;
