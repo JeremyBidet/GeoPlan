@@ -23,7 +23,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -50,12 +52,14 @@ public class MainActivity extends AppCompatActivity {
     private EventAdapter adapter;
 
     private void getCurrentUser() {
-        currentUser = new User();
-        // Identify user
-        // Maybe use https://developers.google.com/identity/sign-in/android/
-        currentUser.setFirstname("Jean");
-        currentUser.setFirstname("Dupont");
-        currentUser = requestToServer.createUser(currentUser);
+        requestToServer = new RequestToServer(getApplicationContext());
+        // TODO: get the e-mail of the current connected Google account
+        String email = "";
+        String firstname = "";
+        String lastname = "";
+        String phone = "";
+        requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
+        currentUser = requestToServer.getUserAccordingToEmail(email);
     }
 
     private void initList() {
@@ -87,13 +91,18 @@ public class MainActivity extends AppCompatActivity {
         if(intent.hasExtra("planning")) {
             planning = intent.getParcelableExtra("planning");
         } else {
-            RequestToServer rts = new RequestToServer(getApplicationContext());
-            rts.getAllEventsGuested(currentUser.getID());
+            ArrayList<Event> event_guested = requestToServer.getAllEventsGuested(currentUser.getID());
+            ArrayList<Event> event_owned = requestToServer.getAllEventsOwned(currentUser.getID());
             planning = new Planning();
-            // TODO: get planning from database
+            for(Event e : event_guested) {
+                planning.addEvent(e);
+            }
+            for(Event e : event_owned) {
+                planning.addEvent(e);
+            }
         }
 
-        requestToServer = new RequestToServer(getBaseContext());
+        /*requestToServer = new RequestToServer(getBaseContext());
 
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
@@ -122,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             startCalendar.set(2016, Calendar.MARCH, 28, 14, i+1);
             endCalendar.set(2016, Calendar.MARCH, 28, 16, i+20+1);
             planning.addEvent(new Event(-i-671, "seance photo"+i, startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
-        }
+        }*/
     }
 
     @Override
