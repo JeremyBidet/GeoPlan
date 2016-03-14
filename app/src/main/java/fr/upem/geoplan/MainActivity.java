@@ -67,8 +67,13 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Accounts", account.name);
         }
         // TODO: set datas of the google account here
-        String email = mail[0].name;
-        String firstname = accounts[0].name;
+        String firstname = "", email = "";
+        if (mail.length > 0) {
+            email = mail[0].name;
+        }
+        if (accounts.length > 0) {
+            firstname = accounts[0].name;
+        }
         String lastname = "";
         String phone = phoneNumber;
         requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
