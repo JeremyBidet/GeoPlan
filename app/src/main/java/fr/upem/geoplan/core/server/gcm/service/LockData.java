@@ -6,7 +6,12 @@ import java.util.List;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.session.User;
 
-class LockData {
+final class LockData {
+
+    private LockData(){
+
+    }
+
     static String receivedEventId;
     static boolean doneReceivedEventId;
     final static Object lockReceivedEventId = new Object();
