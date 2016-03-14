@@ -1,10 +1,7 @@
 package fr.upem.geoplan.core.server.gcm.service;
 
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.List;
-import java.util.Map;
 
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.session.User;

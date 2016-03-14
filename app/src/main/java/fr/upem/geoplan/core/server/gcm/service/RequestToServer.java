@@ -15,6 +15,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import fr.upem.geoplan.R;
 import fr.upem.geoplan.core.planning.Event;
@@ -75,6 +77,45 @@ public class RequestToServer {
             }
         }.execute(null, null, null);
 
+    }
+
+    private Object extractObjectFromDataLock(final String fieldName){
+        final List<Object> oneElementList = new LinkedList<>();
+
+        new AsyncTask<Void, Void, Object>() {
+
+            @Override
+            protected Object doInBackground(Void... params) {
+                String capitalized = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+                String lockField = "lock" + capitalized;
+                String booleanField = "done" + capitalized;
+                Object extracted;
+                try {
+                    synchronized (LockData.class.getDeclaredField(lockField).get(null)){
+                        while(!((boolean)LockData.class.getDeclaredField(booleanField).get(null))){
+                            LockData.class.getDeclaredField(lockField).get(null).wait();
+                        }
+                        LockData.class.getDeclaredField(booleanField).set(null, false);
+                        extracted = LockData.class.getDeclaredField(fieldName).get(null);
+                    }
+                } catch (NoSuchFieldException e) {
+                    Log.e(LOG_TAG, "Error in LockData, some fields are missing");
+                    return null;
+                } catch (IllegalAccessException e) {
+                    Log.e(LOG_TAG, "Error in LockData, can't access some fields");
+                    return null;
+                } catch (InterruptedException e) {
+                    return null;
+                }
+                return extracted;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                oneElementList.add(o);
+            }
+        }.execute();
+        return oneElementList.get(0);
     }
 
     /**
