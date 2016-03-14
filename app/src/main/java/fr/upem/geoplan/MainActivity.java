@@ -345,6 +345,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case 1:
                 // TODO: call synchronize method on this event
+                requestToServer.updateEvent(e);
                 Toast.makeText(this, "Synchronizing...", Toast.LENGTH_LONG).show();
                 return true;
             case 2:
