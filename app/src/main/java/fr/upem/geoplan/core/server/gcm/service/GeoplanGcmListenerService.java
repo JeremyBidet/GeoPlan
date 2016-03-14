@@ -72,7 +72,6 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                     }
                     break;
                 case "receivedEventsGuested":
-                    //TODO check "s" on event on server
                     synchronized (LockData.lockReceivedEventsGuested) {
                         try {
                             LockData.receivedEventsGuested = parseToGetAllEvent(data);
@@ -85,7 +84,6 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                     }
                     break;
                 case "receivedEventsOwned":
-                    //TODO check "s" on event on server
                     synchronized (LockData.lockReceivedEventsGuested) {
                         try {
                             LockData.receivedEventsOwned = parseToGetAllEvent(data);

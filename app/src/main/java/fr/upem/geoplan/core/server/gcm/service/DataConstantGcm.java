@@ -34,23 +34,23 @@ final class DataConstantGcm {
     static String EVENT_COLOR = "color";
 
     // Action method sended to server
-    public static String ACTION_CREATE_USER = "createUser";
-    public static String ACTION_CREATE_EVENT = "createEvent";
-    public static String ACTION_GET_ALL_EVENTS_OWNED = "getAllEventsOwned";
-    public static String ACTION_GET_ALL_EVENTS_GUESTED = "getAllEventsGuested";
-    public static String ACTION_GET_USERS = "getUsers()";
-    public static String ACTION_UPDATE_POSITION = "updatePosition";
-    public static String ACTION_ADD_USERS_TO_EVENT = "addUserToEvent";
-    public static String ACTION_REMOVE_USERS_TO_EVENT = "removeUserToEvent";
-    public static String ACTION_UPDATE_EVENT = "updateEvent";
-    public static String ACTION_UPDATE_USER = "updateUser";
-    public static String ACTION_GET_POSITION_USER ="askUserPositions";
+    static String ACTION_CREATE_USER = "createUser";
+    static String ACTION_CREATE_EVENT = "createEvent";
+    static String ACTION_GET_ALL_EVENTS_OWNED = "getAllEventsOwned";
+    static String ACTION_GET_ALL_EVENTS_GUESTED = "getAllEventsGuested";
+    static String ACTION_GET_USER_ACCORDING_TO_EMAIL = "getUserAccordingToEmail";
+    static String ACTION_UPDATE_POSITION = "updatePosition";
+    static String ACTION_ADD_USERS_TO_EVENT = "addUserToEvent";
+    static String ACTION_REMOVE_USERS_TO_EVENT = "removeUserToEvent";
+    static String ACTION_UPDATE_EVENT = "updateEvent";
+    static String ACTION_UPDATE_USER = "updateUser";
+    static String ACTION_GET_POSITION_USER ="askUserPositions";
 
-    public static String RECEIVED_EVENT_ID = "receivedEventID";
-    public static String UPDATE_POSITION= "updatePosition";
-    public static String RECEIVED_USER_POSITION = "receivedUserPosition";
-    public static String RECEIVED_EVENTS_GUESTED = "receivedEventsGuested";
-    public static String RECEIVED_EVENTS_OWNED = "receivedEventsOwned";
-    public static String RECEIVED_USER_ACCORDING_TO_EMAIL = "receivedUserAccordingToEmail";
+    static String RECEIVED_EVENT_ID = "receivedEventID";
+    static String UPDATE_POSITION= "updatePosition";
+    static String RECEIVED_USER_POSITION = "receivedUserPosition";
+    static String RECEIVED_EVENTS_GUESTED = "receivedEventsGuested";
+    static String RECEIVED_EVENTS_OWNED = "receivedEventsOwned";
+    static String RECEIVED_USER_ACCORDING_TO_EMAIL = "receivedUserAccordingToEmail";
 
 }

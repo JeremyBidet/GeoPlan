@@ -50,13 +50,13 @@ public class RequestToServer {
      */
     private void sendGCMMessage(Bundle dataSend) {
         final Bundle dataTmp = dataSend;
-
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
                 String msg = "";
                 try {
                     Bundle data = dataTmp;
+                    Log.w(LOG_TAG, dataTmp.toString()); // Affichage debug
                     String id = Integer.toString(getNextMsgId());
                     gcm.send(SenderID + "@gcm.googleapis.com", id, data);
                     msg = "Sent message";
@@ -68,7 +68,7 @@ public class RequestToServer {
 
             @Override
             protected void onPostExecute(String msg) {
-                if (msg != null) {
+                if (msg == null) {
                     Log.w(LOG_TAG, String.format("send message failed (%s)", msg));
                     Toast.makeText(context,
                             "send message failed: " + msg,
@@ -76,7 +76,6 @@ public class RequestToServer {
                 }
             }
         }.execute(null, null, null);
-
     }
 
     /**
@@ -161,6 +160,7 @@ public class RequestToServer {
         Bundle data = new Bundle();
 
         data.putString("action", DataConstantGcm.ACTION_CREATE_USER);
+        //data.putParcelable("user", user);  Test pour Pierre --> renvoie "user":"User -1".
         data.putString(DataConstantGcm.USER_ID, USER_ID);
         data.putString(DataConstantGcm.FIRST_NAME, user.getFirstname());
         data.putString(DataConstantGcm.LAST_NAME, user.getLastname());
@@ -201,15 +201,16 @@ public class RequestToServer {
     /**
      * Search and get all events associated to owner.
      *
+     * @param userId An user identifiant to recover events associated.
      * @return An ArrayList containing all events associated to owner.
      */
-    public ArrayList<Event> getAllEventsOwned() {
-        TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        USER_ID = tele.getDeviceId();
+    public ArrayList<Event> getAllEventsOwned(String userId) {
+        /*TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        USER_ID = tele.getDeviceId();*/
         Bundle data = new Bundle();
 
         data.putString("action", DataConstantGcm.ACTION_GET_ALL_EVENTS_OWNED);
-        data.putString(DataConstantGcm.USER_ID, USER_ID);
+        data.putString(DataConstantGcm.USER_ID, userId);
 
         sendGCMMessage(data);
         return (ArrayList<Event>) extractObjectFromDataLock(DataConstantGcm.RECEIVED_EVENTS_OWNED);
@@ -218,15 +219,16 @@ public class RequestToServer {
     /**
      * Search and get all events associated to guest.
      *
+     * @param userId An user identifiant to recover events associated.
      * @return An ArrayList containing all events associated to guest.
      */
-    public ArrayList<Event> getAllEventsGuested() {
-        TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        USER_ID = tele.getDeviceId();
+    public ArrayList<Event> getAllEventsGuested(String userId) {
+        /*TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        USER_ID = tele.getDeviceId();*/
         Bundle data = new Bundle();
 
         data.putString("action", DataConstantGcm.ACTION_GET_ALL_EVENTS_GUESTED);
-        data.putString(DataConstantGcm.USER_ID, USER_ID);
+        data.putString(DataConstantGcm.USER_ID, userId);
 
         sendGCMMessage(data);
         return (ArrayList<Event>) extractObjectFromDataLock(DataConstantGcm.RECEIVED_EVENTS_GUESTED);
@@ -236,7 +238,7 @@ public class RequestToServer {
     public User getUserAccordingToEmail(String emailUser) {
         Bundle data = new Bundle();
 
-        data.putString("action", DataConstantGcm.RECEIVED_USER_ACCORDING_TO_EMAIL);
+        data.putString("action", DataConstantGcm.ACTION_GET_USER_ACCORDING_TO_EMAIL);
         data.putString(DataConstantGcm.EMAIL, emailUser);
         sendGCMMessage(data);
         return (User)extractObjectFromDataLock(DataConstantGcm.RECEIVED_USER_ACCORDING_TO_EMAIL);
@@ -253,12 +255,14 @@ public class RequestToServer {
         USER_ID = tele.getDeviceId();
 
         Bundle data = new Bundle();
+
         data.putString("action", DataConstantGcm.ACTION_UPDATE_POSITION);
         data.putString(DataConstantGcm.USER_ID, USER_ID);
         data.putLong(DataConstantGcm.EVENT_ID, eventId);
         data.putDouble(DataConstantGcm.POSITION_LATITUDE, position.latitude);
         data.putDouble(DataConstantGcm.POSITION_LONGITUDE, position.longitude);
         sendGCMMessage(data);
+        //TODO
     }
 
     /**
@@ -275,7 +279,7 @@ public class RequestToServer {
         data.putString(DataConstantGcm.USER_ID, user.getID());
 
         sendGCMMessage(data);
-        // Necessite peut-être attente serveur donc un wait avec une méthode à appeler ici.
+        //TODO
         return null;
     }
 
