@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         String firstname = "";
         String lastname = "";
         String phone = "";
-        requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
-        currentUser = requestToServer.getUserAccordingToEmail(email);
+        //requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
+        //currentUser = requestToServer.getUserAccordingToEmail(email);
     }
 
     private void initList() {
