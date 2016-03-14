@@ -21,7 +21,6 @@ import java.util.concurrent.ExecutionException;
 
 import fr.upem.geoplan.R;
 import fr.upem.geoplan.core.planning.Event;
-import fr.upem.geoplan.core.server.gcm.DataConstantGcm;
 import fr.upem.geoplan.core.session.User;
 
 public class RequestToServer {
@@ -80,6 +79,13 @@ public class RequestToServer {
 
     }
 
+    /**
+     * Extract an object received by server, to avoid active queue for Main thread,
+     * this method use Asynchronous Task with synchronized to get object from server.
+     *
+     * @param fieldName A field name to extract a specific object.
+     * @return An object according to field name action received by server.
+     */
     private Object extractObjectFromDataLock(final String fieldName){
         final List<Object> oneElementList = new LinkedList<>();
 
@@ -187,75 +193,54 @@ public class RequestToServer {
         data.putString(DataConstantGcm.EVENT_TYPE, event.getType());
         data.putFloat(DataConstantGcm.EVENT_COST, event.getCost());
         data.putInt(DataConstantGcm.EVENT_COLOR, event.getColor());
+
         sendGCMMessage(data);
-        String get;
-        synchronized (LockData.lockReceivedEventId){
-            while(!LockData.doneReceivedEventId){
-                LockData.lockReceivedEventId.wait();
-            }
-            LockData.doneReceivedEventId = false;
-            get = LockData.receivedEventId;
-        }
-        return get;
+        return (String)extractObjectFromDataLock(DataConstantGcm.RECEIVED_EVENT_ID);
     }
 
     /**
      * Search and get all events associated to owner.
      *
-     * @param ownerId An owner identifiant.
      * @return An ArrayList containing all events associated to owner.
      */
-    public ArrayList<Event> getAllEventsOwned(String ownerId) {
-        /*TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        USER_ID = tele.getDeviceId();*/
-
-
+    public ArrayList<Event> getAllEventsOwned() {
+        TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        USER_ID = tele.getDeviceId();
         Bundle data = new Bundle();
 
         data.putString("action", DataConstantGcm.ACTION_GET_ALL_EVENTS_OWNED);
-        data.putString(DataConstantGcm.USER_ID, ownerId);
+        data.putString(DataConstantGcm.USER_ID, USER_ID);
+
         sendGCMMessage(data);
-
-        // Necessite peut-être attente serveur donc un wait avec une méthode à appeler ici.
-        return null;
-
+        return (ArrayList<Event>) extractObjectFromDataLock(DataConstantGcm.RECEIVED_EVENTS_OWNED);
     }
 
     /**
      * Search and get all events associated to guest.
      *
-     * @param guestId A guest identifiant.
      * @return An ArrayList containing all events associated to guest.
      */
-    public ArrayList<Event> getAllEventsGuested(String guestId) {
-        /*TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        USER_ID = tele.getDeviceId();*/
-
+    public ArrayList<Event> getAllEventsGuested() {
+        TelephonyManager tele = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        USER_ID = tele.getDeviceId();
         Bundle data = new Bundle();
 
         data.putString("action", DataConstantGcm.ACTION_GET_ALL_EVENTS_GUESTED);
-        data.putString(DataConstantGcm.USER_ID, guestId);
+        data.putString(DataConstantGcm.USER_ID, USER_ID);
+
         sendGCMMessage(data);
-
-        // Necessite peut-être attente serveur donc un wait avec une méthode à appeler ici.
-
-        return null;
+        return (ArrayList<Event>) extractObjectFromDataLock(DataConstantGcm.RECEIVED_EVENTS_GUESTED);
     }
 
-    /**
-     * Get all users registered in our application.
-     *
-     * @return An ArrayList containing all Users registered in AppServer (Database).
-     */
-    /*public ArrayList<User> getUsers() {
+
+    public User getUserAccordingToEmail(String emailUser) {
         Bundle data = new Bundle();
 
-        data.putString("action", DataConstantGcm.ACTION_GET_USERS);
+        data.putString("action", DataConstantGcm.ACTION_GET_USER_ACCORDING_TO_EMAIL);
+        data.putString(DataConstantGcm.EMAIL, emailUser);
         sendGCMMessage(data);
-
-        // Necessite peut-être attente serveur donc un wait avec une méthode à appeler ici.
-        return null;
-    }*/
+        return (User)extractObjectFromDataLock(DataConstantGcm.RECEIVED_USER_ACCORDING_TO_EMAIL);
+    }
 
     /**
      * Update position of user.
@@ -268,7 +253,6 @@ public class RequestToServer {
         USER_ID = tele.getDeviceId();
 
         Bundle data = new Bundle();
-        // autre méthode on reçoit tous les param user + lat + lng (methode getPosition.
         data.putString("action", DataConstantGcm.ACTION_UPDATE_POSITION);
         data.putString(DataConstantGcm.USER_ID, USER_ID);
         data.putLong(DataConstantGcm.EVENT_ID, eventId);
@@ -278,6 +262,8 @@ public class RequestToServer {
     }
 
     /**
+     * Get position of one user.
+     *
      * @param user
      * @return
      * @throws IllegalAccessException
@@ -287,9 +273,8 @@ public class RequestToServer {
 
         data.putString("action", DataConstantGcm.ACTION_GET_POSITION_USER);
         data.putString(DataConstantGcm.USER_ID, user.getID());
+
         sendGCMMessage(data);
-
-
         // Necessite peut-être attente serveur donc un wait avec une méthode à appeler ici.
         return null;
     }

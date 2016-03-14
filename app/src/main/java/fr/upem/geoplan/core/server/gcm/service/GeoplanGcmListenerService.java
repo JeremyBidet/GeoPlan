@@ -19,11 +19,10 @@ import java.util.Set;
 
 import fr.upem.geoplan.R;
 import fr.upem.geoplan.core.planning.Event;
-import fr.upem.geoplan.core.server.gcm.DataConstantGcm;
 import fr.upem.geoplan.core.session.User;
 
 public class GeoplanGcmListenerService extends GcmListenerService {
-    public static final int MESSAGE_NOTIFICATION_ID = 435345;
+    private static final int MESSAGE_NOTIFICATION_ID = 435345;
     private static final String TAG = "GeoPlan";
 
     /**
@@ -46,7 +45,7 @@ public class GeoplanGcmListenerService extends GcmListenerService {
 
             String action = data.getString(DataConstantGcm.ACTION);
             switch (action) {
-                case "receivedEventID": // inutile pour les autres teams
+                case "receivedEventID":
                     synchronized (LockData.lockReceivedEventId) {
                         LockData.receivedEventId = data.getString(DataConstantGcm.EVENT_ID);
                         LockData.doneReceivedEventId = true;
@@ -99,16 +98,20 @@ public class GeoplanGcmListenerService extends GcmListenerService {
                     }
                     break;
                 case "receivedUserAccordingToEmail":
-                    //TODO Same thing on server
                     synchronized (LockData.lockReceivedUserAccordingToMail) {
+                        String userId = data.getString(DataConstantGcm.USER_ID);
+                        String firstName = data.getString(DataConstantGcm.FIRST_NAME);
+                        String lastName = data.getString(DataConstantGcm.LAST_NAME);
+                        String phone = data.getString(DataConstantGcm.PHONE);
+                        String email = data.getString(DataConstantGcm.EMAIL);
+                        LatLng userPosition = new LatLng(data.getLong(DataConstantGcm.POSITION_LATITUDE),
+                                data.getLong(DataConstantGcm.POSITION_LONGITUDE));
 
-                            // ancien code getUsers
-                            JSONObject json = bundleToJsonObject(data);
-                            //LockData.receivedUserAccordingToMail = parserToGetUser(json.getJSONArray("users"));
-                            LockData.doneReceivedUserAccordingToMail =  true;
-                            LockData.lockReceivedUserAccordingToMail.notify();
-                            sendNotification("Réception events propriétaire");
-
+                        User userTmp = new User(userId, email, firstName, lastName, phone);
+                        userTmp.setPosition(userPosition);
+                        LockData.receivedUserAccordingToMail = userTmp;
+                        LockData.doneReceivedUserAccordingToMail =  true;
+                        LockData.lockReceivedUserAccordingToMail.notify();
                     }
                     break;
             }
@@ -195,7 +198,10 @@ public class GeoplanGcmListenerService extends GcmListenerService {
             email = userJsonObj.getString(DataConstantGcm.EMAIL);
             userPosition = new LatLng(userJsonObj.getLong(DataConstantGcm.POSITION_LATITUDE), userJsonObj.getLong(DataConstantGcm.POSITION_LONGITUDE));
 
-            listUsers.add(new User(userId, email, firstName, lastName, phone));
+            User userTmp = new User(userId, email, firstName, lastName, phone);
+            userTmp.setPosition(userPosition);
+            listUsers.add(userTmp);
+
         }
 
         return listUsers;
