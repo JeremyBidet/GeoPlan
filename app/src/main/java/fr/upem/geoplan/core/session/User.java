@@ -26,12 +26,13 @@ public class User implements Parcelable {
         readFromParcel(parcel);
     }
 
-    public User(String id, String email, String firstname, String lastname, String phone) {
+    public User(String id, String email, String firstname, String lastname, String phone, LatLng position) {
         this.id = id;
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
         this.phone = phone;
+        this.position = position;
     }
 
     public User() {
@@ -121,6 +122,8 @@ public class User implements Parcelable {
     public LatLng getPosition() {
         return position;
     }
+
+    public void setId(String id) { this.id = id; }
 
     public void setEmail(String email) {
         assert email != null;

@@ -49,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
     private ListView listEvent;
     private EventAdapter adapter;
 
+    private void getCurrentUser() {
+        currentUser = new User();
+        // Identify user
+        // Maybe use https://developers.google.com/identity/sign-in/android/
+        currentUser.setFirstname("Jean");
+        currentUser.setFirstname("Dupont");
+        currentUser = requestToServer.createUser(currentUser);
+    }
+
     private void initList() {
         listEvent = (ListView) findViewById(R.id.listEvent);
 
@@ -78,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         if(intent.hasExtra("planning")) {
             planning = intent.getParcelableExtra("planning");
         } else {
+            RequestToServer rts = new RequestToServer(getApplicationContext());
+            rts.getAllEventsGuested(currentUser.getID());
             planning = new Planning();
             // TODO: get planning from database
         }
@@ -120,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         setContentView(R.layout.activity_planning);
 
+        getCurrentUser();
         initPlanning(intent);
         initList();
 
@@ -129,13 +141,6 @@ public class MainActivity extends AppCompatActivity {
         initializeReceiver();
         registerReceiver();
         startReceiver();
-
-        currentUser = new User();
-        // Identify user
-        // Maybe use https://developers.google.com/identity/sign-in/android/
-        currentUser.setFirstname("Jean");
-        currentUser.setFirstname("Dupont");
-        currentUser = requestToServer.createUser(currentUser);
 
         startLocationUpdater();
 
