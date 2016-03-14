@@ -104,7 +104,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void syncEvent() {
-        MainActivity.requestToServer.updateEvent(event);
+        //MainActivity.requestToServer.updateEvent(event);
     }
 
     @Override
