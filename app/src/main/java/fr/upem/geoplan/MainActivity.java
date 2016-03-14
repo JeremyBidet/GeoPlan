@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -56,18 +57,24 @@ public class MainActivity extends AppCompatActivity {
     private void getCurrentUser() {
         requestToServer = new RequestToServer(getApplicationContext());
         // TODO: get the datas of the current connected Google account: email, names, phone
-        AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
-        Account[] account_list = manager.getAccounts();
+        AccountManager manager = AccountManager.get(this);
+        Account[] account_list = manager.getAccountsByType("com.google");
+
         ArrayList<String> gmails = new ArrayList<String>();
+
+        TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String phoneNumber = tele.getLine1Number();
+        
         for(Account account : account_list) {
             gmails.add(account.name);
+
             Log.i("Gmail", account.name);
         }
         // TODO: set datas of the google account here
-        String email = "";
+        String email = gmails.get(0);
         String firstname = "";
         String lastname = "";
-        String phone = "";
+        String phone = phoneNumber;
         requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
         currentUser = requestToServer.getUserAccordingToEmail(email);
     }
