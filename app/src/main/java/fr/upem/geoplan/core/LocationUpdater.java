@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import fr.upem.geoplan.core.server.gcm.RequestToServer;
+
 
 public class LocationUpdater extends Service implements LocationListener {
     private static final String TAG = "GeoPlanLocService";

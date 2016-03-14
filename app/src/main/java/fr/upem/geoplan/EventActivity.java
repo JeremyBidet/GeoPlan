@@ -28,7 +28,6 @@ import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.planning.GuestAdapter;
 import fr.upem.geoplan.core.planning.Planning;
-import fr.upem.geoplan.core.server.gcm.RequestToServer;
 import fr.upem.geoplan.core.session.User;
 
 public class EventActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {

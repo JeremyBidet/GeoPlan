@@ -236,7 +236,7 @@ public class RequestToServer {
     public User getUserAccordingToEmail(String emailUser) {
         Bundle data = new Bundle();
 
-        data.putString("action", DataConstantGcm.ACTION_GET_USER_ACCORDING_TO_EMAIL);
+        data.putString("action", DataConstantGcm.RECEIVED_USER_ACCORDING_TO_EMAIL);
         data.putString(DataConstantGcm.EMAIL, emailUser);
         sendGCMMessage(data);
         return (User)extractObjectFromDataLock(DataConstantGcm.RECEIVED_USER_ACCORDING_TO_EMAIL);
