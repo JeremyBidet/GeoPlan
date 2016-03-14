@@ -26,7 +26,7 @@
                 <EditText
                     android:layout_margin="8dp"
                     android:layout_width="280dp"
-                    android:layout_height="28dp"
+                    android:layout_height="30dp"
                     android:hint="@string/email_adress"
                     android:inputType="textEmailAddress"
                     android:ems="10"
@@ -58,7 +58,7 @@
                 <EditText
                     android:layout_margin="8dp"
                     android:layout_width="280dp"
-                    android:layout_height="28dp"
+                    android:layout_height="30dp"
                     android:id="@+id/editNameEvent"
                     android:hint="@string/event_name"
                     android:paddingLeft="8dp"
@@ -85,7 +85,7 @@
                 <EditText
                     android:layout_margin="8dp"
                     android:layout_width="280dp"
-                    android:layout_height="28dp"
+                    android:layout_height="30dp"
                     android:hint="@string/description"
                     android:id="@+id/editDescription"
                     android:paddingLeft="8dp"
@@ -111,10 +111,11 @@
                 android:background="@drawable/layout_border_position"
                 >
 
+
                 <EditText
                     android:layout_margin="8dp"
                     android:layout_width="280dp"
-                    android:layout_height="28dp"
+                    android:layout_height="30dp"
                     android:id="@+id/editPosition"
                     android:hint="@string/position"
                     android:paddingLeft="8dp"

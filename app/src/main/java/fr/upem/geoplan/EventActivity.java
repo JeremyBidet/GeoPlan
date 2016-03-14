@@ -151,7 +151,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         editDescription = (EditText) findViewById(R.id.editDescription);
         imageViewDescription = (ImageView) findViewById(R.id.imageViewDescription);
-        //imageViewDescription.setImageResource(R.drawable.description);
+        imageViewDescription.setImageResource(R.drawable.description);
 
         editPosition = (EditText) findViewById(R.id.editPosition);
         image_position = (ImageView) findViewById(R.id.imageViewPosition);
