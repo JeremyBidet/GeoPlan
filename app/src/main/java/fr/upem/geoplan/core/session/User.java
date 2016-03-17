@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Objects;
+
 import fr.upem.geoplan.core.planning.Planning;
 
 /**
@@ -23,6 +25,7 @@ public class User implements Parcelable {
         this.id = id;
         Parcel parcel = Parcel.obtain();
         user.writeToParcel(parcel, PARCELABLE_WRITE_RETURN_VALUE);
+        parcel.setDataPosition(0);
         readFromParcel(parcel);
     }
 
@@ -67,12 +70,12 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
-        dest.writeString(this.email);
-        dest.writeString(this.firstname);
-        dest.writeString(this.lastname);
-        dest.writeString(this.phone);
-        dest.writeParcelable(this.position, flags);
+        dest.writeString(id);
+        dest.writeString(email);
+        dest.writeString(firstname);
+        dest.writeString(lastname);
+        dest.writeString(phone);
+        dest.writeParcelable(position, flags);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
