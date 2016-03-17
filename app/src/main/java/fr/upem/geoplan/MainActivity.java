@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         assert accounts.length > 0;
         //String firstname = accounts[0].name;
-        
+
         String email = "john.doe@gmail.com";
         String firstname = "John";
         String lastname = "Doe";
@@ -144,30 +144,31 @@ public class MainActivity extends AppCompatActivity {
 
         startCalendar.set(2015, Calendar.NOVEMBER, 19, 23, 0);
         endCalendar.set(2015, Calendar.NOVEMBER, 20, 7, 0);
-        final Event event = new Event(-666, "sex party", startCalendar.getTime(), endCalendar.getTime(), "upem", Color.RED);
+        final Event event = new Event(-666, "sex party", new LatLng(48.8392203, 2.5848739), startCalendar.getTime(), endCalendar.getTime(), "upem", Color.RED);
         event.addGuest(getBaseContext(), currentUser);
+        currentUser.setPosition(new LatLng(48.839, 2.5848780));
         planning.addEvent(event);
 
         startCalendar.set(2015, Calendar.DECEMBER, 20, 15, 0);
         endCalendar.set(2015, Calendar.DECEMBER, 20, 18, 0);
-        planning.addEvent(new Event(-667, "fiesta", startCalendar.getTime(), endCalendar.getTime(), "chez Jeremie", Color.BLUE));
+        planning.addEvent(new Event(-667, "fiesta", new LatLng(48.8392203, 2.5848739), startCalendar.getTime(), endCalendar.getTime(), "chez Jeremie", Color.BLUE));
 
         startCalendar.set(2016, Calendar.JANUARY, 20, 15, 0);
         endCalendar.set(2016, Calendar.JANUARY, 21, 0, 0);
-        planning.addEvent(new Event(-668, "karaoke night", startCalendar.getTime(), endCalendar.getTime(), "chez tristan", Color.GREEN));
+        planning.addEvent(new Event(-668, "karaoke night", new LatLng(48.8392203, 2.5848739), startCalendar.getTime(), endCalendar.getTime(), "chez tristan", Color.GREEN));
 
         startCalendar.set(2016, Calendar.MARCH, 21, 22, 0);
         endCalendar.set(2016, Calendar.MARCH, 21, 2, 0);
-        planning.addEvent(new Event(-669, "geek party", startCalendar.getTime(), endCalendar.getTime(), "chez Jeremy", Color.BLACK));
+        planning.addEvent(new Event(-669, "geek party", new LatLng(48.8392203, 2.5848739), startCalendar.getTime(), endCalendar.getTime(), "chez Jeremy", Color.BLACK));
 
         startCalendar.set(2016, Calendar.MARCH, 9, 3, 0);
         endCalendar.set(2016, Calendar.MARCH, 10, 16, 30);
-        planning.addEvent(new Event(-670, "seance photo", startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
+        planning.addEvent(new Event(-670, "seance photo", new LatLng(48.8392203, 2.5848739), startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
 
         for (int i = 0; i < 20; i++) {
             startCalendar.set(2016, Calendar.MARCH, 28, 14, i + 1);
             endCalendar.set(2016, Calendar.MARCH, 28, 16, i + 20 + 1);
-            planning.addEvent(new Event(-i - 671, "seance photo" + i, startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
+            planning.addEvent(new Event(-i - 671, "seance photo" + i, new LatLng(48.8392203, 2.5848739), startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
         }
     }
 

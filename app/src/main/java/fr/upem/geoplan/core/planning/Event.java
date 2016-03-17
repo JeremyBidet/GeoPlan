@@ -97,41 +97,69 @@ public class Event implements Parcelable, Comparable<Event> {
     public long getId() {
         return this.id;
     }
-    public void setId(long id) { this.id = id; }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return this.name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public Date getStart_date_time() { return this.start_date_time; }
-    public void setStart_date_time(Date start_date_time) { this.start_date_time = start_date_time; }
+    public Date getStart_date_time() {
+        return this.start_date_time;
+    }
 
-    public Date getEnd_date_time() { return this.end_date_time; }
+    public void setStart_date_time(Date start_date_time) {
+        this.start_date_time = start_date_time;
+    }
+
+    public Date getEnd_date_time() {
+        return this.end_date_time;
+    }
+
     public void setEnd_date_time(Date end_date_time) {
         this.end_date_time = end_date_time;
     }
 
-    public String getLocalization() { return this.localization; }
-    public void setLocalization(String localization) { this.localization = localization; }
+    public String getLocalization() {
+        return this.localization;
+    }
 
-    public LatLng getPosition() { return this.position; }
-    public void setPos_lat(LatLng position) { this.position = position; }
+    public void setLocalization(String localization) {
+        this.localization = localization;
+    }
+
+    public LatLng getPosition() {
+        return this.position;
+    }
+
+    public void setPos_lat(LatLng position) {
+        this.position = position;
+    }
 
     public void addGuest(Context context, User user) {
         guests.add(user);
         RequestToServer requestToServer = new RequestToServer(context);
         requestToServer.addUserToEvent(user, this);
     }
-    public List<User> getGuests() { return new ArrayList<>(this.guests); }
 
-    public List<User> getOwners() { return new ArrayList<>(this.owners); }
+    public List<User> getGuests() {
+        return new ArrayList<>(this.guests);
+    }
+
+    public List<User> getOwners() {
+        return new ArrayList<>(this.owners);
+    }
 
     public String getDescription() {
         return this.description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -139,6 +167,7 @@ public class Event implements Parcelable, Comparable<Event> {
     public int getWeight() {
         return this.weight;
     }
+
     public void setWeight(int weight) {
         this.weight = weight;
     }
@@ -146,6 +175,7 @@ public class Event implements Parcelable, Comparable<Event> {
     public String getType() {
         return this.type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
@@ -153,12 +183,18 @@ public class Event implements Parcelable, Comparable<Event> {
     public float getCost() {
         return this.cost;
     }
+
     public void setCost(float cost) {
         this.cost = cost;
     }
 
-    public int getColor() { return this.color; }
-    public void setColor(int color) { this.color = color; }
+    public int getColor() {
+        return this.color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 
     protected Creator<User> getUserCreator() {
         return User.CREATOR;
@@ -194,14 +230,14 @@ public class Event implements Parcelable, Comparable<Event> {
                 this.start_date_time.after(another.getStart_date_time()) ?
                         1 :
                         this.id == another.id ?
-                            0 :
-                            1;
+                                0 :
+                                1;
     }
-
 
     /**
      * Initialize a temporary Event used to sort events in planning.<br/>
      * This Event cannot be added to the planning
+     *
      * @param start_date_time the start datetime used to compare with other events
      */
     Event(Date start_date_time) {
@@ -210,8 +246,8 @@ public class Event implements Parcelable, Comparable<Event> {
     }
 
     //pour les tests
-    public Event(long id, String name, Date start_date_time, Date end_date_time, String localization, int color) {
-        this(id, name, "description", new LatLng(48.8392203, 2.5848739), localization,
+    public Event(long id, String name, LatLng position, Date start_date_time, Date end_date_time, String localization, int color) {
+        this(id, name, "description", position, localization,
                 start_date_time, end_date_time, new ArrayList<User>(), new ArrayList<User>(),
                 4, "type", 19.99f, color);
     }
