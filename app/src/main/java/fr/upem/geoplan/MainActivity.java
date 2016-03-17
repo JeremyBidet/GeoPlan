@@ -1,5 +1,7 @@
 package fr.upem.geoplan;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -30,6 +33,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import fr.upem.geoplan.core.LocationUpdater;
+import fr.upem.geoplan.core.NoAccountActivity;
 import fr.upem.geoplan.core.planning.Event;
 import fr.upem.geoplan.core.planning.EventAdapter;
 import fr.upem.geoplan.core.planning.Planning;
@@ -51,8 +55,14 @@ public class MainActivity extends AppCompatActivity {
     private ListView listEvent;
     private EventAdapter adapter;
 
-    private void getCurrentUser() {
-        /*
+    private static final class NoAccountException extends IllegalAccessException {
+        public NoAccountException() {
+            super("No account found");
+        }
+    }
+
+    private void getCurrentUser() throws NoAccountException {
+
         requestToServer = new RequestToServer(getApplicationContext());
         // TODO: get the datas of the current connected Google account: email, names, phone
         AccountManager manager = AccountManager.get(this);
@@ -60,32 +70,29 @@ public class MainActivity extends AppCompatActivity {
 
         // If not account ask for a new one
         if (mail.length == 0) {
-            Intent launchIntent = new Intent(Settings.ACTION_ADD_ACCOUNT);
-            startActivity(launchIntent);
-            return;
+            Intent intent = new Intent(this, NoAccountActivity.class);
+            startActivity(intent);
+            throw new NoAccountException();
         }
 
         Account[] accounts = manager.getAccounts();
         TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String phoneNumber = tele.getLine1Number();
+        String phone = tele.getLine1Number();
 
-        for(Account account:accounts) {
+        for (Account account : accounts) {
             Log.i("Accounts", account.name);
         }
         // TODO: set datas of the google account here
         assert mail.length > 0;
-        String email = mail[0].name;
+        //String email = mail[0].name;
 
         assert accounts.length > 0;
-        String firstname = accounts[0].name;
-        */
-
+        //String firstname = accounts[0].name;
+        
         String email = "john.doe@gmail.com";
         String firstname = "John";
         String lastname = "Doe";
-        String phone = "0606060606";
-        /*requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
-        currentUser = requestToServer.getUserAccordingToEmail(email);*/
+        currentUser = requestToServer.createUser(new User(email, email, firstname, lastname, phone, new LatLng(1.0, 1.0)));
     }
 
     private void initList() {
@@ -114,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initPlanning(Intent intent) {
-        if(intent.hasExtra("planning")) {
+        if (intent.hasExtra("planning")) {
             planning = intent.getParcelableExtra("planning");
         } else {
             //ArrayList<Event> event_guested = requestToServer.getAllEventsGuested(currentUser.getID());
@@ -123,10 +130,10 @@ public class MainActivity extends AppCompatActivity {
 
             Calendar c = Calendar.getInstance();
             Calendar c2 = Calendar.getInstance();
-            for(int i=0; i<30; i++) {
-                c.set(2016, 3, i+1, i%24, i);
-                c2.set(2016, 3, i+1, i%24, i+10);
-                planning.addEvent(new Event(-i-700, "Event " + i, "Description " + i, new LatLng(i+50.342, i-39.543), i + " Main street", c.getTime(), c2.getTime(), new ArrayList<User>(), new ArrayList<User>(), i+1, "Type " + (i%10), i+10.99f, i));
+            for (int i = 0; i < 30; i++) {
+                c.set(2016, 3, i + 1, i % 24, i);
+                c2.set(2016, 3, i + 1, i % 24, i + 10);
+                planning.addEvent(new Event(-i - 700, "Event " + i, "Description " + i, new LatLng(i + 50.342, i - 39.543), i + " Main street", c.getTime(), c2.getTime(), new ArrayList<User>(), new ArrayList<User>(), i + 1, "Type " + (i % 10), i + 10.99f, i));
             }
         }
 
@@ -137,7 +144,9 @@ public class MainActivity extends AppCompatActivity {
 
         startCalendar.set(2015, Calendar.NOVEMBER, 19, 23, 0);
         endCalendar.set(2015, Calendar.NOVEMBER, 20, 7, 0);
-        planning.addEvent(new Event(-666, "sex party", startCalendar.getTime(), endCalendar.getTime(), "upem", Color.RED));
+        final Event event = new Event(-666, "sex party", startCalendar.getTime(), endCalendar.getTime(), "upem", Color.RED);
+        event.addGuest(getBaseContext(), currentUser);
+        planning.addEvent(event);
 
         startCalendar.set(2015, Calendar.DECEMBER, 20, 15, 0);
         endCalendar.set(2015, Calendar.DECEMBER, 20, 18, 0);
@@ -155,10 +164,10 @@ public class MainActivity extends AppCompatActivity {
         endCalendar.set(2016, Calendar.MARCH, 10, 16, 30);
         planning.addEvent(new Event(-670, "seance photo", startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
 
-        for(int i=0; i<20; i++) {
-            startCalendar.set(2016, Calendar.MARCH, 28, 14, i+1);
-            endCalendar.set(2016, Calendar.MARCH, 28, 16, i+20+1);
-            planning.addEvent(new Event(-i-671, "seance photo"+i, startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
+        for (int i = 0; i < 20; i++) {
+            startCalendar.set(2016, Calendar.MARCH, 28, 14, i + 1);
+            endCalendar.set(2016, Calendar.MARCH, 28, 16, i + 20 + 1);
+            planning.addEvent(new Event(-i - 671, "seance photo" + i, startCalendar.getTime(), endCalendar.getTime(), "chez Huy", Color.CYAN));
         }
     }
 
@@ -168,21 +177,26 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         setContentView(R.layout.activity_planning);
 
-        getCurrentUser();
-        initPlanning(intent);
-        initList();
+        try {
+            getCurrentUser();
+            initPlanning(intent);
+            initList();
 
-        setListContent(planning.getEvents());
-        setListPosition(planning.getPosition());
+            setListContent(planning.getEvents());
+            setListPosition(planning.getPosition());
 
-        initializeReceiver();
-        registerReceiver();
-        startReceiver();
+            initializeReceiver();
+            registerReceiver();
+            startReceiver();
 
-        startLocationUpdater();
+            startLocationUpdater();
 
-        // Start correct activity
-        doAction(intent.getAction(), intent.getData());
+            // Start correct activity
+            doAction(intent.getAction(), intent.getData());
+        } catch (NoAccountException e) {
+            Log.i(LOG_TAG, "No account found", e);
+            finish();
+        }
     }
 
     private void startLocationUpdater() {
@@ -345,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
         Event e = (Event) listEvent.getItemAtPosition(info.position);
         switch (item.getItemId()) {
             case 0:
-                if(e.getOwners().contains(currentUser)) {
+                if (e.getOwners().contains(currentUser)) {
                     Toast.makeText(this, "You are not the owner of this event!", Toast.LENGTH_LONG).show();
                     return true;
                 }
@@ -360,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Synchronizing...", Toast.LENGTH_LONG).show();
                 return true;
             case 2:
-                if(!e.getOwners().contains(currentUser)) {
+                if (!e.getOwners().contains(currentUser)) {
                     Toast.makeText(this, "You are not the owner of this event!", Toast.LENGTH_LONG).show();
                     return true;
                 }

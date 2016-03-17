@@ -1,5 +1,6 @@
 package fr.upem.geoplan.core.planning;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,13 +11,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import fr.upem.geoplan.core.server.gcm.service.RequestToServer;
 import fr.upem.geoplan.core.session.User;
 
 /**
  * Created by jerem_000 on 11/02/2016.
  */
 public class Event implements Parcelable, Comparable<Event> {
-
     private long id;
     private String name;
     private String description;
@@ -119,9 +120,14 @@ public class Event implements Parcelable, Comparable<Event> {
     public LatLng getPosition() { return this.position; }
     public void setPos_lat(LatLng position) { this.position = position; }
 
-    public List<User> getGuests() { return (List<User>) this.guests.clone(); }
+    public void addGuest(Context context, User user) {
+        guests.add(user);
+        RequestToServer requestToServer = new RequestToServer(context);
+        requestToServer.addUserToEvent(user, this);
+    }
+    public List<User> getGuests() { return new ArrayList<>(this.guests); }
 
-    public List<User> getOwners() { return (List<User>) this.owners.clone(); }
+    public List<User> getOwners() { return new ArrayList<>(this.owners); }
 
     public String getDescription() {
         return this.description;
