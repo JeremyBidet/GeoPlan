@@ -52,11 +52,11 @@ public class User implements Parcelable {
 
     private String readFromParcel(Parcel in) {
         String id = in.readString();
-        this.email = in.readString();
-        this.firstname = in.readString();
-        this.lastname = in.readString();
-        this.phone = in.readString();
-        this.position = in.readParcelable(null);
+        email = in.readString();
+        firstname = in.readString();
+        lastname = in.readString();
+        phone = in.readString();
+        position = in.readParcelable(LatLng.class.getClassLoader());
         return id;
     }
 
@@ -123,7 +123,9 @@ public class User implements Parcelable {
         return position;
     }
 
-    public void setId(String id) { this.id = id; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public void setEmail(String email) {
         assert email != null;
