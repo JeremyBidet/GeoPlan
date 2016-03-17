@@ -195,5 +195,9 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
                 .snippet(String.format(getString(R.string.users_number_format), users.size()))
                 .title(event.getName());
         mMap.addMarker(eventMarkerOptions);
+
+        for (User user : users.values()) {
+            updatePositionMap(user.getID(), user.getPosition());
+        }
     }
 }
