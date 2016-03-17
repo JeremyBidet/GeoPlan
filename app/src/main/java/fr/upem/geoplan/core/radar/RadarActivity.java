@@ -75,9 +75,8 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
         initializeRadar();
         initializeMap();
 
-        LatLng eventPosition = event.getPosition();
         for (User user : users) {
-            updatePosition(user.getID(), new LatLng(eventPosition.latitude + Math.random() / 100., eventPosition.longitude));
+            updatePosition(user.getID(), user.getPosition());
         }
     }
 
@@ -189,7 +188,7 @@ public class RadarActivity extends AppCompatActivity implements OnMapReadyCallba
         } else {
             // TODO Show rationale and request permission.
         }
-        
+
         final MarkerOptions eventMarkerOptions = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.radar_marker_event))
                 .position(eventPosition)
