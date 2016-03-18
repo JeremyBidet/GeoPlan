@@ -3,59 +3,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="0dp"
     android:layout_margin="0dp"
-    >
+    android:padding="0dp">
 
     <ImageView
         android:id="@+id/img"
         android:layout_width="20dp"
         android:layout_height="60dp"
-        tools:background="#AAA"
-        />
+        tools:background="#AAA" />
 
     <TextView
         android:id="@+id/eventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:layout_alignTop="@+id/img"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/img"
-        android:layout_alignTop="@+id/img"
+        android:textColor="@android:color/black"
         android:textStyle="bold"
-        tools:text="Event Name"
-        />
+        tools:text="Event Name" />
 
     <TextView
         android:id="@+id/startingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
         android:layout_alignLeft="@+id/eventName"
         android:layout_below="@+id/eventName"
+        android:textColor="@android:color/black"
 
-        tools:text="StartingTime"
-        />
+        tools:text="StartingTime" />
 
     <TextView
         android:id="@+id/duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/nbParticipants"
+        android:layout_marginRight="10dp"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/eventName"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/startingTime"
-        tools:text="EndTime"
-        />
+        tools:text="EndTime" />
 
     <TextView
         android:id="@+id/localization"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
         android:layout_alignLeft="@+id/startingTime"
         android:layout_below="@+id/startingTime"
-        tools:text="Localization"
-        />
+        android:textColor="@android:color/black"
+        tools:text="Localization" />
+
+    <TextView
+        android:id="@+id/nbParticipants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Participants" />
 
 </RelativeLayout>

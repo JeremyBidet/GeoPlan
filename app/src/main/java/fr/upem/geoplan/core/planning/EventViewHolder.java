@@ -12,4 +12,5 @@ public class EventViewHolder {
     public TextView localization;
     public ImageView icon;
     public TextView duration;
+    public TextView nbParticipants;
 }

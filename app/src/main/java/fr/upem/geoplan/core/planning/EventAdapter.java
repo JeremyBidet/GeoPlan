@@ -6,11 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -40,6 +38,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
             viewHolder.startingTime = (TextView) convertView.findViewById(R.id.startingTime);
             viewHolder.duration = (TextView) convertView.findViewById(R.id.duration);
             viewHolder.localization = (TextView) convertView.findViewById(R.id.localization);
+            viewHolder.nbParticipants = (TextView) convertView.findViewById(R.id.nbParticipants);
             viewHolder.icon = (ImageView) convertView.findViewById(R.id.img);
             convertView.setTag(viewHolder);
         }
@@ -54,6 +53,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
         calendar.setTimeInMillis(event.getEnd_date_time().getTime() - event.getStart_date_time().getTime());
         viewHolder.duration.setText(durationDateFormat.format(calendar.getTime()));
         viewHolder.localization.setText(event.getLocalization());
+        int size = event.getGuests().size();
+        viewHolder.nbParticipants.setText(size == 1 ? "1 participant" : String.format("%d participants", size));
         viewHolder.icon.setImageDrawable(new ColorDrawable(event.getColor()));
 
         return convertView;
