@@ -10,16 +10,22 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import fr.upem.geoplan.core.server.gcm.service.RequestToServer;
 
 
 public class LocationUpdater extends Service implements LocationListener {
+    public static final String INTENT_ACTION = "UpdatePosition";
+
     private static final String TAG = "GeoPlanLocService";
     private static final long MIN_DISTANCE = 10000;
     private static final long MIN_TIME = 5000;
+
+    private RequestToServer requestToServer;
 
     private LocationManager locationManager;
 
@@ -44,6 +50,7 @@ public class LocationUpdater extends Service implements LocationListener {
         super.onCreate();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        requestToServer = new RequestToServer(getApplicationContext());
         startLocationUpdates();
     }
 
@@ -61,7 +68,12 @@ public class LocationUpdater extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.i(TAG, "Location updated " + location);
-       // RequestToServer.updatePosition(new LatLng(location.getLatitude(), location.getLongitude()));
+        //requestToServer.updatePosition(new LatLng(location.getLatitude(), location.getLongitude()));
+        Intent intent = new Intent();
+        intent.putExtra("position", new LatLng(location.getLatitude(), location.getLongitude()));
+        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(getApplicationContext());
+        manager.sendBroadcast(intent);
+        Log.i(TAG, "sent");
     }
 
     @Override
