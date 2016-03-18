@@ -42,7 +42,7 @@ public class CcsClient {
     private XMPPConnection connection;
 
     private final String apiKey;
-    private final String projectId;
+    private final long projectId;
     private final boolean debuggable;
     private final DataBaseCommunicator dataBaseCommunicator = new DataBaseCommunicator();
 
@@ -52,7 +52,7 @@ public class CcsClient {
      */
     protected volatile boolean connectionDraining = false;
 
-    public CcsClient(String projectId, String apiKey, boolean debuggable) {
+    public CcsClient(long projectId, String apiKey, boolean debuggable) {
         // Add GcmPacketExtension
         ProviderManager.getInstance().addExtensionProvider(GCM_ELEMENT_NAME,
                 GCM_NAMESPACE, new PacketExtensionProvider() {

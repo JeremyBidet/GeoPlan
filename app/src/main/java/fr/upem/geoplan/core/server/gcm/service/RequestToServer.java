@@ -87,7 +87,7 @@ public class RequestToServer {
      */
     private Object extractObjectFromDataLock(final String fieldName){
         final List<Object> oneElementList = new LinkedList<>();
-
+        Log.w(LOG_TAG, "extractObject");
         try {
             new AsyncTask<Void, Void, Object>() {
 
@@ -112,6 +112,7 @@ public class RequestToServer {
                         Log.e(LOG_TAG, "Error in LockData, can't access some fields.");
                         return null;
                     } catch (InterruptedException e) {
+                        Log.e(LOG_TAG, "Interrupted rendez-vous");
                         return null;
                     }
                     return extracted;
@@ -129,7 +130,7 @@ public class RequestToServer {
             Log.e(LOG_TAG, "Error in the execution of extractObjectFromDataLock");
             return null;
         }
-        return oneElementList.get(0);
+            return oneElementList.get(0);
     }
 
     /**
@@ -150,7 +151,7 @@ public class RequestToServer {
      * Create an user in AppServer.
      *
      * @param user An User object containing all parameters to send AppServer.
-     * @return A user created.
+     * @return A user create
      */
     public User createUser(User user) {
         if (USER_ID == null) {
@@ -160,7 +161,6 @@ public class RequestToServer {
         Bundle data = new Bundle();
 
         data.putString("action", DataConstantGcm.ACTION_CREATE_USER);
-        //data.putParcelable("user", user);  Test pour Pierre --> renvoie "user":"User -1".
         data.putString(DataConstantGcm.USER_ID, USER_ID);
         data.putString(DataConstantGcm.FIRST_NAME, user.getFirstname());
         data.putString(DataConstantGcm.LAST_NAME, user.getLastname());
@@ -178,6 +178,8 @@ public class RequestToServer {
      * @return An evenID from event created.
      */
     public String createEvent(Event event) throws InterruptedException {
+        ArrayList<String> guestsId = new ArrayList<>();
+        ArrayList<String> ownersId = new ArrayList<>();
         Bundle data = new Bundle();
 
         data.putString("action", DataConstantGcm.ACTION_CREATE_EVENT);
@@ -188,7 +190,14 @@ public class RequestToServer {
         data.putDouble(DataConstantGcm.POSITION_LONGITUDE, event.getPosition().longitude);
         data.putLong(DataConstantGcm.EVENT_START_DATE_TIME, event.getStart_date_time().getTime());
         data.putLong(DataConstantGcm.EVENT_END_DATE_TIME, event.getEnd_date_time().getTime());
-        data.putString(DataConstantGcm.EVENT_GUESTS_ID, event.getName());
+        for (User owner : event.getGuests()) {
+            ownersId.add(owner.getID());
+        }
+        for (User guest : event.getGuests()) {
+            guestsId.add(guest.getID());
+        }
+        data.putStringArrayList(DataConstantGcm.EVENT_GUESTS_ID, guestsId);
+        data.putStringArrayList(DataConstantGcm.EVENT_OWNERS_ID, ownersId);
         data.putInt(DataConstantGcm.EVENT_WEIGHT, event.getWeight());
         data.putString(DataConstantGcm.EVENT_TYPE, event.getType());
         data.putFloat(DataConstantGcm.EVENT_COST, event.getCost());

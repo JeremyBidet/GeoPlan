@@ -46,7 +46,7 @@ final class DataConstantGcm {
     static String ACTION_UPDATE_USER = "updateUser";
     static String ACTION_GET_POSITION_USER ="askUserPositions";
 
-    static String RECEIVED_EVENT_ID = "receivedEventID";
+    static String RECEIVED_EVENT_ID = "receivedEventId";
     static String UPDATE_POSITION= "updatePosition";
     static String RECEIVED_USER_POSITION = "receivedUserPosition";
     static String RECEIVED_EVENTS_GUESTED = "receivedEventsGuested";
