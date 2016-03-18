@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class EventViewHolder {
     public TextView nameEvent;
     public TextView startingTime;
-    public TextView endTime;
     public TextView localization;
     public ImageView icon;
+    public TextView duration;
 }

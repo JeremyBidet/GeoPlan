@@ -10,6 +10,8 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import fr.upem.geoplan.R;
@@ -18,8 +20,8 @@ import fr.upem.geoplan.R;
  * Created by Huynh on 03/03/2016.
  */
 public class EventAdapter extends ArrayAdapter<Event> {
-
     private static final StartDateFormat startDateFormat = new StartDateFormat();
+    private static final DurationDateFormat durationDateFormat = new DurationDateFormat();
 
     public EventAdapter(Context context, List<Event> events) {
         super(context, 0, events);
@@ -36,7 +38,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
             viewHolder = new EventViewHolder();
             viewHolder.nameEvent = (TextView) convertView.findViewById(R.id.eventName);
             viewHolder.startingTime = (TextView) convertView.findViewById(R.id.startingTime);
-            viewHolder.endTime = (TextView) convertView.findViewById(R.id.endTime);
+            viewHolder.duration = (TextView) convertView.findViewById(R.id.duration);
             viewHolder.localization = (TextView) convertView.findViewById(R.id.localization);
             viewHolder.icon = (ImageView) convertView.findViewById(R.id.img);
             convertView.setTag(viewHolder);
@@ -48,7 +50,9 @@ public class EventAdapter extends ArrayAdapter<Event> {
         //on remplit la vue
         viewHolder.nameEvent.setText(event.getName());
         viewHolder.startingTime.setText(startDateFormat.format(event.getStart_date_time()));
-        viewHolder.endTime.setText(startDateFormat.format(event.getEnd_date_time()));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(event.getEnd_date_time().getTime() - event.getStart_date_time().getTime());
+        viewHolder.duration.setText(durationDateFormat.format(calendar.getTime()));
         viewHolder.localization.setText(event.getLocalization());
         viewHolder.icon.setImageDrawable(new ColorDrawable(event.getColor()));
 
